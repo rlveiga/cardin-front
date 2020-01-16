@@ -3,18 +3,56 @@ import React, { Component } from 'react';
 import {
   Login,
   Home,
-  CardsCollections,
-  CreateCard
+  Cards,
+  CreateCard,
+  Collections
 } from './src/screens'
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-
+import { createMaterialTopTabNavigator, MaterialTopTabBar } from 'react-navigation-tabs';
+ 
 import { Provider } from 'mobx-react';
 import stores from './src/stores';
-import { YellowBox } from 'react-native';
+import { View, StatusBar, YellowBox, Text, SafeAreaView } from 'react-native';
 
 YellowBox.ignoreWarnings(['Remote debugger']);
+
+function SafeAreaMaterialTopTabBar (props) {
+  return (
+    <View>
+      <SafeAreaView style={{backgroundColor: '#000'}}>
+        <MaterialTopTabBar
+        activeTintColor='#FFF'
+        inactiveTintColor='#FFF'
+        style={{backgroundColor: '#000'}}
+        {...props} />
+      </SafeAreaView>
+    </View>
+  )
+}
+
+const CardsCollectionsNavigator = createMaterialTopTabNavigator({
+  Cards: {
+    screen: Cards,
+    navigationOptions: {
+      title: 'Cards'
+    }
+  },
+
+  Collections: {
+    screen: Collections,
+    navigationOptions: {
+      title: 'Collections'
+    }
+  }
+}, {
+  initialRouteName: 'Cards',
+  tabBarComponent: SafeAreaMaterialTopTabBar,
+  navigationOptions: {
+    swipeEnabled: true
+  }
+})
 
 const LoggedOutNavigator = createStackNavigator({
   Login: {
@@ -30,20 +68,13 @@ const LoggedOutNavigator = createStackNavigator({
 const HomeNavigator = createStackNavigator({
   Home: {
     screen: Home,
-  },
-
-  CardsCollections: {
-    screen: CardsCollections,
     navigationOptions: {
-      title: 'Cards and Collections'
+      header: null
     }
   },
 
-  CreateCard: {
-    screen: CreateCard,
-    navigationOptions: {
-      title: 'Create card'
-    }
+  CardsCollectionsNavigator: {
+    screen: CardsCollectionsNavigator
   }
 }, {
   initialRouteName: 'Home',
@@ -52,7 +83,8 @@ const HomeNavigator = createStackNavigator({
     headerStyle: {
       backgroundColor: '#000',
       elevation: 0,
-      borderBottomWidth: 0
+      borderBottomWidth: 0,
+      paddingBottom: 12,
     },
     headerBackTitle: null
   }
@@ -76,6 +108,7 @@ export default class App extends Component {
   render() {
     return (
       <Provider {...stores}>
+        <StatusBar barStyle='light-content'/>
         <AppContainer/>
       </Provider>
     );

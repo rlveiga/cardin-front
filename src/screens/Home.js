@@ -1,6 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 @inject('user')
 @inject('room')
@@ -47,10 +48,10 @@ export default class Home extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <Text style={styles.greeter}>👋 Hi, {this.props.user.username}</Text>
 
-                <View style={{flex: 1, alignSelf: 'stretch', justifyContent: 'center'}}>
+                <View style={{flex: 1, paddingLeft: 25, paddingRight: 25, alignSelf: 'stretch', justifyContent: 'center'}}>
                     <View style={styles.searchInput}>
                         <TextInput
                         style={{
@@ -80,12 +81,12 @@ export default class Home extends Component {
                     </TouchableOpacity>    
 
                     <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('CardsCollections')}
+                    onPress={() => this.props.navigation.navigate('CardsCollectionsNavigator', {}, NavigationActions.navigate({routeName: 'Cards'}))}
                     style={{marginTop: 48}}>
                         <Text style={{color: '#FFF', textAlign: 'center'}}>Minhas cartas</Text>    
                     </TouchableOpacity> 
                 </View>           
-            </View>
+            </SafeAreaView>
         )
     }
 }
@@ -95,9 +96,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#000',
         alignSelf: 'stretch',
-        alignItems: 'center',
-        paddingLeft: 25,
-        paddingRight: 25
+        alignItems: 'center'
     },
 
     greeter: {

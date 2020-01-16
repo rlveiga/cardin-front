@@ -1,12 +1,15 @@
 import Login from './Login.js';
 import Home from './Home.js';
 
-import CardsCollections from './Cards/CardsCollections';
+import Cards from './Cards/Cards';
 import CreateCard from './Cards/CreateCard';
+
+import Collections from './Collections/Collections';
 
 export {
 	Login,
 	Home,
-	CardsCollections,
-	CreateCard
+	Cards,
+	CreateCard,
+	Collections
 };

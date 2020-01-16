@@ -6,7 +6,7 @@ import { NavigationEvents } from 'react-navigation'
 
 @inject('card')
 @observer
-export default class CardsCollections extends Component {
+export default class Collections extends Component {
     constructor(props) {
         super(props)
 
@@ -15,49 +15,49 @@ export default class CardsCollections extends Component {
         }
     }
 
-    async loadCards() {
-        this.setState({loaded: false})
+    // async loadCards() {
+    //     this.setState({loaded: false})
 
-        await this.props.card.getCards()
+    //     await this.props.card.getCards()
 
-        this.setState({loaded: true})
-    }
+    //     this.setState({loaded: true})
+    // }
 
-    renderCards() {
-        if(this.state.loaded) {
-            return this.props.card.cardList.map((card, i) => {
-                console.log(card)
-                return (
-                    <TouchableOpacity>
-                        <CardPreview card={card}/>
-                    </TouchableOpacity>
-                )
-            })
-        }
-        else {
-            return (
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <ActivityIndicator size='large' color='#FFF'/>
-                </View>
-            )
-        }
-    }
+    // renderCards() {
+    //     if(this.state.loaded) {
+    //         return this.props.card.cardList.map((card, i) => {
+    //             console.log(card)
+    //             return (
+    //                 <TouchableOpacity>
+    //                     <CardPreview card={card}/>
+    //                 </TouchableOpacity>
+    //             )
+    //         })
+    //     }
+    //     else {
+    //         return (
+    //             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    //                 <ActivityIndicator size='large' color='#FFF'/>
+    //             </View>
+    //         )
+    //     }
+    // }
 
     render() {
         return (
             <View style={styles.container}>
-                <NavigationEvents
+                {/* <NavigationEvents
                 onWillFocus={payload => {
                     this.loadCards()
-                }}/>
+                }}/> */}
 
                 <ScrollView contentContainerStyle={styles.cardsContaier}>
-                    {this.renderCards()}
+                    {/* {this.renderCards()} */}
                 </ScrollView>
 
                 <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('CreateCard')}>
-                    <Text style={{color: '#FFF', marginBottom: 32, textAlign: 'center'}}>+ Create new card</Text>
+                    <Text style={{color: '#FFF', marginBottom: 32, textAlign: 'center'}}>+ Create new collection</Text>
                 </TouchableOpacity>
             </View>
         )
