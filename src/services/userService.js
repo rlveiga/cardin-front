@@ -1,9 +1,9 @@
 import api from '../../axios';
 
 class UserService {
-    login(email, password) {
+    login(username, password) {
          return api.post('/auth/login', {
-             email,
+             username,
              password
          })
          .then(res => {

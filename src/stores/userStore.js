@@ -3,27 +3,28 @@ import UserService from '../services/userService';
 
 export default class UserStore {
     @observable name = '';
-    @observable email = '';
+    @observable username = '';
     @observable token = '';
     @observable success = false;
 
     @action
-    async login(email, password) {
+    async login(username, password) {
         this.success = false;
 
         await UserService.login(
-            email,
+            username,
             password
-        ).then(res => {
-            console.log(res)
-            if(res.data.success) {
+        ).then(response => {
+            console.log(response)
+            
+            if(response.status == 200) {
                 this.success = true;
-                this.name = res.data.user.name;
-                this.email = res.data.user.email;
-                this.token = res.data.token;
+                this.name = response.data.user.name;
+                this.username = response.data.user.username;
+                this.token = response.data.token;
             }
         }, err => {
-            console.log(err.response)
+            console.log(err)
         }) 
     }
 }

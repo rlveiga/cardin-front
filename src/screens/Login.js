@@ -9,7 +9,7 @@ export default class Login extends Component {
         super(props);
 
         this.state = {
-            email: '',
+            username: '',
             password: ''
         }
 
@@ -18,7 +18,7 @@ export default class Login extends Component {
 
     async onButtonPress() {
         await this.props.user.login(
-            this.state.email,
+            this.state.username,
             this.state.password
         );
 
@@ -32,15 +32,17 @@ export default class Login extends Component {
             <View style={styles.container}>
                 <TextInput 
                 style={[styles.textInputContainer, {marginBottom: 42}]}
-                placeholder='E-mail'
+                placeholder='Nome de usuário'
+                placeholderTextColor='#A2A2A2'
                 autoCapitalize='none'
                 autoCorrect={false}
-                value={this.state.email}
-                onChangeText={(val) => this.setState({email: val})}/>
+                value={this.state.username}
+                onChangeText={(val) => this.setState({username: val})}/>
                 <TextInput 
                 secureTextEntry={true}
                 style={[styles.textInputContainer, {marginBottom: 64}]}
                 placeholder='Senha'
+                placeholderTextColor='#A2A2A2'
                 autoCapitalize='none'
                 autoCorrect={false}
                 value={this.state.password}
@@ -49,7 +51,7 @@ export default class Login extends Component {
                 <TouchableOpacity
                 onPress={() => this.onButtonPress()}
                 style={styles.button}>
-                    <Text style={{color: '#FFF'}}>Entrar</Text>
+                    <Text style={{color: '#000'}}>Entrar</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -59,7 +61,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF',
+        backgroundColor: '#000',
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: 25,
@@ -68,6 +70,7 @@ const styles = StyleSheet.create({
 
     textInputContainer: {
         alignSelf: 'stretch',
+        color: '#FFF',
         borderBottomWidth: 1,
         borderColor: 'grey',
         paddingBottom: 12, 
@@ -77,7 +80,8 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: '#000',
+        backgroundColor: '#FFF',
+        borderRadius: 6,
         paddingTop: 15,
         paddingBottom: 15,
         justifyContent: 'center',

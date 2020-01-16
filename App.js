@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 
 import {
   Login,
-  Home
+  Home,
+  CardsCollections,
+  CreateCard
 } from './src/screens'
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
@@ -28,9 +30,32 @@ const LoggedOutNavigator = createStackNavigator({
 const HomeNavigator = createStackNavigator({
   Home: {
     screen: Home,
+  },
+
+  CardsCollections: {
+    screen: CardsCollections,
+    navigationOptions: {
+      title: 'Cards and Collections'
+    }
+  },
+
+  CreateCard: {
+    screen: CreateCard,
+    navigationOptions: {
+      title: 'Create card'
+    }
   }
 }, {
-  initialRouteName: 'Home'
+  initialRouteName: 'Home',
+  defaultNavigationOptions: {
+    headerTintColor: '#FFF',
+    headerStyle: {
+      backgroundColor: '#000',
+      elevation: 0,
+      borderBottomWidth: 0
+    },
+    headerBackTitle: null
+  }
 });
 
 const LoginNavigator = createSwitchNavigator({

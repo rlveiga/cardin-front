@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
-import { Alert, Text, View, StyleSheet, TouchableOpacity } from 'react-native'
-import Dialog from "react-native-dialog";
 import { inject, observer } from 'mobx-react';
+import React, { Component } from 'react';
+import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 
 @inject('user')
 @inject('room')
@@ -48,36 +47,44 @@ export default class Home extends Component {
 
     render() {
         return (
-            <View>
-                <Text>Hi, {this.props.user.name}</Text>
-                
-                <Dialog.Container visible={this.state.dialogVisible}>
-                    <Dialog.Title>{this.state.dialogTitle}</Dialog.Title>
-                    <Dialog.Description>{this.state.dialogDescription}</Dialog.Description>
+            <View style={styles.container}>
+                <Text style={styles.greeter}>👋 Hi, {this.props.user.username}</Text>
 
-                    <Dialog.Input onChangeText={(val) => this.setState({newRoomName: val})}/>
+                <View style={{flex: 1, alignSelf: 'stretch', justifyContent: 'center'}}>
+                    <View style={styles.searchInput}>
+                        <TextInput
+                        style={{
+                            flex: 1,
+                            color: '#FFF',
+                            fontSize: 22,
+                            textAlign: 'center'
+                        }}
+                        maxLength={5}
+                        placeholder='Buscar sala'
+                        placeholderTextColor='#A2A2A2'
+                        autoCapitalize='characters'
+                        autoCorrect={false}>                        
+                        </TextInput>
 
-                    <Dialog.Button bold={true} label='Confirmar' onPress={() => {
-                        this.setState({dialogVisible: false, dialogTitle: '', dialogDescription: ''})
+                        <TouchableOpacity style={styles.searchButton}>
+                            <Text style={{color: '#000'}}>Go</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                        if(this.state.dialogTitle == 'Criar sala')
-                            this.createRoom(this.state.newRoomName)
-                        
-                        else if(this.state.dialogTitle == 'Buscar sala')
-                            this.joinRoom(this.state.newRoomName)
-                    }}/>
-                    <Dialog.Button label='Cancelar' onPress={() => {this.setState({dialogVisible: false})}}/>
-                </Dialog.Container>
+                    
 
-                <TouchableOpacity
-                onPress={() => this.onButtonPress('create')}>
-                    <Text>Criar sala</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                    style={{paddingLeft: 8, paddingRight: 8, borderRadius: 6, marginTop: 12, alignSelf: 'center', backgroundColor: '#FFF', opacity: 0.8}}
+                    onPress={() => this.onButtonPress('create')}>
+                        <Text style={styles.createText}>Criar sala</Text>
+                    </TouchableOpacity>    
 
-                <TouchableOpacity
-                onPress={() => this.onButtonPress('join')}>
-                    <Text>Buscar sala</Text>    
-                </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('CardsCollections')}
+                    style={{marginTop: 48}}>
+                        <Text style={{color: '#FFF', textAlign: 'center'}}>Minhas cartas</Text>    
+                    </TouchableOpacity> 
+                </View>           
             </View>
         )
     }
@@ -86,5 +93,41 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#000',
+        alignSelf: 'stretch',
+        alignItems: 'center',
+        paddingLeft: 25,
+        paddingRight: 25
+    },
+
+    greeter: {
+        color: '#FFF',
+        fontSize: 26
+    },
+
+    searchInput: {
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        borderBottomWidth: 1,
+        borderColor: 'grey',
+        paddingBottom: 12
+    },
+
+    createText: {
+        color: '#000',
+        textAlign: 'center',
+        fontSize: 16
+    },
+
+    searchButton: {
+        paddingLeft: 8,
+        paddingRight: 8,
+        paddingTop: 4,
+        paddingBottom: 4,
+        borderRadius: 12,
+        backgroundColor: '#A2A2A2',
+        opacity: 0.5,
+        position: 'absolute',
+        right: 0
     }
 })

@@ -4,5 +4,7 @@ const root = new RootStore()
 
 export default {
 	user: root.userStore,
-	room: root.roomStore
+	room: root.roomStore,
+	card: root.cardStore,
+	collection: root.collectionStore
 }
