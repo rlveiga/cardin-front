@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { NavigationEvents } from 'react-navigation'
 import CardPreview from '../../components/CardPreview'
+import CardModal from '../../components/CardModal'
 
 @inject('card')
 @observer
@@ -11,12 +12,27 @@ export default class Cards extends Component {
         super(props)
 
         this.state = {
-            loaded: false
+            loaded: false,
+            selectedCard: {}
         }
+
+        this.modal = null
+        this.delete = this.delete.bind(this)
     }
 
     componentDidMount() {
         this.loadCards()
+    }
+
+    async delete(id) {
+        this.setState({loaded: false})
+
+        await this.props.card.deleteCard(id)
+
+        if(this.props.card.success) {
+            this.modal.hideModal()
+            this.loadCards()
+        }
     }
 
     async loadCards() {
@@ -31,7 +47,12 @@ export default class Cards extends Component {
         if(this.state.loaded) {
             return this.props.card.cardList.map((card, i) => {
                 return (
-                    <TouchableOpacity key={i}>
+                    <TouchableOpacity 
+                    onPress={() => {
+                        this.setState({selectedCard: card})
+                        this.modal.showModal()
+                    }}
+                    key={i}>
                         <CardPreview card={card}/>
                     </TouchableOpacity>
                 )
@@ -67,6 +88,11 @@ export default class Cards extends Component {
                 onPress={() => this.props.navigation.navigate('CreateCard')}>
                     <Text style={{color: '#000', textAlign: 'center'}}>+ Create new card</Text>
                 </TouchableOpacity>
+
+                <CardModal
+                ref={e => this.modal = e}
+                card={this.state.selectedCard}
+                onDelete={this.delete}/>
             </View>
         )
     }

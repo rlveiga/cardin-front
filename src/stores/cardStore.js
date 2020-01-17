@@ -43,11 +43,17 @@ export default class CardStore {
 
     @action
     async deleteCard(id) {
+        this.success = false
+
         await CardService.deleteCard(
             this.root.userStore.token,
             id
         ).then(response => {
+            console.log(response)
 
+            if(response.status == 200) {
+                this.success = true
+            }
         }, error => {
             
         })
