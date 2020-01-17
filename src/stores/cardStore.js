@@ -13,6 +13,7 @@ export default class CardStore {
         await CardService.getCards(
             this.root.userStore.token
         ).then(response => {
+            console.log(response)
             if(response.status == 200) {
                 this.cardList = response.data.cards
             }
@@ -30,7 +31,7 @@ export default class CardStore {
         ).then(response => {
             console.log(response)
         }, error => {
-            console.log(error)
+            console.log(error.response)
         })
     }
 

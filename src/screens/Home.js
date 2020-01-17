@@ -61,7 +61,7 @@ export default class Home extends Component {
                             textAlign: 'center'
                         }}
                         maxLength={5}
-                        placeholder='Buscar sala'
+                        placeholder='Join room'
                         placeholderTextColor='#A2A2A2'
                         autoCapitalize='characters'
                         autoCorrect={false}>                        
@@ -77,13 +77,13 @@ export default class Home extends Component {
                     <TouchableOpacity
                     style={{paddingLeft: 8, paddingRight: 8, borderRadius: 6, marginTop: 12, alignSelf: 'center', backgroundColor: '#FFF', opacity: 0.8}}
                     onPress={() => this.onButtonPress('create')}>
-                        <Text style={styles.createText}>Criar sala</Text>
+                        <Text style={styles.createText}>Create room</Text>
                     </TouchableOpacity>    
 
                     <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('CardsCollectionsNavigator', {}, NavigationActions.navigate({routeName: 'Cards'}))}
                     style={{marginTop: 48}}>
-                        <Text style={{color: '#FFF', textAlign: 'center'}}>Minhas cartas</Text>    
+                        <Text style={{color: '#FFF', textAlign: 'center'}}>My cards</Text>    
                     </TouchableOpacity> 
                 </View>           
             </SafeAreaView>

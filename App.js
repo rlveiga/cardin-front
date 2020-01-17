@@ -10,7 +10,7 @@ import {
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createMaterialTopTabNavigator, MaterialTopTabBar } from 'react-navigation-tabs';
+import { createMaterialTopTabNavigator, MaterialTopTabBar, createTabNavigator } from 'react-navigation-tabs';
  
 import { Provider } from 'mobx-react';
 import stores from './src/stores';
@@ -75,6 +75,13 @@ const HomeNavigator = createStackNavigator({
 
   CardsCollectionsNavigator: {
     screen: CardsCollectionsNavigator
+  },
+
+  CreateCard: {
+    screen: CreateCard,
+    navigationOptions: {
+      title: 'New card'
+    }
   }
 }, {
   initialRouteName: 'Home',
