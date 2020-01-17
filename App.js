@@ -5,7 +5,8 @@ import {
   Home,
   Cards,
   CreateCard,
-  Collections
+  Collections,
+  CreateCollection
 } from './src/screens'
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
@@ -82,11 +83,22 @@ const HomeNavigator = createStackNavigator({
     navigationOptions: {
       title: 'New card'
     }
+  },
+
+  CreateCollection: {
+    screen: CreateCollection,
+    navigationOptions: {
+      title: 'New collection'
+    }
   }
 }, {
   initialRouteName: 'Home',
   defaultNavigationOptions: {
     headerTintColor: '#FFF',
+    headerTitleStyle: {
+      fontSize: 28,
+      fontWeight: 'bold'
+    },
     headerStyle: {
       backgroundColor: '#000',
       elevation: 0,

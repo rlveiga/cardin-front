@@ -26,11 +26,11 @@ export default class CollectionPreview extends Component {
 
 const styles = StyleSheet.create({
     collectionContainer: {
+        margin: 6,
         backgroundColor: '#000',
         borderWidth: 2,
         borderColor: '#FFF',
         opacity: 0.8,
-        margin: 12,
         paddingTop: 12,
         paddingLeft: 8,
         paddingRight: 12,

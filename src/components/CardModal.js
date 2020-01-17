@@ -49,7 +49,7 @@ export default class CardModal extends Component {
                 onPress={() => this.props.onDelete(card.id)}
                 style={styles.deleteButton}>
                     <Text style={{color: '#FFF'}}>
-                        Delete
+                        Delete card
                     </Text>
                 </TouchableOpacity>
             </Modal>
@@ -60,6 +60,8 @@ export default class CardModal extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        borderWidth: 2,
+        borderColor: '#FFF',
         borderRadius: 18,
         paddingTop: 24,
         paddingBottom: 24,

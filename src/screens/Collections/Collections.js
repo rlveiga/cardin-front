@@ -33,7 +33,7 @@ export default class Collections extends Component {
         if(this.state.loaded) {
             return this.props.collection.collectionList.map((collection, i) => {
                 return (
-                    <TouchableOpacity key={i}>
+                    <TouchableOpacity style={{marginTop: 8}} key={i}>
                         <CollectionPreview collection={collection}/>
                     </TouchableOpacity>
                 )
@@ -52,14 +52,25 @@ export default class Collections extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <NavigationEvents
+                onWillFocus={payload => {
+                    const shouldReload = this.props.navigation.getParam('shouldReload')
 
-                <ScrollView contentContainerStyle={styles.collectionContaier}>
-                    {this.renderCollections()}
+                    if(shouldReload) {
+                        this.loadCollections()
+                        this.props.navigation.setParams({shouldReload: false})
+                    }
+                }}/>
+
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.collectionContaier}>
+                    <View style={{marginLeft: 25, marginRight: 25, justifyContent: 'space-between', flexDirection: 'row', flexWrap: 'wrap'}}>
+                        {this.renderCollections()}
+                    </View>
                 </ScrollView>
 
                 <TouchableOpacity
                 style={styles.createButton}
-                onPress={() => this.props.navigation.navigate('CreateCard')}>
+                onPress={() => this.props.navigation.navigate('CreateCollection')}>
                     <Text style={{color: '#000', textAlign: 'center'}}>+ Create new collection</Text>
                 </TouchableOpacity>
             </View>
@@ -70,14 +81,12 @@ export default class Collections extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000'
+        backgroundColor: '#000',
     },
 
     collectionContaier: {
-        flex: 1,
-        flexDirection: 'row',
-        paddingTop: 12,
-        flexWrap: 'wrap',
+        flexGrow: 1,
+        alignItems: 'center',
     },
 
     createButton: {

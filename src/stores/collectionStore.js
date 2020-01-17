@@ -25,4 +25,21 @@ export default class CollectionStore {
             console.log(error.response)
         })
     }
+
+    @action
+    async createCollection(name) {
+        this.success = false
+
+        await CollectionService.createCollection(
+            this.root.userStore.token,
+            name
+        ).then(response => {
+            console.log(response)
+            if(response.status == 201) {
+                this.success = true
+            }
+        }, error => {
+            console.log(error.response)
+        })
+    }
 }

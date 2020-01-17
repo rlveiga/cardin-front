@@ -76,6 +76,7 @@ export default class Cards extends Component {
 
                     if(shouldReload) {
                         this.loadCards()
+                        this.props.navigation.setParams({shouldReload: false})
                     }
                 }}/>
 
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     cardsContaier: {
         flexGrow: 1,
         flexDirection: 'row',
-        paddingTop: 12,
+        justifyContent: 'flex-start',
         flexWrap: 'wrap',
     },
 
