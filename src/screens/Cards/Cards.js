@@ -49,6 +49,15 @@ export default class Cards extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <NavigationEvents
+                onWillFocus={payload => {
+                    const shouldReload = this.props.navigation.getParam('shouldReload')
+
+                    if(shouldReload) {
+                        this.loadCards()
+                    }
+                }}/>
+
                 <ScrollView contentContainerStyle={styles.cardsContaier}>
                     {this.renderCards()}
                 </ScrollView>
@@ -70,7 +79,7 @@ const styles = StyleSheet.create({
     },
 
     cardsContaier: {
-        flex: 1,
+        flexGrow: 1,
         flexDirection: 'row',
         paddingTop: 12,
         flexWrap: 'wrap',
@@ -79,6 +88,7 @@ const styles = StyleSheet.create({
     createButton: {
         alignSelf: 'center',
         backgroundColor: '#A2A2A2',
+        marginTop: 16,
         marginBottom: 32,
         borderRadius: 6,
         paddingLeft: 8,

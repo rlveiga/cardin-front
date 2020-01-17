@@ -20,6 +20,10 @@ export default class CreateCard extends Component {
             this.state.cardName,
             this.state.cardType
         )
+
+        if(this.props.card.success) {
+            this.props.navigation.navigate('Cards', {shouldReload: true})
+        }
     }
 
     render() {

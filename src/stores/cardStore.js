@@ -6,6 +6,7 @@ export default class CardStore {
         this.root = root
     }
 
+    @observable success
     @observable cardList
 
     @action
@@ -24,12 +25,17 @@ export default class CardStore {
 
     @action
     async createCard(name, type) {
+        this.success = false
+
         await CardService.createCard(
             this.root.userStore.token,
             name,
             type
         ).then(response => {
             console.log(response)
+            if(response.status == 200) {
+                this.success = true
+            }
         }, error => {
             console.log(error.response)
         })

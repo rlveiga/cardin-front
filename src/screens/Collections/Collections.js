@@ -33,12 +33,13 @@ export default class Collections extends Component {
         if(this.state.loaded) {
             return this.props.collection.collectionList.map((collection, i) => {
                 return (
-                    <TouchableOpacity>
+                    <TouchableOpacity key={i}>
                         <CollectionPreview collection={collection}/>
                     </TouchableOpacity>
                 )
             })
         }
+        
         else {
             return (
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
