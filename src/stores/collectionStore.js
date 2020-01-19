@@ -19,7 +19,9 @@ export default class CollectionStore {
             console.log(response)
             if(response.status == 200) {
                 this.success = true
-                this.collectionList = response.data.collections
+                this.collectionList = response.data.collections.sort((a, b) => {
+                    return a.data.id - b.data.id
+                })
             }
         }, error => {
             console.log(error.response)

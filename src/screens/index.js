@@ -6,6 +6,7 @@ import CreateCard from './Cards/CreateCard';
 
 import Collections from './Collections/Collections';
 import CreateCollection from './Collections/CreateCollection';
+import ShowCollection from './Collections/ShowCollection';
 
 export {
 	Login,
@@ -13,5 +14,6 @@ export {
 	Cards,
 	CreateCard,
 	Collections,
-	CreateCollection
+	CreateCollection,
+	ShowCollection
 };

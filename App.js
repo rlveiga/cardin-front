@@ -6,7 +6,8 @@ import {
   Cards,
   CreateCard,
   Collections,
-  CreateCollection
+  CreateCollection,
+  ShowCollection
 } from './src/screens'
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
@@ -90,6 +91,10 @@ const HomeNavigator = createStackNavigator({
     navigationOptions: {
       title: 'New collection'
     }
+  },
+
+  ShowCollection: {
+    screen: ShowCollection
   }
 }, {
   initialRouteName: 'Home',

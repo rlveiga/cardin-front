@@ -33,7 +33,9 @@ export default class Collections extends Component {
         if(this.state.loaded) {
             return this.props.collection.collectionList.map((collection, i) => {
                 return (
-                    <TouchableOpacity style={{marginTop: 8}} key={i}>
+                    <TouchableOpacity 
+                    onPress={() => this.props.navigation.navigate('ShowCollection', {collection})}
+                    style={{marginTop: 8}} key={i}>
                         <CollectionPreview collection={collection}/>
                     </TouchableOpacity>
                 )
