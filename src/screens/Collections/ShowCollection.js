@@ -10,7 +10,7 @@ import CardModal from '../../components/CardModal'
 export default class ShowCollection extends Component {
     static navigationOptions = ({navigation}) => {
         return {
-            title: navigation.getParam('collection').data.name
+            title: navigation.getParam('collection').collection.name
         }
     }
 
@@ -18,7 +18,7 @@ export default class ShowCollection extends Component {
         super(props)
 
         this.state = {
-            selectedCard: {}
+            selectedCard: null
         }
 
         this.modal = null
@@ -32,7 +32,6 @@ export default class ShowCollection extends Component {
 
         if(this.props.card.success) {
             this.modal.hideModal()
-            this.loadCards()
         }
     }
 
@@ -45,7 +44,7 @@ export default class ShowCollection extends Component {
                     this.modal.showModal()
                 }}
                 key={i}>
-                    <CardPreview card={card}/>
+                    <CardPreview card={card.data}/>
                 </TouchableOpacity>
             )
         })

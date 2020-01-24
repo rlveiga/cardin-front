@@ -55,7 +55,7 @@ export default class CardStore {
                 this.success = true
             }
         }, error => {
-            
+            console.log(error.response)
         })
     }
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 
 export default class CardPreview extends Component {
     constructor(props) {
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
         paddingLeft: 8,
         paddingRight: 4,
         borderRadius: 6,
-        width: 120,
+        width: widthPercentageToDP("30%"),
         height: 180
     }
 })

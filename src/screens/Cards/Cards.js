@@ -6,6 +6,7 @@ import CardPreview from '../../components/CardPreview'
 import CardModal from '../../components/CardModal'
 
 @inject('card')
+@inject('collection')
 @observer
 export default class Cards extends Component {
     constructor(props) {
@@ -13,7 +14,7 @@ export default class Cards extends Component {
 
         this.state = {
             loaded: false,
-            selectedCard: {}
+            selectedCard: null
         }
 
         this.modal = null
@@ -21,6 +22,7 @@ export default class Cards extends Component {
     }
 
     componentDidMount() {
+        console.log(this.state.selectedCard)
         this.loadCards()
     }
 
@@ -47,13 +49,14 @@ export default class Cards extends Component {
         if(this.state.loaded) {
             return this.props.card.cardList.map((card, i) => {
                 return (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                     onPress={() => {
                         this.setState({selectedCard: card})
+                        console.log(card)
                         this.modal.showModal()
                     }}
                     key={i}>
-                        <CardPreview card={card}/>
+                        <CardPreview card={card.data}/>
                     </TouchableOpacity>
                 )
             })

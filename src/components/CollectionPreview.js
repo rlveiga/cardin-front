@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 
 export default class CollectionPreview extends Component {
     constructor(props) {
@@ -11,7 +12,7 @@ export default class CollectionPreview extends Component {
         return (
             <View style={styles.collectionContainer}>
                 <Text numberOfLines={2} style={{fontSize: 28, fontWeight: 'bold', color: '#FFF'}}>
-                    {this.props.collection.data.name}
+                    {this.props.collection.collection.name}
                 </Text>
 
                 <View style={{flex: 1}}/>
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
         paddingLeft: 8,
         paddingRight: 12,
         borderRadius: 6,
-        width: 150,
+        width: widthPercentageToDP("35%"),
         height: 245
     }
 })
