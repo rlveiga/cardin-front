@@ -12,7 +12,7 @@ export default class CollectionPreview extends Component {
         return (
             <View style={styles.collectionContainer}>
                 <Text numberOfLines={2} style={{fontSize: 28, fontWeight: 'bold', color: '#FFF'}}>
-                    {this.props.collection.collection.name}
+                    {this.props.collection.name}
                 </Text>
 
                 <View style={{flex: 1}}/>

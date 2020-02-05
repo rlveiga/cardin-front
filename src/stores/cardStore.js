@@ -9,6 +9,8 @@ export default class CardStore {
     @observable success
     @observable cardList
 
+    @observable card
+
     @action
     async getCards() {
         await CardService.getCards(
@@ -21,6 +23,19 @@ export default class CardStore {
         }, error => {
             console.log(error)
         })
+    }
+
+    @action
+    async getCardById(id) {
+      await CardService.getCardById(
+        this.root.userStore.token,
+        id
+      ).then(response => {
+        this.success = true
+        this.card = response.data
+      }, error => {
+        console.log(error)
+      })
     }
 
     @action

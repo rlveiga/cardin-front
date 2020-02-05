@@ -20,7 +20,7 @@ export default class CollectionStore {
             if(response.status == 200) {
                 this.success = true
                 this.collectionList = response.data.collections.sort((a, b) => {
-                    return a.collection.id - b.collection.id
+                    return a.id - b.id
                 })
             }
         }, error => {

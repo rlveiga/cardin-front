@@ -75,8 +75,11 @@ const HomeNavigator = createStackNavigator({
     }
   },
 
-  CardsCollectionsNavigator: {
-    screen: CardsCollectionsNavigator
+  Collections: {
+    screen: Collections,
+    navigationOptions: {
+      title: 'Collections'
+    }
   },
 
   CreateCard: {

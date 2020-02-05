@@ -22,7 +22,6 @@ export default class Cards extends Component {
     }
 
     componentDidMount() {
-        console.log(this.state.selectedCard)
         this.loadCards()
     }
 
@@ -53,7 +52,7 @@ export default class Cards extends Component {
                     onPress={() => {
                         this.setState({selectedCard: card})
                         console.log(card)
-                        this.modal.showModal()
+                        this.modal.showModal(card)
                     }}
                     key={i}>
                         <CardPreview card={card.data}/>

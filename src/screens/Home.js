@@ -81,7 +81,7 @@ export default class Home extends Component {
                     </TouchableOpacity>    
 
                     <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('CardsCollectionsNavigator', {}, NavigationActions.navigate({routeName: 'Cards'}))}
+                    onPress={() => this.props.navigation.navigate('Collections')}
                     style={{marginTop: 48}}>
                         <Text style={{color: '#FFF', textAlign: 'center'}}>My cards</Text>    
                     </TouchableOpacity> 

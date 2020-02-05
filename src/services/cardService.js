@@ -15,6 +15,20 @@ class CardService {
         });
     }  
 
+    getCardById(token, id) {
+      return api.get(`/cards/${id}`, {
+          headers: {
+              'access-token': token
+          }
+      })
+      .then(res => {
+          return res;
+      })
+      .catch(err => {
+          throw err.response;
+      });
+  }
+
     createCard(token, name, card_type) {
         return api.post(
                 `/cards`,
