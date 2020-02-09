@@ -39,13 +39,14 @@ export default class CardStore {
     }
 
     @action
-    async createCard(name, type) {
+    async createCard(name, type, collection_id) {
         this.success = false
 
         await CardService.createCard(
             this.root.userStore.token,
             name,
-            type
+            type,
+            collection_id
         ).then(response => {
             console.log(response)
             if(response.status == 200) {

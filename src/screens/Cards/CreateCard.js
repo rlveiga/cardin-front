@@ -19,7 +19,8 @@ export default class CreateCard extends Component {
     async createCard() {
       await this.props.card.createCard(
         this.state.cardName,
-        this.state.cardType
+        this.state.cardType,
+        this.props.collection.selectedCollection.id
       )
 
       if(this.props.card.success) {

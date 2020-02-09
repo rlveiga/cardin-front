@@ -29,24 +29,25 @@ class CardService {
       });
   }
 
-    createCard(token, name, card_type) {
-        return api.post(
-                `/cards/`,
-                {
-                    name,
-                    card_type
-                }, 
-                {
-                    headers: {
-                        'access-token': token
-                    }
-                }
-        ).then(res => {
-            return res;
-        })
-        .catch(err => {
-            return err.response;
-        });
+    createCard(token, name, card_type, collection_id) {
+      return api.post(
+              `/cards/`,
+              {
+                  name,
+                  card_type,
+                  collection_id
+              }, 
+              {
+                  headers: {
+                      'access-token': token
+                  }
+              }
+      ).then(res => {
+          return res;
+      })
+      .catch(err => {
+          return err.response;
+      });
     }  
 
     deleteCard(token, card_id) {
