@@ -31,7 +31,7 @@ class CardService {
 
     createCard(token, name, card_type) {
         return api.post(
-                `/cards`,
+                `/cards/`,
                 {
                     name,
                     card_type
@@ -63,18 +63,61 @@ class CardService {
         });
     }  
 
-    addToCollection(token, card_id, collection_id) {
-        return api.put(`/cards/${card_id}/add_collection/${collection_id}`, {
-            headers: {
-                'access-token': token
-            }
-        })
-        .then(res => {
-            return res;
-        })
-        .catch(err => {
-            throw err;
-        });
+    addToCollection(token, card_id, collection_id) {      
+      return api.post(`/cards/${card_id}/add_collection/${collection_id}`,
+        null,
+        {
+          headers: {
+            'access-token': token
+          }
+        }
+      )
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err.response;
+      });
+    }
+
+    removeFromCollection(token, card_id, collection_id) {      
+      return api.delete(`/cards/${card_id}/remove_collection/${collection_id}`,
+        {
+          headers: {
+            'access-token': token
+          }
+        }
+      )
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err.response;
+      });
+    }
+    
+    // TODO
+    // This HTTP call is no good. TIL REST is not too appropriate for deleting content in batched,
+    // therefore I should add/remove cards from collections as these collections are clicked.
+    // Sounds simple and much easier to implement. Because it is! 
+    removeCollections(token, card_id, removed) {
+      console.log(token)
+      return api.delete(`/cards/${card_id}/remove_collections`, 
+        {
+          collections: removed
+        },
+        {
+          headers: {
+            'access-token': token
+          }
+        }
+      )
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err.response;
+      });
     }  
 }
 

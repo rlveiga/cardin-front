@@ -15,9 +15,9 @@ export default class Collections extends Component {
         }
     }
 
-    componentDidMount() {
-        this.loadCollections()
-    }
+    // componentDidMount() {
+    //     this.loadCollections()
+    // }
 
     async loadCollections() {
         this.setState({loaded: false})
@@ -30,28 +30,30 @@ export default class Collections extends Component {
     }
 
     renderCollections() {
-        if(this.state.loaded) {
-            return this.props.collection.collectionList.map((collection, i) => {
-                return (
-                    <TouchableOpacity 
-                    onPress={() => {
-                        console.log(collection)
-                        this.props.navigation.navigate('ShowCollection', {collection})
-                    }}
-                    style={{marginTop: 8}} key={i}>
-                        <CollectionPreview collection={collection}/>
-                    </TouchableOpacity>
-                )
-            })
-        }
-        
-        else {
-            return (
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <ActivityIndicator size='large' color='#FFF'/>
-                </View>
-            )
-        }
+      console.log('render collections')
+      if(this.state.loaded) {
+        return this.props.collection.collectionList.map((collection, i) => {
+          return (
+              <TouchableOpacity 
+              onPress={() => {
+                  this.props.collection.selectedCollection = collection
+                  this.props.collection.shouldReloadCollection = true
+                  this.props.navigation.navigate('ShowCollection', {collection})
+              }}
+              style={{marginTop: 8}} key={i}>
+                  <CollectionPreview collection={collection}/>
+              </TouchableOpacity>
+          )
+        })
+      }
+      
+      else {
+        return (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <ActivityIndicator size='large' color='#FFF'/>
+          </View>
+        )
+      }
     }
 
     render() {
@@ -59,16 +61,18 @@ export default class Collections extends Component {
             <View style={styles.container}>
                 <NavigationEvents
                 onWillFocus={payload => {
-                    const shouldReload = this.props.navigation.getParam('shouldReload')
+                    const shouldReload = this.props.collection.shouldReloadCollections
+
+                    console.log(shouldReload)
 
                     if(shouldReload) {
                         this.loadCollections()
-                        this.props.navigation.setParams({shouldReload: false})
+                        this.props.collection.shouldReloadCollections = false
                     }
                 }}/>
 
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.collectionContaier}>
-                    <View style={{marginLeft: 25, marginRight: 25, justifyContent: 'space-between', flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <View style={{flex: 1, marginLeft: 25, marginRight: 25, justifyContent: 'space-between', flexDirection: 'row', flexWrap: 'wrap'}}>
                         {this.renderCollections()}
                     </View>
                 </ScrollView>

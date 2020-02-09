@@ -5,6 +5,7 @@ import { NavigationActions } from 'react-navigation';
 
 @inject('user')
 @inject('room')
+@inject('collection')
 @observer
 export default class Home extends Component {
     constructor(props) {
@@ -81,7 +82,10 @@ export default class Home extends Component {
                     </TouchableOpacity>    
 
                     <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Collections')}
+                    onPress={() => {
+                      this.props.collection.shouldReloadCollections = true
+                      this.props.navigation.navigate('Collections')
+                    }}
                     style={{marginTop: 48}}>
                         <Text style={{color: '#FFF', textAlign: 'center'}}>My cards</Text>    
                     </TouchableOpacity> 

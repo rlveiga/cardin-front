@@ -13,29 +13,35 @@ export default class CardModal extends Component {
 
         this.state = {
             modalVisible: false,
+            collectionsLoaded: false,
             collectionMenuHidden: true,
             initialList: [],
             editedList: [],
         }
-
-        this.getCollections = this.getCollections.bind(this)
     }
 
-    showModal = (card) => {
-      console.log(card)
+    showModal = async (card) => {
         this.setState({
             modalVisible: true
         });
+
+        await this.getCollections()
     };
 
-    hideModal = () => {
-        this.setState({
-            initialList: [],
-            editedList: [],
-            modalVisible: false
-        });
+    hideModal = async () => {
+      if(this.state.initialList !== this.state.editedList) {
+        this.props.loadCards()
+        this.props.collection.shouldReloadCollection = true
+        this.props.collectionMenu.shouldReloadCollections = true
+      }
+      
+      this.setState({
+          initialList: [],
+          editedList: [],
+          modalVisible: false
+      });
 
-        console.log('Cleared lists')
+      console.log('Cleared lists')
     };
 
     async getCollections() {
@@ -43,7 +49,7 @@ export default class CardModal extends Component {
 
       if(this.props.card.success) {
         this.setState({
-          collectionMenuHidden: false, 
+          collectionsLoaded: true,
           initialList: this.props.card.card.collections, 
           editedList: this.props.card.card.collections
         })
@@ -52,38 +58,60 @@ export default class CardModal extends Component {
       }
     }
 
+    async onCollectionPress(collection, inCollection) {
+      // Remove element from editedList
+      if(inCollection) {
+        await this.props.card.removeFromCollection(
+          this.props.card.selectedCard.id,
+          collection.id
+        )
+
+        if(this.props.card.success) {
+          const newList = this.state.editedList.filter((e) => {
+              return e.id != collection.id
+          })
+
+          this.setState({editedList: newList})
+        }
+
+        else {
+          console.log('Error removing')
+        }
+      }
+
+      // Add element to editedList
+      else {
+        await this.props.card.addToCollection(
+          this.props.card.selectedCard.id,
+          collection.id
+        )
+
+        if(this.props.card.success) {
+          const newList = this.state.editedList.concat([collection])
+
+          this.setState({editedList: newList})
+        }
+
+        else {
+          console.log('Error adding')
+        }
+      }
+    }
+
     renderCollections() {
         console.log(this.state.editedList)
 
         return this.props.collection.collectionList.map((col, i) => {
+          if(col.name !== 'My cards') {
             let inCollection = false
 
-            console.log('Edited list: ', this.state.editedList)
             if(this.state.editedList.find((c) => c.name == col.name)) {
                 inCollection = true
             }
 
-            console.log(inCollection)
-
             return (
                 <TouchableOpacity
-                onPress={() => {
-                    // Remove element from editedList
-                    if(inCollection) {
-                        const newList = this.state.editedList.filter((e) => {
-                            return e.name != col.name
-                        })
-
-                        this.setState({editedList: newList})
-                    }
-
-                    // Add element to editedList
-                    else {
-                        const newList = this.state.editedList.concat([col])
-
-                        this.setState({editedList: newList})
-                    }
-                }}
+                onPress={() => this.onCollectionPress(col, inCollection)}
                 key={i}
                 style={styles.collectionItem}>
                     <Text style={{flex: 1}} key={i}>{col.name}</Text>
@@ -91,6 +119,7 @@ export default class CardModal extends Component {
                     <View style={{height: 8, width: 8, borderRadius: 4, backgroundColor: inCollection ? '#000' : '#FFF', borderWidth: 1, borderColor: '#000'}}/>
                 </TouchableOpacity>
             )
+          }
         })
     }
 
@@ -133,15 +162,7 @@ export default class CardModal extends Component {
                         <View style={{alignItems: 'center', width: widthPercentageToDP("100%")}}>
                             <View style={styles.collectionMenu}>
                                 <TouchableOpacity
-                                onPress={() => {
-                                  if(this.state.collectionMenuHidden) {
-                                    this.getCollections()
-                                  }
-
-                                  else {
-                                    this.setState({collectionMenuHidden: true})
-                                  }
-                                }}
+                                onPress={() => this.setState({collectionMenuHidden: !this.state.collectionMenuHidden})}
                                 style={{paddingBottom: 6, paddingTop: 6}}>
                                     <Text style={{textAlign: 'center'}}>Gerenciar coleções</Text>
                                 </TouchableOpacity>

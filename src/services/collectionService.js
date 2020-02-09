@@ -15,6 +15,20 @@ class CollectionService {
         });
     }  
 
+    getCardsFromCollection(token, collection_id) {
+      return api.get(`/collections/${collection_id}`, {
+          headers: {
+              'access-token': token
+          }
+      })
+      .then(res => {
+          return res;
+      })
+      .catch(err => {
+          return err;
+      });
+  }  
+
     createCollection(token, name) {
         return api.post(
                 `/collections`,

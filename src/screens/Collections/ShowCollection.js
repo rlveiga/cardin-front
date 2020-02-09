@@ -6,6 +6,7 @@ import CardPreview from '../../components/CardPreview'
 import CardModal from '../../components/CardModal'
 
 @inject('card')
+@inject('collection')
 @observer
 export default class ShowCollection extends Component {
     static navigationOptions = ({navigation}) => {
@@ -22,8 +23,26 @@ export default class ShowCollection extends Component {
         }
 
         this.modal = null
+        this.loadCards = this.loadCards.bind(this)
         this.delete = this.delete.bind(this)
     }
+
+    // componentDidMount() {
+    //   console.log('component did mount')
+    //   this.loadCards()
+    // }
+
+    async loadCards() {
+      this.setState({loaded: false})
+
+      await this.props.collection.getCardsFromCollection(
+        this.props.collection.selectedCollection.id
+      )
+
+      if(this.props.collection.success) {
+          this.setState({loaded: true})
+      }
+  }
 
     async delete(id) {
         this.setState({loaded: false})
@@ -32,50 +51,86 @@ export default class ShowCollection extends Component {
 
         if(this.props.card.success) {
             this.modal.hideModal()
+
+            this.loadCards()
+            await this.props.collection.getCollections()
         }
+
+        this.setState({loaded: true})
     }
 
-    renderCards() {        
-        return this.props.navigation.getParam('collection').cards.map((card, i) => {
-            return (
-                <TouchableOpacity 
-                onPress={() => {
-                    this.props.card.selectedCard = card
-                    this.modal.showModal(card)
-                }}
-                key={i}>
-                    <CardPreview card={card}/>
-                </TouchableOpacity>
-            )
-        })
+    renderCards() {   
+      if(this.state.loaded) {
+        if(this.props.collection.selectedCollection.cards.length == 0) {
+          return (
+            <View style={{flex: 1, justifyContent: 'center', paddingLeft: 25, paddingRight: 25}}>
+              <Text style={{textAlign: 'center', color: '#FFF'}}>
+                  There are no cards in this collection.{`\n`}How about adding one right now?
+              </Text>
+              <TouchableOpacity
+              style={styles.createButton}
+              onPress={() => this.props.navigation.navigate('CreateCard')}>
+                  <Text style={{color: '#000', textAlign: 'center'}}>+ Create new card</Text>
+              </TouchableOpacity>
+            </View>
+          )
+        }  
+        
+        else {
+          return (
+            <ScrollView contentContainerStyle={styles.cardsContaier}>
+              {
+                this.props.collection.selectedCollection.cards.map((card, i) => {
+                  return (
+                      <TouchableOpacity 
+                      onPress={() => {
+                          this.props.card.selectedCard = card
+                          this.modal.showModal(card)
+                      }}
+                      key={i}>
+                          <CardPreview card={card}/>
+                      </TouchableOpacity>
+                  )
+                })
+              }
+            </ScrollView>
+          )
+        }
+      }
+
+      else {
+        return (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <ActivityIndicator size='large' color='#FFF'/>
+          </View>
+        )
+      }
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                {
-                    this.props.navigation.getParam('collection').cards.length == 0 ?
-                    <View style={{flex: 1, justifyContent: 'center', paddingLeft: 25, paddingRight: 25}}>
-                        <Text style={{textAlign: 'center', color: '#FFF'}}>
-                            There are no cards in this collection.{`\n`}How about adding one right now?
-                        </Text>
-                        <TouchableOpacity
-                        style={styles.createButton}
-                        onPress={() => this.props.navigation.navigate('CreateCard')}>
-                            <Text style={{color: '#000', textAlign: 'center'}}>+ Create new card</Text>
-                        </TouchableOpacity>
-                    </View>
-                    :
-                    <ScrollView contentContainerStyle={styles.cardsContaier}>
-                        {this.renderCards()}
-                    </ScrollView>
-                }
+      return (
+          <View style={styles.container}>
+            <NavigationEvents
+              onWillFocus={payload => {
+                const shouldReload = this.props.collection.shouldReloadCollection
 
-                <CardModal
-                ref={e => this.modal = e}
-                onDelete={this.delete}/>
-            </View>
-        )
+                console.log(shouldReload)
+
+                if(shouldReload) {
+                    this.loadCards()
+                    this.props.collection.shouldReloadCollection = false
+                }
+            }}/>
+
+              {this.renderCards()}
+
+              <CardModal
+              ref={e => this.modal = e}
+              navigation={this.props.navigation}
+              onDelete={this.delete}
+              loadCards={this.loadCards}/>
+          </View>
+      )
     }
 }
 

@@ -20,7 +20,8 @@ export default class CreateCollection extends Component {
         )
 
         if(this.props.collection.success) {
-            this.props.navigation.navigate('Collections', {shouldReload: true})
+          this.props.collection.shouldReloadCollections = true
+          this.props.navigation.navigate('Collections')
         }
     }
 

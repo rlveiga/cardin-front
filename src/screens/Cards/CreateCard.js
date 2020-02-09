@@ -3,27 +3,30 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 @inject('card')
+@inject('collection')
 @observer
 export default class CreateCard extends Component {
     constructor(props) {
-        super(props)
+      super(props)
 
-        this.state = {
-            cardName: '',
-            cardType: 'black',
-            loaded: false
-        }
+      this.state = {
+        cardName: '',
+        cardType: 'black',
+        loaded: false
+      }
     }
 
     async createCard() {
-        await this.props.card.createCard(
-            this.state.cardName,
-            this.state.cardType
-        )
+      await this.props.card.createCard(
+        this.state.cardName,
+        this.state.cardType
+      )
 
-        if(this.props.card.success) {
-            this.props.navigation.navigate('Cards', {shouldReload: true})
-        }
+      if(this.props.card.success) {
+        this.props.collection.shouldReloadCollection = true
+        this.props.collection.shouldReloadCollections = true
+        this.props.navigation.goBack()
+      }
     }
 
     render() {
