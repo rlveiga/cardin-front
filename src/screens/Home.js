@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { Text, TextInput, TouchableOpacity, View, StyleSheet, SafeAreaView } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 
 @inject('user')
 @inject('room')
@@ -50,9 +50,22 @@ export default class Home extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <Text style={styles.greeter}>👋 Hi, {this.props.user.username}</Text>
+                <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
 
-                <View style={{flex: 1, paddingLeft: 25, paddingRight: 25, alignSelf: 'stretch', justifyContent: 'center'}}>
+                <View style={styles.buttonsContainer}>
+                  <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
+                    <Text style={[styles.cardButtonText, {color: '#FFF'}]}>Buscar sala</Text>
+
+                    <Text style={[styles.cardButtonDescription, {color: '#FFF'}]}>Encontre amigos ou jogue online com desconhecidos</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#FFF'}]}>
+                    <Text style={[styles.cardButtonText, {color: '#000'}]}>Criar sala</Text>
+
+                    <Text style={[styles.cardButtonDescription, {color: '#000'}]}>Crie uma nova sala e chame seus amigos</Text>
+                  </TouchableOpacity>
+                </View>
+                {/* <View style={{flex: 1, paddingLeft: 25, paddingRight: 25, alignSelf: 'stretch', justifyContent: 'center'}}>
                     <View style={styles.searchInput}>
                         <TextInput
                         style={{
@@ -62,34 +75,51 @@ export default class Home extends Component {
                             textAlign: 'center'
                         }}
                         maxLength={5}
-                        placeholder='Join room'
+                        placeholder='Buscar sala'
                         placeholderTextColor='#A2A2A2'
                         autoCapitalize='characters'
-                        autoCorrect={false}>                        
-                        </TextInput>
-
-                        <TouchableOpacity style={styles.searchButton}>
-                            <Text style={{color: '#000'}}>Go</Text>
-                        </TouchableOpacity>
+                        autoCorrect={false}/>
                     </View>
 
-                    
+                    <Text
+                      style={{
+                        color: '#FFF',
+                        fontSize: 28,
+                        textAlign: 'center',
+                        marginVertical: 12
+                      }}>ou
+                    </Text> 
 
-                    <TouchableOpacity
-                    style={{paddingLeft: 8, paddingRight: 8, borderRadius: 6, marginTop: 12, alignSelf: 'center', backgroundColor: '#FFF', opacity: 0.8}}
-                    onPress={() => this.onButtonPress('create')}>
-                        <Text style={styles.createText}>Create room</Text>
-                    </TouchableOpacity>    
+                    <View style={styles.searchInput}>
+                      <TextInput
+                      style={{
+                          flex: 1,
+                          color: '#FFF',
+                          fontSize: 22,
+                          textAlign: 'center'
+                      }}
+                      maxLength={5}
+                      placeholder='Criar sala'
+                      placeholderTextColor='#A2A2A2'
+                      autoCapitalize='characters'
+                      autoCorrect={false}/>
+                    </View> 
+                </View>            */}
 
-                    <TouchableOpacity
-                    onPress={() => {
-                      this.props.collection.shouldReloadCollections = true
-                      this.props.navigation.navigate('Collections')
-                    }}
-                    style={{marginTop: 48}}>
-                        <Text style={{color: '#FFF', textAlign: 'center'}}>My cards</Text>    
-                    </TouchableOpacity> 
-                </View>           
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.collection.shouldReloadCollections = true
+                    this.props.navigation.navigate('Collections')
+                  }}
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+                    paddingHorizontal: 12,
+                    paddingVertical: 8,
+                    borderRadius: 8,
+                    marginBottom: 32
+                  }}>
+                    <Text style={{color: '#000', textAlign: 'center'}}>Minhas cartas</Text>    
+                </TouchableOpacity> 
             </SafeAreaView>
         )
     }
@@ -106,6 +136,31 @@ const styles = StyleSheet.create({
     greeter: {
         color: '#FFF',
         fontSize: 26
+    },
+
+    buttonsContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+
+    cardButton: {
+      width: widthPercentageToDP("40%"),
+      height: heightPercentageToDP("30%"),
+      marginHorizontal: 12,
+      borderRadius: 8,
+      paddingLeft: widthPercentageToDP("3%"),
+      paddingTop: heightPercentageToDP("2%")
+    },
+
+    cardButtonText: {
+      fontSize: 24,
+      fontWeight: 'bold'
+    },
+
+    cardButtonDescription: {
+      fontSize: 14,
+      marginTop: heightPercentageToDP("2%")
     },
 
     searchInput: {
