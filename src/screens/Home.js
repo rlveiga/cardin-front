@@ -49,21 +49,22 @@ export default class Home extends Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
+            <View style={styles.container}>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
+                  <View style={styles.buttonsContainer}>
+                    <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
+                      <Text style={[styles.cardButtonText, {color: '#FFF'}]}>Buscar sala</Text>
 
-                <View style={styles.buttonsContainer}>
-                  <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
-                    <Text style={[styles.cardButtonText, {color: '#FFF'}]}>Buscar sala</Text>
+                      <Text style={[styles.cardButtonDescription, {color: '#FFF'}]}>Encontre amigos ou jogue online com desconhecidos</Text>
+                    </TouchableOpacity>
 
-                    <Text style={[styles.cardButtonDescription, {color: '#FFF'}]}>Encontre amigos ou jogue online com desconhecidos</Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#FFF'}]}>
+                      <Text style={[styles.cardButtonText, {color: '#000'}]}>Criar sala</Text>
 
-                  <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#FFF'}]}>
-                    <Text style={[styles.cardButtonText, {color: '#000'}]}>Criar sala</Text>
-
-                    <Text style={[styles.cardButtonDescription, {color: '#000'}]}>Crie uma nova sala e chame seus amigos</Text>
-                  </TouchableOpacity>
+                      <Text style={[styles.cardButtonDescription, {color: '#000'}]}>Crie uma nova sala e chame seus amigos</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 {/* <View style={{flex: 1, paddingLeft: 25, paddingRight: 25, alignSelf: 'stretch', justifyContent: 'center'}}>
                     <View style={styles.searchInput}>
@@ -120,7 +121,7 @@ export default class Home extends Component {
                   }}>
                     <Text style={{color: '#000', textAlign: 'center'}}>Minhas cartas</Text>    
                 </TouchableOpacity> 
-            </SafeAreaView>
+            </View>
         )
     }
 }
@@ -135,13 +136,12 @@ const styles = StyleSheet.create({
 
     greeter: {
         color: '#FFF',
-        fontSize: 26
+        fontSize: 26,
+        marginBottom: heightPercentageToDP("3%")
     },
 
     buttonsContainer: {
-      flex: 1,
       flexDirection: 'row',
-      alignItems: 'center'
     },
 
     cardButton: {
