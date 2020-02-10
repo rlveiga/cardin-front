@@ -32,7 +32,7 @@ export default class CardModal extends Component {
       if(this.state.initialList !== this.state.editedList) {
         this.props.loadCards()
         this.props.collection.shouldReloadCollection = true
-        this.props.collectionMenu.shouldReloadCollections = true
+        this.props.collection.shouldReloadCollections = true
       }
       
       this.setState({
