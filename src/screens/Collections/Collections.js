@@ -15,9 +15,9 @@ export default class Collections extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     this.loadCollections()
-    // }
+    componentDidMount() {
+      this.loadCollections()
+    }
 
     async loadCollections() {
         this.setState({loaded: false})

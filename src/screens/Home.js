@@ -49,79 +49,24 @@ export default class Home extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                  <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
-                  <View style={styles.buttonsContainer}>
-                    <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
-                      <Text style={[styles.cardButtonText, {color: '#FFF'}]}>Buscar sala</Text>
+          <View style={styles.container}>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
+              <View style={styles.buttonsContainer}>
+                <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
+                  <Text style={[styles.cardButtonText, {color: '#FFF'}]}>Buscar sala</Text>
 
-                      <Text style={[styles.cardButtonDescription, {color: '#FFF'}]}>Encontre amigos ou jogue online com desconhecidos</Text>
-                    </TouchableOpacity>
+                  <Text style={[styles.cardButtonDescription, {color: '#FFF'}]}>Encontre amigos ou jogue online com desconhecidos</Text>
+                </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#FFF'}]}>
-                      <Text style={[styles.cardButtonText, {color: '#000'}]}>Criar sala</Text>
+                <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#FFF'}]}>
+                  <Text style={[styles.cardButtonText, {color: '#000'}]}>Criar sala</Text>
 
-                      <Text style={[styles.cardButtonDescription, {color: '#000'}]}>Crie uma nova sala e chame seus amigos</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                {/* <View style={{flex: 1, paddingLeft: 25, paddingRight: 25, alignSelf: 'stretch', justifyContent: 'center'}}>
-                    <View style={styles.searchInput}>
-                        <TextInput
-                        style={{
-                            flex: 1,
-                            color: '#FFF',
-                            fontSize: 22,
-                            textAlign: 'center'
-                        }}
-                        maxLength={5}
-                        placeholder='Buscar sala'
-                        placeholderTextColor='#A2A2A2'
-                        autoCapitalize='characters'
-                        autoCorrect={false}/>
-                    </View>
-
-                    <Text
-                      style={{
-                        color: '#FFF',
-                        fontSize: 28,
-                        textAlign: 'center',
-                        marginVertical: 12
-                      }}>ou
-                    </Text> 
-
-                    <View style={styles.searchInput}>
-                      <TextInput
-                      style={{
-                          flex: 1,
-                          color: '#FFF',
-                          fontSize: 22,
-                          textAlign: 'center'
-                      }}
-                      maxLength={5}
-                      placeholder='Criar sala'
-                      placeholderTextColor='#A2A2A2'
-                      autoCapitalize='characters'
-                      autoCorrect={false}/>
-                    </View> 
-                </View>            */}
-
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.collection.shouldReloadCollections = true
-                    this.props.navigation.navigate('Collections')
-                  }}
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.5)', 
-                    paddingHorizontal: 12,
-                    paddingVertical: 8,
-                    borderRadius: 8,
-                    marginBottom: 32
-                  }}>
-                    <Text style={{color: '#000', textAlign: 'center'}}>Minhas cartas</Text>    
-                </TouchableOpacity> 
-            </View>
+                  <Text style={[styles.cardButtonDescription, {color: '#000'}]}>Crie uma nova sala e chame seus amigos</Text>
+                </TouchableOpacity>
+              </View>
+            </View>   
+          </View>
         )
     }
 }
@@ -146,7 +91,7 @@ const styles = StyleSheet.create({
 
     cardButton: {
       width: widthPercentageToDP("40%"),
-      height: heightPercentageToDP("30%"),
+      height: heightPercentageToDP("22%"),
       marginHorizontal: 12,
       borderRadius: 8,
       paddingLeft: widthPercentageToDP("3%"),
