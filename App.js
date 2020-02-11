@@ -7,7 +7,9 @@ import {
   CreateCard,
   Collections,
   CreateCollection,
-  ShowCollection
+  ShowCollection,
+  CreateRoom,
+  Room
 } from './src/screens'
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
@@ -74,6 +76,17 @@ const HomeNavigator = createStackNavigator({
     navigationOptions: {
       header: null
     }
+  },
+
+  CreateRoom: {
+    screen: CreateRoom,
+    navigationOptions: {
+      title: 'Criar sala',
+    }
+  },
+
+  Room: {
+    screen: Room
   }
 }, {
   initialRouteName: 'Home',

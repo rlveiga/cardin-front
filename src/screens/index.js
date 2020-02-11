@@ -1,6 +1,9 @@
 import Login from './Login.js';
 import Home from './Home.js';
 
+import CreateRoom from './CreateRoom';
+import Room from './Room';
+
 import Cards from './Cards/Cards';
 import CreateCard from './Cards/CreateCard';
 
@@ -15,5 +18,7 @@ export {
 	CreateCard,
 	Collections,
 	CreateCollection,
-	ShowCollection
+  ShowCollection,
+  CreateRoom,
+  Room
 };

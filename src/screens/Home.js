@@ -53,13 +53,16 @@ export default class Home extends Component {
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
               <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
+                <TouchableOpacity 
+                style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
                   <Text style={[styles.cardButtonText, {color: '#FFF'}]}>Buscar sala</Text>
 
                   <Text style={[styles.cardButtonDescription, {color: '#FFF'}]}>Encontre amigos ou jogue online com desconhecidos</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.cardButton, {backgroundColor: '#FFF'}]}>
+                <TouchableOpacity 
+                style={[styles.cardButton, {backgroundColor: '#FFF'}]}
+                onPress={() => this.props.navigation.navigate('CreateRoom')}>
                   <Text style={[styles.cardButtonText, {color: '#000'}]}>Criar sala</Text>
 
                   <Text style={[styles.cardButtonDescription, {color: '#000'}]}>Crie uma nova sala e chame seus amigos</Text>

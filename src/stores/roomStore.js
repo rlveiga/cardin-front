@@ -6,6 +6,26 @@ export default class RoomStore {
         this.root = root
     }
 
+    @observable success = false
+
+    @observable currentRoom
+
+    @action
+    async createRoom(code) {
+      this.success = false
+
+      await RoomService.createRoom(
+        this.root.userStore.token,
+        code
+      ).then(res => {
+        console.log(res)
+        this.success = true
+        this.currentRoom = res.data.room
+      }, err => {
+        console.log(err)
+      })
+    }
+
     @action
     async joinRoom(name) {
         this.success = false;
