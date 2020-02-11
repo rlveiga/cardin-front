@@ -25,7 +25,7 @@ export default class CreateRoom extends Component {
       Alert.alert(
         'Erro ao criar sala',
         'Tente novamente mais tarde!',
-        [{title: 'Entendi'}]
+        [{text: 'Entendi'}]
       )
     }
   }

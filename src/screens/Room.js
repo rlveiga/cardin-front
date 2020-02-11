@@ -1,21 +1,56 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, Alert } from 'react-native'
 import { heightPercentageToDP } from 'react-native-responsive-screen'
 import { inject, observer } from 'mobx-react'
+import {HeaderBackButton} from 'react-navigation-stack';
 
 @inject('room')
 @observer
 export default class Room extends Component {
   static navigationOptions = ({navigation}) => {
+    const { params = {} } = navigation.state
+
     return {
-      title: navigation.state.params.code
+      headerLeft: (
+        <HeaderBackButton
+          tintColor='#FFF'
+          onPress={() => params.onBack()}
+        />
+      ),
+      title: params.code
     }
+  }
+
+  constructor(props) {
+    super(props)
+
+    this._onBack = this._onBack.bind(this)
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({onBack: this._onBack})
+  }
+
+  async componentWillUnmount() {
+    await this.props.room.leaveRoom()
+  }
+
+  _onBack() {
+    Alert.alert(
+      'Tem certeza que deseja sair desta sala?',
+      null,
+      [
+        {text: 'Sair', style: 'destructive', onPress: () => this.props.navigation.goBack()},
+        {text: 'Continuar'}
+      ]
+    )
   }
 
   renderUsers() {
     return this.props.room.currentRoom.users.map((user, i) => {
       return (
         <View
+          key={i}
           style={{
             backgroundColor: '#FFF',
             height: heightPercentageToDP("8%"),
