@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, ScrollView, ActivityIndicator
 import { inject, observer } from 'mobx-react'
 import CollectionPreview from '../../components/CollectionPreview'
 import { NavigationEvents } from 'react-navigation'
+import { heightPercentageToDP } from 'react-native-responsive-screen'
 
 @inject('collection')
 @observer
@@ -80,7 +81,7 @@ export default class Collections extends Component {
                 <TouchableOpacity
                 style={styles.createButton}
                 onPress={() => this.props.navigation.navigate('CreateCollection')}>
-                    <Text style={{color: '#000', textAlign: 'center'}}>+ Create new collection</Text>
+                    <Text style={{color: '#000', textAlign: 'center'}}>+ Criar nova coleção</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -96,12 +97,14 @@ const styles = StyleSheet.create({
     collectionContaier: {
         flexGrow: 1,
         alignItems: 'center',
+        paddingBottom: heightPercentageToDP("6%")
     },
 
     createButton: {
+        position: 'absolute',
+        bottom: heightPercentageToDP("2%"),
         alignSelf: 'center',
         backgroundColor: '#A2A2A2',
-        marginBottom: 32,
         borderRadius: 6,
         paddingLeft: 8,
         paddingRight: 8,

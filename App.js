@@ -97,21 +97,21 @@ const CollectionsNavigator = createStackNavigator({
   Collections: {
     screen: Collections,
     navigationOptions: {
-      title: 'Collections'
+      title: 'Coleções'
     }
   },
 
   CreateCard: {
     screen: CreateCard,
     navigationOptions: {
-      title: 'New card'
+      title: 'Nova carta'
     }
   },
 
   CreateCollection: {
     screen: CreateCollection,
     navigationOptions: {
-      title: 'New collection'
+      title: 'Nova coleção'
     }
   },
 

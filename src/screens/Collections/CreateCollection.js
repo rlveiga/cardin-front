@@ -32,13 +32,13 @@ export default class CreateCollection extends Component {
                 value={this.state.collectionName}
                 onChangeText={val => this.setState({collectionName: val})}
                 placeholderTextColor='#A2A2A2'
-                placeholder='collection name'
+                placeholder='nome da coleção'
                 style={styles.textInput}/>
 
                 <TouchableOpacity
                 style={{marginTop: 32}}
                 onPress={() => this.createCollection()}>
-                    <Text style={{color: '#FFF', textAlign: 'center'}}>Create</Text>
+                    <Text style={{color: '#FFF', textAlign: 'center'}}>Criar</Text>
                 </TouchableOpacity>
             </View>
         )

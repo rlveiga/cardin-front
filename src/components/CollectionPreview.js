@@ -18,7 +18,7 @@ export default class CollectionPreview extends Component {
                 <View style={{flex: 1}}/>
 
                 <Text style={{marginBottom: 8, color: '#FFF'}}>
-                    {this.props.collection.card_count} cards
+                    {`${this.props.collection.card_count} ${this.props.collection.card_count == 1 ? 'carta' : 'cartas'}`}
                 </Text>
             </View>
         )

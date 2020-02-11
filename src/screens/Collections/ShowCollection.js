@@ -65,12 +65,12 @@ export default class ShowCollection extends Component {
           return (
             <View style={{flex: 1, justifyContent: 'center', paddingLeft: 25, paddingRight: 25}}>
               <Text style={{textAlign: 'center', color: '#FFF'}}>
-                  There are no cards in this collection.{`\n`}How about adding one right now?
+                  Não existem cartas nesta coleção.{`\n`}Que tal criar uma agora mesmo?
               </Text>
               <TouchableOpacity
               style={styles.createButton}
               onPress={() => this.props.navigation.navigate('CreateCard')}>
-                  <Text style={{color: '#000', textAlign: 'center'}}>+ Create new card</Text>
+                  <Text style={{color: '#000', textAlign: 'center'}}>+ Criar nova carta</Text>
               </TouchableOpacity>
             </View>
           )

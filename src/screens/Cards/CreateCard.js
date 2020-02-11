@@ -38,14 +38,14 @@ export default class CreateCard extends Component {
                     onPress={() => this.setState({cardType: 'black'})}
                     disabled={this.state.cardType == 'black'}
                     style={[styles.optionButton, {backgroundColor: this.state.cardType == 'black' ? 'grey' : '#FFF' , marginRight: 24}]}>
-                        <Text>Black</Text>
+                        <Text>Preta</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                     onPress={() => this.setState({cardType: 'white'})}
                     disabled={this.state.cardType == 'white'}
                     style={[styles.optionButton, {backgroundColor: this.state.cardType == 'white' ? 'grey' : '#FFF'}]}>
-                        <Text>White</Text>
+                        <Text>Branca</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.creatorContainer, {backgroundColor: this.state.cardType == 'black' ? '#000' : '#FFF'}]}>
@@ -56,7 +56,7 @@ export default class CreateCard extends Component {
                     value={this.state.cardName}
                     onChangeText={(val) => this.setState({cardName: val})}
                     style={[styles.textInput, {color: this.state.cardType == 'black' ? '#FFF' : '#000'}]}
-                    placeholder='card name'
+                    placeholder='nome da carta'
                     placeholderTextColor='#A1A1A1'/>
 
                     {/* <TextInput
@@ -70,7 +70,7 @@ export default class CreateCard extends Component {
                 <TouchableOpacity
                 style={{marginTop: 32}}
                 onPress={() => this.createCard()}>
-                    <Text style={{color: '#FFF', textAlign: 'center'}}>Create</Text>
+                    <Text style={{color: '#FFF', textAlign: 'center'}}>Criar</Text>
                 </TouchableOpacity>
             </View>
         )
