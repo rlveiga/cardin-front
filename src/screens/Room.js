@@ -57,6 +57,7 @@ export default class Room extends Component {
             width: heightPercentageToDP("8%"),
             borderRadius: heightPercentageToDP("4%"),
             justifyContent: 'center',
+            marginHorizontal: 6
           }}>
           <Text style={{color: '#000', textAlign: 'center'}}>{user.username}</Text>
         </View>

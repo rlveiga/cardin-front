@@ -29,21 +29,25 @@ export default class RoomStore {
     }
 
     @action
-    async joinRoom(name) {
+    async joinRoom(code) {
         this.success = false;
 
         await RoomService.joinRoom(
-            name,
-            this.root.userStore.token
+            this.root.userStore.token,
+            code
         ).then(res => {
             console.log(res)
+            if(res.status == 200) {
+              this.success = true
+              this.currentRoom = res.data.room
+            }
         }, err => {
             console.log(err.response)
         }) 
     }
 
     @action
-    async leaveRoom(name) {
+    async leaveRoom() {
         this.success = false;
 
         await RoomService.leaveRoom(

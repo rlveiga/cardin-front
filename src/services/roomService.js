@@ -20,8 +20,8 @@ class RoomService {
     })
   }
 
-  joinRoom(name, token) {
-    return api.post(`/rooms/${name}.json`, null, {
+  joinRoom(token, code) {
+    return api.post(`/rooms/${code}`, null, {
       headers: {
           'access-token': token
       }

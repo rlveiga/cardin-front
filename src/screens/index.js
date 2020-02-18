@@ -1,6 +1,7 @@
 import Login from './Login.js';
 import Home from './Home.js';
 
+import JoinRoom from './JoinRoom';
 import CreateRoom from './CreateRoom';
 import Room from './Room';
 
@@ -19,6 +20,7 @@ export {
 	Collections,
 	CreateCollection,
   ShowCollection,
+  JoinRoom,
   CreateRoom,
   Room
 };

@@ -9,6 +9,7 @@ import {
   CreateCollection,
   ShowCollection,
   CreateRoom,
+  JoinRoom,
   Room
 } from './src/screens'
 
@@ -82,6 +83,13 @@ const HomeNavigator = createStackNavigator({
     screen: CreateRoom,
     navigationOptions: {
       title: 'Criar sala',
+    }
+  },
+
+  JoinRoom: {
+    screen: JoinRoom,
+    navigationOptions: {
+      title: 'Buscar sala',
     }
   },
 

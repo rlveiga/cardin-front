@@ -54,7 +54,8 @@ export default class Home extends Component {
               <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity 
-                style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}>
+                style={[styles.cardButton, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}
+                onPress={() => this.props.navigation.navigate('JoinRoom')}>
                   <Text style={[styles.cardButtonText, {color: '#FFF'}]}>Buscar sala</Text>
 
                   <Text style={[styles.cardButtonDescription, {color: '#FFF'}]}>Encontre amigos ou jogue online com desconhecidos</Text>
