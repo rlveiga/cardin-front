@@ -1,5 +1,5 @@
 {
-  "name": "ChallengeApp",
+  "name": "Cardin",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -26,7 +26,8 @@
     "react-native-screens": "^2.0.0-alpha.25",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.10.3",
-    "react-navigation-tabs": "^2.7.0"
+    "react-navigation-tabs": "^2.7.0",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",

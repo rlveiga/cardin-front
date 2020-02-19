@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, Alert } from 'react-native'
+import { View, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native'
 import { heightPercentageToDP } from 'react-native-responsive-screen'
 import { inject, observer } from 'mobx-react'
 import {HeaderBackButton} from 'react-navigation-stack';
+import io from 'socket.io-client/dist/socket.io';
 
 @inject('room')
 @observer
@@ -24,14 +25,30 @@ export default class Room extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      connected: false
+    }
+
+    this.socket = null
     this._onBack = this._onBack.bind(this)
+    this._onRoomConnect = this._onRoomConnect.bind(this)
+  }
+
+  // Alters state indicating user has connected
+  _onRoomConnect() {
+    this.setState({connected: true})
   }
 
   componentDidMount() {
     this.props.navigation.setParams({onBack: this._onBack})
+
+    this.socket = io('http://127.0.0.1:5000', {transports: ['websocket']})
+    this.socket.on('connect', this._onRoomConnect)
   }
 
   async componentWillUnmount() {
+    this.socket.disconnect()
+
     await this.props.room.leaveRoom()
   }
 
@@ -67,10 +84,15 @@ export default class Room extends Component {
 
   render() {
     return (
+      this.state.connected ? (
       <View style={styles.container}>
         <View style={styles.userList}>
           {this.renderUsers()}
         </View>
+      </View>
+      ) :
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <ActivityIndicator size='large' color='#FFF'/>
       </View>
     )
   }

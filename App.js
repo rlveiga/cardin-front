@@ -1,64 +1,18 @@
+import { Provider } from 'mobx-react';
 import React, { Component } from 'react';
-
-import {
-  Login,
-  Home,
-  Cards,
-  CreateCard,
-  Collections,
-  CreateCollection,
-  ShowCollection,
-  CreateRoom,
-  JoinRoom,
-  Room
-} from './src/screens'
-
+import { StatusBar, YellowBox } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createMaterialTopTabNavigator, MaterialTopTabBar, createBottomTabNavigator } from 'react-navigation-tabs';
- 
-import { Provider } from 'mobx-react';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, Login, Room, ShowCollection } from './src/screens';
 import stores from './src/stores';
-import { View, StatusBar, YellowBox, Text, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements'
+
+
+ 
+
 
 YellowBox.ignoreWarnings(['Remote debugger']);
-
-// function SafeAreaMaterialTopTabBar (props) {
-//   return (
-//     <View>
-//       <SafeAreaView style={{backgroundColor: '#000'}}>
-//         <MaterialTopTabBar
-//         activeTintColor='#FFF'
-//         inactiveTintColor='#FFF'
-//         style={{backgroundColor: '#000'}}
-//         {...props} />
-//       </SafeAreaView>
-//     </View>
-//   )
-// }
-
-// const CardsCollectionsNavigator = createMaterialTopTabNavigator({
-//   Cards: {
-//     screen: Cards,
-//     navigationOptions: {
-//       title: 'Cards'
-//     }
-//   },
-
-//   Collections: {
-//     screen: Collections,
-//     navigationOptions: {
-//       title: 'Collections'
-//     }
-//   }
-// }, {
-//   initialRouteName: 'Cards',
-//   tabBarComponent: SafeAreaMaterialTopTabBar,
-//   navigationOptions: {
-//     swipeEnabled: true
-//   }
-// })
 
 const LoggedOutNavigator = createStackNavigator({
   Login: {
