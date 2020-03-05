@@ -4,7 +4,9 @@ import { heightPercentageToDP } from 'react-native-responsive-screen'
 import { inject, observer } from 'mobx-react'
 import {HeaderBackButton} from 'react-navigation-stack';
 import io from 'socket.io-client/dist/socket.io';
+import { thisExpression } from '@babel/types';
 
+@inject('user')
 @inject('room')
 @observer
 export default class Room extends Component {
@@ -26,12 +28,18 @@ export default class Room extends Component {
     super(props)
 
     this.state = {
-      connected: false
+      connected: true
     }
 
-    this.socket = null
+    this.socket = io(`http://127.0.0.1:5000`, {transports: ['websocket']})
     this._onBack = this._onBack.bind(this)
     this._onRoomConnect = this._onRoomConnect.bind(this)
+    this._addUser = this._addUser.bind(this)
+    this._removeUser = this._removeUser.bind(this)
+
+    this.socket.on('new_join', this._addUser)
+
+    this.socket.on('new_leave', this._removeUser)
   }
 
   // Alters state indicating user has connected
@@ -42,8 +50,10 @@ export default class Room extends Component {
   componentDidMount() {
     this.props.navigation.setParams({onBack: this._onBack})
 
-    this.socket = io('http://127.0.0.1:5000', {transports: ['websocket']})
+    // this.socket = io('http://127.0.0.1:5000', {transports: ['websocket']})
+
     this.socket.on('connect', this._onRoomConnect)
+    this.socket.emit('join', {room: this.props.room.currentRoom.data.code, user: this.props.user})
   }
 
   async componentWillUnmount() {
@@ -57,10 +67,35 @@ export default class Room extends Component {
       'Tem certeza que deseja sair desta sala?',
       null,
       [
-        {text: 'Sair', style: 'destructive', onPress: () => this.props.navigation.goBack()},
+        {text: 'Sair', style: 'destructive', onPress: () => {
+          this.socket.emit('leave', {room: this.props.room.currentRoom.data.code, user: this.props.user})
+          this.props.navigation.goBack()
+        }},
         {text: 'Continuar'}
       ]
     )
+  }
+
+  _addUser(data) {
+    let new_user = data.user
+
+    if(new_user.username == this.props.user.username) {
+      return
+    }
+
+    console.log(new_user)
+
+    this.props.room.currentRoom.users.push(new_user)
+  }
+
+  _removeUser(data) {
+    let removed_user = data.user
+
+    console.log(removed_user)
+
+    this.props.room.currentRoom.users = this.props.room.currentRoom.users.filter(user => {
+      return user.username != removed_user.username
+    })
   }
 
   renderUsers() {

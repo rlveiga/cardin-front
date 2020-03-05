@@ -10,6 +10,20 @@ export default class RoomStore {
 
     @observable currentRoom
 
+    // @action
+    // async getRoomInfo(code) {
+    //   this.success = false
+
+    //   await RoomService.getRoomInfo(
+    //     this.root.userStore.token,
+    //     code
+    //   ).then(res => {
+    //     if(res.status == 200) {
+    //       this.currentRoom = res.data
+    //     }
+    //   })
+    // }
+
     @action
     async createRoom(code) {
       this.success = false
