@@ -11,7 +11,7 @@ import CollectionPreview from '../../components/CollectionPreview';
 @inject('collection')
 @observer
 export default class RoomLobby extends Component {
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state
 
     return {
@@ -32,7 +32,7 @@ export default class RoomLobby extends Component {
       connected: true
     }
 
-    this.socket = io(`http://127.0.0.1:5000`, {transports: ['websocket']})
+    this.socket = io(`http://127.0.0.1:5000`, { transports: ['websocket'] })
     this._onBack = this._onBack.bind(this)
     this._onRoomConnect = this._onRoomConnect.bind(this)
     this._addUser = this._addUser.bind(this)
@@ -45,16 +45,16 @@ export default class RoomLobby extends Component {
 
   // Alters state indicating user has connected
   _onRoomConnect() {
-    this.setState({connected: true})
+    this.setState({ connected: true })
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({onBack: this._onBack})
+    this.props.navigation.setParams({ onBack: this._onBack })
 
     // this.socket = io('http://127.0.0.1:5000', {transports: ['websocket']})
 
     this.socket.on('connect', this._onRoomConnect)
-    this.socket.emit('join', {room: this.props.room.currentRoom.data.code, user: this.props.user})
+    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: this.props.user })
   }
 
   async componentWillUnmount() {
@@ -68,11 +68,13 @@ export default class RoomLobby extends Component {
       'Tem certeza que deseja sair desta sala?',
       null,
       [
-        {text: 'Sair', style: 'destructive', onPress: () => {
-          this.socket.emit('leave', {room: this.props.room.currentRoom.data.code, user: this.props.user})
-          this.props.navigation.navigate('Home')
-        }},
-        {text: 'Continuar'}
+        {
+          text: 'Sair', style: 'destructive', onPress: () => {
+            this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: this.props.user })
+            this.props.navigation.navigate('Home')
+          }
+        },
+        { text: 'Continuar' }
       ]
     )
   }
@@ -80,7 +82,7 @@ export default class RoomLobby extends Component {
   _addUser(data) {
     let new_user = data.user
 
-    if(new_user.username == this.props.user.username) {
+    if (new_user.username == this.props.user.username) {
       return
     }
 
@@ -112,7 +114,7 @@ export default class RoomLobby extends Component {
             justifyContent: 'center',
             marginHorizontal: 6
           }}>
-          <Text style={{color: '#000', textAlign: 'center'}}>{user.username}</Text>
+          <Text style={{ color: '#000', textAlign: 'center' }}>{user.username}</Text>
         </View>
       )
     })
@@ -121,19 +123,19 @@ export default class RoomLobby extends Component {
   render() {
     return (
       this.state.connected ? (
-      <View style={styles.container}>
-        <View style={styles.userList}>
-          {this.renderUsers()}
-        </View>
+        <View style={styles.container}>
+          <View style={styles.userList}>
+            {this.renderUsers()}
+          </View>
 
-        <CollectionPreview
-        collection={this.props.room.currentRoom.game.collection}
-        />
-      </View>
+          <CollectionPreview
+            collection={this.props.room.currentRoom.game.collection}
+          />
+        </View>
       ) :
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <ActivityIndicator size='large' color='#FFF'/>
-      </View>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <ActivityIndicator size='large' color='#FFF' />
+        </View>
     )
   }
 }
