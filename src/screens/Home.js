@@ -63,7 +63,7 @@ export default class Home extends Component {
 
                 <TouchableOpacity 
                 style={[styles.cardButton, {backgroundColor: '#FFF'}]}
-                onPress={() => this.props.navigation.navigate('CreateRoom')}>
+                onPress={() => this.props.navigation.navigate('SelectCollection')}>
                   <Text style={[styles.cardButtonText, {color: '#000'}]}>Criar sala</Text>
 
                   <Text style={[styles.cardButtonDescription, {color: '#000'}]}>Crie uma nova sala e chame seus amigos</Text>

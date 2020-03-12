@@ -20,16 +20,16 @@ export default class CardModal extends Component {
         }
     }
 
-    showModal = async (card) => {
+    showModal = (card) => {
         this.setState({
             modalVisible: true
         });
 
-        await this.getCollections()
+        this.getCollections()
     };
 
     hideModal = async () => {
-      if(this.state.initialList !== this.state.editedList) {
+      if(this.state.initialList != this.state.editedList) {
         this.props.loadCards()
         this.props.collection.shouldReloadCollection = true
         this.props.collection.shouldReloadCollections = true
@@ -40,8 +40,6 @@ export default class CardModal extends Component {
           editedList: [],
           modalVisible: false
       });
-
-      console.log('Cleared lists')
     };
 
     async getCollections() {
@@ -136,7 +134,7 @@ export default class CardModal extends Component {
                 swipeDirection='down'
                 onSwipeMove={pct => {
                     if (pct < 0.55) {
-                        this.hideModal();
+                      this.hideModal()
                     }
                 }}
                 isVisible={this.state.modalVisible}
@@ -150,22 +148,30 @@ export default class CardModal extends Component {
                         style={[styles.cardText, {color: textColor}]}>{card.name}</Text>
                     </View>
 
-                    <TouchableOpacity
-                    onPress={() => this.props.onDelete(card.id)}
-                    style={styles.deleteButton}>
-                        <Text style={{color: '#FFF'}}>
-                            Delete card
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                      this.props.collection.selectedCollection.editable ?
+                      <TouchableOpacity
+                      onPress={() => this.props.onDelete(card.id)}
+                      style={styles.deleteButton}>
+                          <Text style={{color: '#FFF'}}>
+                              Delete card
+                          </Text>
+                      </TouchableOpacity> :
+                      null
+                    }
 
                     <View style={{position: 'absolute', top: 100}}>
                         <View style={{alignItems: 'center', width: widthPercentageToDP("100%")}}>
                             <View style={styles.collectionMenu}>
-                                <TouchableOpacity
-                                onPress={() => this.setState({collectionMenuHidden: !this.state.collectionMenuHidden})}
-                                style={{paddingBottom: 6, paddingTop: 6}}>
-                                    <Text style={{textAlign: 'center'}}>Gerenciar coleções</Text>
-                                </TouchableOpacity>
+                                {
+                                  this.props.collection.selectedCollection.editable ?
+                                  <TouchableOpacity
+                                  onPress={() => this.setState({collectionMenuHidden: !this.state.collectionMenuHidden})}
+                                  style={{paddingBottom: 6, paddingTop: 6}}>
+                                      <Text style={{textAlign: 'center'}}>Gerenciar coleções</Text>
+                                  </TouchableOpacity> :
+                                  null
+                                }
 
                                 {
                                     this.state.collectionMenuHidden ?

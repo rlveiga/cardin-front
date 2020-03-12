@@ -17,8 +17,7 @@ export default class CreateRoom extends Component {
     await this.props.room.createRoom(this.state.roomCode)
 
     if(this.props.room.success) {
-      // Go to room lobby
-      this.props.navigation.navigate('Room', {code: this.props.room.currentRoom.data.code})
+      this.props.navigation.navigate('RoomLobby')
     }
 
     else {

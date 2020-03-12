@@ -1,15 +1,16 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native'
-import { heightPercentageToDP } from 'react-native-responsive-screen'
-import { inject, observer } from 'mobx-react'
-import {HeaderBackButton} from 'react-navigation-stack';
+import { inject, observer } from 'mobx-react';
+import React, { Component } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { HeaderBackButton } from 'react-navigation-stack';
 import io from 'socket.io-client/dist/socket.io';
-import { thisExpression } from '@babel/types';
+import CollectionPreview from '../../components/CollectionPreview';
 
 @inject('user')
 @inject('room')
+@inject('collection')
 @observer
-export default class Room extends Component {
+export default class RoomLobby extends Component {
   static navigationOptions = ({navigation}) => {
     const { params = {} } = navigation.state
 
@@ -69,7 +70,7 @@ export default class Room extends Component {
       [
         {text: 'Sair', style: 'destructive', onPress: () => {
           this.socket.emit('leave', {room: this.props.room.currentRoom.data.code, user: this.props.user})
-          this.props.navigation.goBack()
+          this.props.navigation.navigate('Home')
         }},
         {text: 'Continuar'}
       ]
@@ -124,6 +125,10 @@ export default class Room extends Component {
         <View style={styles.userList}>
           {this.renderUsers()}
         </View>
+
+        <CollectionPreview
+        collection={this.props.room.currentRoom.game.collection}
+        />
       </View>
       ) :
       <View style={{flex: 1, justifyContent: 'center'}}>

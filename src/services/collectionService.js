@@ -25,7 +25,7 @@ class CollectionService {
           return res;
       })
       .catch(err => {
-          return err;
+          return err.response;
       });
   }  
 

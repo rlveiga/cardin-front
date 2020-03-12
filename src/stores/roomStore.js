@@ -30,12 +30,13 @@ export default class RoomStore {
 
       await RoomService.createRoom(
         this.root.userStore.token,
-        code
+        code,
+        this.root.collectionStore.selectedCollection.id
       ).then(res => {
         console.log(res)
         if(res.status == 200) {
           this.success = true
-          this.currentRoom = res.data.room
+          this.currentRoom = res.data
         }
       }, err => {
         console.log(err)
@@ -53,7 +54,7 @@ export default class RoomStore {
             console.log(res)
             if(res.status == 200) {
               this.success = true
-              this.currentRoom = res.data.room
+              this.currentRoom = res.data
             }
         }, err => {
             console.log(err.response)
