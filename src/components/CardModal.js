@@ -4,245 +4,246 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
 
+@inject('user')
 @inject('card')
 @inject('collection')
 @observer
 export default class CardModal extends Component {
-    constructor(props) {
-        super(props)
+  constructor(props) {
+    super(props)
 
-        this.state = {
-            modalVisible: false,
-            collectionsLoaded: false,
-            collectionMenuHidden: true,
-            initialList: [],
-            editedList: [],
-        }
+    this.state = {
+      modalVisible: false,
+      collectionsLoaded: false,
+      collectionMenuHidden: true,
+      initialList: [],
+      editedList: [],
+    }
+  }
+
+  showModal = (card) => {
+    this.setState({
+      modalVisible: true
+    });
+
+    this.getCollections()
+  };
+
+  hideModal = async () => {
+    if (this.state.initialList != this.state.editedList) {
+      this.props.loadCards()
+      this.props.collection.shouldReloadCollection = true
+      this.props.collection.shouldReloadCollections = true
     }
 
-    showModal = (card) => {
-        this.setState({
-            modalVisible: true
-        });
+    this.setState({
+      initialList: [],
+      editedList: [],
+      modalVisible: false
+    });
+  };
 
-        this.getCollections()
-    };
+  async getCollections() {
+    await this.props.card.getCardById(this.props.card.selectedCard.id)
 
-    hideModal = async () => {
-      if(this.state.initialList != this.state.editedList) {
-        this.props.loadCards()
-        this.props.collection.shouldReloadCollection = true
-        this.props.collection.shouldReloadCollections = true
-      }
-      
+    if (this.props.card.success) {
       this.setState({
-          initialList: [],
-          editedList: [],
-          modalVisible: false
-      });
-    };
+        collectionsLoaded: true,
+        initialList: this.props.card.card.collections,
+        editedList: this.props.card.card.collections
+      })
 
-    async getCollections() {
-      await this.props.card.getCardById(this.props.card.selectedCard.id)
+      console.log('Updated lists with ', this.props.card.card.collections)
+    }
+  }
 
-      if(this.props.card.success) {
-        this.setState({
-          collectionsLoaded: true,
-          initialList: this.props.card.card.collections, 
-          editedList: this.props.card.card.collections
+  async onCollectionPress(collection, inCollection) {
+    // Remove element from editedList
+    if (inCollection) {
+      await this.props.card.removeFromCollection(
+        this.props.card.selectedCard.id,
+        collection.id
+      )
+
+      if (this.props.card.success) {
+        const newList = this.state.editedList.filter((e) => {
+          return e.id != collection.id
         })
 
-        console.log('Updated lists with ', this.props.card.card.collections)
-      }
-    }
-
-    async onCollectionPress(collection, inCollection) {
-      // Remove element from editedList
-      if(inCollection) {
-        await this.props.card.removeFromCollection(
-          this.props.card.selectedCard.id,
-          collection.id
-        )
-
-        if(this.props.card.success) {
-          const newList = this.state.editedList.filter((e) => {
-              return e.id != collection.id
-          })
-
-          this.setState({editedList: newList})
-        }
-
-        else {
-          console.log('Error removing')
-        }
+        this.setState({ editedList: newList })
       }
 
-      // Add element to editedList
       else {
-        await this.props.card.addToCollection(
-          this.props.card.selectedCard.id,
-          collection.id
-        )
-
-        if(this.props.card.success) {
-          const newList = this.state.editedList.concat([collection])
-
-          this.setState({editedList: newList})
-        }
-
-        else {
-          console.log('Error adding')
-        }
+        console.log('Error removing')
       }
     }
 
-    renderCollections() {
-        console.log(this.state.editedList)
+    // Add element to editedList
+    else {
+      await this.props.card.addToCollection(
+        this.props.card.selectedCard.id,
+        collection.id
+      )
 
-        return this.props.collection.collectionList.map((col, i) => {
-          if(col.name !== 'My cards') {
-            let inCollection = false
+      if (this.props.card.success) {
+        const newList = this.state.editedList.concat([collection])
 
-            if(this.state.editedList.find((c) => c.name == col.name)) {
-                inCollection = true
-            }
+        this.setState({ editedList: newList })
+      }
 
-            return (
-                <TouchableOpacity
-                onPress={() => this.onCollectionPress(col, inCollection)}
-                key={i}
-                style={styles.collectionItem}>
-                    <Text style={{flex: 1}} key={i}>{col.name}</Text>
-
-                    <View style={{height: 8, width: 8, borderRadius: 4, backgroundColor: inCollection ? '#000' : '#FFF', borderWidth: 1, borderColor: '#000'}}/>
-                </TouchableOpacity>
-            )
-          }
-        })
+      else {
+        console.log('Error adding')
+      }
     }
+  }
 
-    render() {
-        if(this.props.card.selectedCard) {
-            const card = this.props.card.selectedCard
+  renderCollections() {
+    console.log(this.state.editedList)
 
-            const backgroundColor = card.card_type == 'black' ? '#000' : '#FFF'
-            const textColor = card.card_type == 'black' ? '#FFF' : '#000'
+    return this.props.collection.collectionList.map((col, i) => {
+      if (col.editable) {
+        let inCollection = false
 
-            return (
-                <Modal
-                propagateSwipe
-                swipeDirection='down'
-                onSwipeMove={pct => {
-                    if (pct < 0.55) {
-                      this.hideModal()
-                    }
-                }}
-                isVisible={this.state.modalVisible}
-                style={{
-                    margin: 0,
-                    paddingLeft: 25,
-                    paddingRight: 25,
-                }}>
-                    <View style={[styles.container, {backgroundColor}]}>
-                        <Text
-                        style={[styles.cardText, {color: textColor}]}>{card.name}</Text>
-                    </View>
-
-                    {
-                      this.props.collection.selectedCollection.editable ?
-                      <TouchableOpacity
-                      onPress={() => this.props.onDelete(card.id)}
-                      style={styles.deleteButton}>
-                          <Text style={{color: '#FFF'}}>
-                              Delete card
-                          </Text>
-                      </TouchableOpacity> :
-                      null
-                    }
-
-                    <View style={{position: 'absolute', top: 100}}>
-                        <View style={{alignItems: 'center', width: widthPercentageToDP("100%")}}>
-                            <View style={styles.collectionMenu}>
-                                {
-                                  this.props.collection.selectedCollection.editable ?
-                                  <TouchableOpacity
-                                  onPress={() => this.setState({collectionMenuHidden: !this.state.collectionMenuHidden})}
-                                  style={{paddingBottom: 6, paddingTop: 6}}>
-                                      <Text style={{textAlign: 'center'}}>Gerenciar coleções</Text>
-                                  </TouchableOpacity> :
-                                  null
-                                }
-
-                                {
-                                    this.state.collectionMenuHidden ?
-                                    null :
-                                    <View>
-                                        {this.renderCollections()}
-                                    </View>
-                                }
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-            )
+        if (this.state.editedList.find((c) => c.name == col.name)) {
+          inCollection = true
         }
 
-        else return null
+        return (
+          <TouchableOpacity
+            onPress={() => this.onCollectionPress(col, inCollection)}
+            key={i}
+            style={styles.collectionItem}>
+            <Text style={{ flex: 1 }} key={i}>{col.name}</Text>
+
+            <View style={{ height: 8, width: 8, borderRadius: 4, backgroundColor: inCollection ? '#000' : '#FFF', borderWidth: 1, borderColor: '#000' }} />
+          </TouchableOpacity>
+        )
+      }
+    })
+  }
+
+  render() {
+    if (this.props.card.selectedCard) {
+      const card = this.props.card.selectedCard
+
+      const backgroundColor = card.card_type == 'black' ? '#000' : '#FFF'
+      const textColor = card.card_type == 'black' ? '#FFF' : '#000'
+
+      return (
+        <Modal
+          propagateSwipe
+          swipeDirection='down'
+          onSwipeMove={pct => {
+            if (pct < 0.55) {
+              this.hideModal()
+            }
+          }}
+          isVisible={this.state.modalVisible}
+          style={{
+            margin: 0,
+            paddingLeft: 25,
+            paddingRight: 25,
+          }}>
+          <View style={[styles.container, { backgroundColor }]}>
+            <Text
+              style={[styles.cardText, { color: textColor }]}>{card.name}</Text>
+          </View>
+
+          {
+            (this.props.collection.selectedCollection.editable || this.props.collection.selectedCollection.created_by == this.props.user.id) ?
+              <TouchableOpacity
+                onPress={() => this.props.onDelete(card.id)}
+                style={styles.deleteButton}>
+                <Text style={{ color: '#FFF' }}>
+                  Delete card
+                </Text>
+              </TouchableOpacity> :
+              null
+          }
+
+          <View style={{ position: 'absolute', top: 100 }}>
+            <View style={{ alignItems: 'center', width: widthPercentageToDP("100%") }}>
+              <View style={styles.collectionMenu}>
+                {
+                  this.props.collection.selectedCollection.editable || this.props.collection.selectedCollection.created_by == this.props.user.id ?
+                    <TouchableOpacity
+                      onPress={() => this.setState({ collectionMenuHidden: !this.state.collectionMenuHidden })}
+                      style={{ paddingBottom: 6, paddingTop: 6 }}>
+                      <Text style={{ textAlign: 'center' }}>Gerenciar coleções</Text>
+                    </TouchableOpacity> :
+                    null
+                }
+
+                {
+                  this.state.collectionMenuHidden ?
+                    null :
+                    <View>
+                      {this.renderCollections()}
+                    </View>
+                }
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )
     }
+
+    else return null
+  }
 }
 
 const styles = StyleSheet.create({
-    collectionMenu: {
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        width: widthPercentageToDP("45%"),
-        borderRadius: 6
-    },
+  collectionMenu: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    width: widthPercentageToDP("45%"),
+    borderRadius: 6
+  },
 
-    menuText: {
-        textAlign: 'center',
-        color: '#000'
-    },
+  menuText: {
+    textAlign: 'center',
+    color: '#000'
+  },
 
-    dropdown: {
-        width: widthPercentageToDP("45%"),
-        alignItems: 'center'
-    },
+  dropdown: {
+    width: widthPercentageToDP("45%"),
+    alignItems: 'center'
+  },
 
-    container: {
-        flex: 0.65,
-        borderWidth: 2,
-        borderColor: '#FFF',
-        borderRadius: 18,
-        paddingTop: 24,
-        paddingBottom: 24,
-        paddingLeft: 18,
-        paddingRight: 12
-    },
+  container: {
+    flex: 0.65,
+    borderWidth: 2,
+    borderColor: '#FFF',
+    borderRadius: 18,
+    paddingTop: 24,
+    paddingBottom: 24,
+    paddingLeft: 18,
+    paddingRight: 12
+  },
 
-    collectionItem: {
-        flexDirection: 'row', 
-        alignItems: 'center',
-        paddingTop: 4,
-        paddingBottom: 4,
-        paddingLeft: 6,
-        paddingRight: 6
-    },
+  collectionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingLeft: 6,
+    paddingRight: 6
+  },
 
-    deleteButton: {
-        backgroundColor: 'red',
-        opacity: 0.6,
-        marginTop: 12,
-        alignSelf: 'center',
-        paddingLeft: 18,
-        paddingRight: 18,
-        paddingTop: 6,
-        paddingBottom: 6,
-        borderRadius: 4
-    },
+  deleteButton: {
+    backgroundColor: 'red',
+    opacity: 0.6,
+    marginTop: 12,
+    alignSelf: 'center',
+    paddingLeft: 18,
+    paddingRight: 18,
+    paddingTop: 6,
+    paddingBottom: 6,
+    borderRadius: 4
+  },
 
-    cardText: {
-        flexWrap: 'wrap',
-        fontSize: 32,
-        fontWeight: 'bold'
-    }
+  cardText: {
+    flexWrap: 'wrap',
+    fontSize: 32,
+    fontWeight: 'bold'
+  }
 })

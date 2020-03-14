@@ -27,14 +27,7 @@ export default class ShowCollection extends Component {
         this.delete = this.delete.bind(this)
     }
 
-    // componentDidMount() {
-    //   console.log('component did mount')
-    //   this.loadCards()
-    // }
-
     async loadCards() {
-      this.setState({loaded: false})
-
       await this.props.collection.getCardsFromCollection(
         this.props.collection.selectedCollection.id
       )
