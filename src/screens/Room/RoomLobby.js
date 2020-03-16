@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { HeaderBackButton } from 'react-navigation-stack';
 import io from 'socket.io-client/dist/socket.io';
@@ -32,29 +32,17 @@ export default class RoomLobby extends Component {
       connected: true
     }
 
-    this.socket = io(`http://127.0.0.1:5000`, { transports: ['websocket'] })
-    this._onBack = this._onBack.bind(this)
-    this._onRoomConnect = this._onRoomConnect.bind(this)
-    this._addUser = this._addUser.bind(this)
-    this._removeUser = this._removeUser.bind(this)
-
-    this.socket.on('new_join', this._addUser)
-
-    this.socket.on('new_leave', this._removeUser)
-  }
-
-  // Alters state indicating user has connected
-  _onRoomConnect() {
-    this.setState({ connected: true })
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ onBack: this._onBack })
-
-    // this.socket = io('http://127.0.0.1:5000', {transports: ['websocket']})
+    this.socket = this.socket = io(`http://127.0.0.1:5000`, { transports: ['websocket'] })
 
     this.socket.on('connect', this._onRoomConnect)
-    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: this.props.user })
+    this.socket.on('join_response', this._addUser)
+    this.socket.on('leave_response', this._removeUser)
+
+    this._onBack = this._onBack.bind(this)
+  }
+
+  async componentDidMount() {
+    this.props.navigation.setParams({ onBack: this._onBack })
   }
 
   async componentWillUnmount() {
@@ -63,7 +51,39 @@ export default class RoomLobby extends Component {
     await this.props.room.leaveRoom()
   }
 
-  _onBack() {
+  _onRoomConnect = () => {
+    // Alter state indicating user has connected
+    this.setState({ connected: true })
+
+    // Emit event to other users that may be in the room`
+    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: this.props.user })
+  }
+
+  _addUser = (data) => {
+    console.log(data)
+    let new_user = data.user
+
+    if (new_user.username == this.props.user.username) {
+      return
+    }
+
+    console.log(new_user)
+
+    this.props.room.currentRoom.users.push(new_user)
+  }
+
+  _removeUser = (data) => {
+    console.log(data)
+    let removed_user = data.user
+
+    console.log(removed_user)
+
+    this.props.room.currentRoom.users = this.props.room.currentRoom.users.filter(user => {
+      return user.username != removed_user.username
+    })
+  }
+
+  _onBack = () => {
     Alert.alert(
       'Tem certeza que deseja sair desta sala?',
       null,
@@ -77,28 +97,6 @@ export default class RoomLobby extends Component {
         { text: 'Continuar' }
       ]
     )
-  }
-
-  _addUser(data) {
-    let new_user = data.user
-
-    if (new_user.username == this.props.user.username) {
-      return
-    }
-
-    console.log(new_user)
-
-    this.props.room.currentRoom.users.push(new_user)
-  }
-
-  _removeUser(data) {
-    let removed_user = data.user
-
-    console.log(removed_user)
-
-    this.props.room.currentRoom.users = this.props.room.currentRoom.users.filter(user => {
-      return user.username != removed_user.username
-    })
   }
 
   renderUsers() {
@@ -131,6 +129,16 @@ export default class RoomLobby extends Component {
           <CollectionPreview
             collection={this.props.room.currentRoom.game.collection}
           />
+
+          {
+            this.props.room.currentRoom.data.created_by == this.props.user.id ?
+              <TouchableOpacity
+                style={styles.startGameButton}
+                onPress={() => this.socket.emit('game_start', `${this.props.user.username} começou a partida`)}>
+                <Text style={{ color: '#000', textAlign: 'center' }}>Começar partida</Text>
+              </TouchableOpacity> :
+              null
+          }
         </View>
       ) :
         <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -151,5 +159,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: heightPercentageToDP("10%"),
     paddingHorizontal: 12
+  },
+
+  startGameButton: {
+    position: 'absolute',
+    bottom: heightPercentageToDP(2),
+    alignSelf: 'center',
+    backgroundColor: '#A2A2A2',
+    borderRadius: 6,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 4,
+    paddingBottom: 4
   }
 })

@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native'
 import { inject, observer } from 'mobx-react'
-import CollectionPreview from '../../components/CollectionPreview'
-import { NavigationEvents } from 'react-navigation'
+import React, { Component } from 'react'
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
+import CollectionPreview from '../../components/CollectionPreview'
 
 @inject('collection')
 @observer
@@ -31,7 +30,6 @@ export default class SellectCollections extends Component {
   }
 
   renderCollections() {
-    console.log('render collections')
     if (this.state.loaded) {
       return this.props.collection.collectionList.map((collection, i) => {
         return (
