@@ -21,6 +21,7 @@ export default class ShowCollection extends Component {
     super(props)
 
     this.state = {
+      loaded: false,
       selectedCard: null
     }
 
@@ -83,7 +84,8 @@ export default class ShowCollection extends Component {
                       this.modal.showModal(card)
                     }}
                     key={i}>
-                    <CardPreview card={card} />
+                    <CardPreview 
+                    card={card} />
                   </TouchableOpacity>
                 )
               })
@@ -115,6 +117,9 @@ export default class ShowCollection extends Component {
               this.loadCards()
               this.props.collection.shouldReloadCollection = false
             }
+          }}
+          onWillBlur={payload => {
+            this.forceUpdate()
           }} />
 
         {this.renderCards()}

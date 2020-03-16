@@ -9,6 +9,8 @@ export default class RoomStore {
     @observable success = false
 
     @observable currentRoom
+    @observable gameData
+    @observable hand
 
     @action
     async createRoom(code) {

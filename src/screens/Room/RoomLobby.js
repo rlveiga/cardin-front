@@ -5,6 +5,8 @@ import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { HeaderBackButton } from 'react-navigation-stack';
 import io from 'socket.io-client/dist/socket.io';
 import CollectionPreview from '../../components/CollectionPreview';
+import CardPreview from '../../components/CardPreview';
+import Game from './Game';
 
 @inject('user')
 @inject('room')
@@ -58,7 +60,7 @@ export default class RoomLobby extends Component {
     this.setState({ connected: true })
 
     // Emit event to other users that may be in the room`
-    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: {username: this.props.user.username} })
+    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: { username: this.props.user.username } })
   }
 
   _onUserAdded = (data) => {
@@ -86,7 +88,11 @@ export default class RoomLobby extends Component {
   _onGameStarted = (data) => {
     console.log(data)
 
-    this.setState({gameStarted: true})
+    this.setState({ gameStarted: true })
+    this.props.room.gameData = data
+    this.props.room.hand = this.props.room.gameData.hands.filter(hand => {
+      return hand.user_id == this.props.user.id
+    })
   }
 
   _onBack = () => {
@@ -96,7 +102,7 @@ export default class RoomLobby extends Component {
       [
         {
           text: 'Sair', style: 'destructive', onPress: () => {
-            this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: {username: this.props.user.username} })
+            this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: { username: this.props.user.username } })
             this.props.navigation.navigate('Home')
           }
         },
@@ -106,7 +112,7 @@ export default class RoomLobby extends Component {
   }
 
   async startGame() {
-    this.socket.emit('game_start', {room: this.props.room.currentRoom.data.code})
+    this.socket.emit('game_start', { room: this.props.room.currentRoom.data.code })
   }
 
   renderUsers() {
@@ -128,32 +134,46 @@ export default class RoomLobby extends Component {
     })
   }
 
+  renderGameLobby() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.userList}>
+          {this.renderUsers()}
+        </View>
+
+        <CollectionPreview
+          collection={this.props.room.currentRoom.game.collection}
+        />
+
+        {
+          this.props.room.currentRoom.data.created_by == this.props.user.id ?
+            <TouchableOpacity
+              style={styles.startGameButton}
+              onPress={() => this.startGame()}>
+              <Text style={{ color: '#000', textAlign: 'center' }}>Começar partida</Text>
+            </TouchableOpacity> :
+            null
+        }
+      </View>
+    )
+  }
+
+  renderGame() {
+    return this.props.room.gameData ?
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <CardPreview
+          card={this.props.room.gameData.table_card} />
+      </View> :
+      null
+  }
+
   render() {
     return (
       this.state.connected ? (
         !this.state.gameStarted ?
-        <View style={styles.container}>
-          <View style={styles.userList}>
-            {this.renderUsers()}
-          </View>
-
-          <CollectionPreview
-            collection={this.props.room.currentRoom.game.collection}
-          />
-
-          {
-            this.props.room.currentRoom.data.created_by == this.props.user.id ?
-              <TouchableOpacity
-                style={styles.startGameButton}
-                onPress={() => this.startGame()}>
-                <Text style={{ color: '#000', textAlign: 'center' }}>Começar partida</Text>
-              </TouchableOpacity> :
-              null
-          }
-        </View> :
-        <View style={[styles.container, {justifyContent: 'center'}]}>
-          <Text style={{color: '#FFF', fontSize: 24}}>Game has started!</Text>
-        </View>
+          this.renderGameLobby()
+          :
+          <Game/>
       ) :
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <ActivityIndicator size='large' color='#FFF' />
