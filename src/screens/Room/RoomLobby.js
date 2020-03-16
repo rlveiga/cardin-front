@@ -29,14 +29,16 @@ export default class RoomLobby extends Component {
     super(props)
 
     this.state = {
-      connected: true
+      connected: false,
+      gameStarted: false
     }
 
     this.socket = this.socket = io(`http://127.0.0.1:5000`, { transports: ['websocket'] })
 
     this.socket.on('connect', this._onRoomConnect)
-    this.socket.on('join_response', this._addUser)
-    this.socket.on('leave_response', this._removeUser)
+    this.socket.on('join_response', this._onUserAdded)
+    this.socket.on('leave_response', this._onUserRemoved)
+    this.socket.on('start_response', this._onGameStarted)
 
     this._onBack = this._onBack.bind(this)
   }
@@ -56,31 +58,35 @@ export default class RoomLobby extends Component {
     this.setState({ connected: true })
 
     // Emit event to other users that may be in the room`
-    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: this.props.user })
+    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: {username: this.props.user.username} })
   }
 
-  _addUser = (data) => {
+  _onUserAdded = (data) => {
     console.log(data)
-    let new_user = data.user
+
+    let new_user = data
 
     if (new_user.username == this.props.user.username) {
       return
     }
 
-    console.log(new_user)
-
     this.props.room.currentRoom.users.push(new_user)
   }
 
-  _removeUser = (data) => {
+  _onUserRemoved = (data) => {
     console.log(data)
-    let removed_user = data.user
 
-    console.log(removed_user)
+    let removed_user = data
 
     this.props.room.currentRoom.users = this.props.room.currentRoom.users.filter(user => {
       return user.username != removed_user.username
     })
+  }
+
+  _onGameStarted = (data) => {
+    console.log(data)
+
+    this.setState({gameStarted: true})
   }
 
   _onBack = () => {
@@ -90,13 +96,17 @@ export default class RoomLobby extends Component {
       [
         {
           text: 'Sair', style: 'destructive', onPress: () => {
-            this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: this.props.user })
+            this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: {username: this.props.user.username} })
             this.props.navigation.navigate('Home')
           }
         },
         { text: 'Continuar' }
       ]
     )
+  }
+
+  async startGame() {
+    this.socket.emit('game_start', {room: this.props.room.currentRoom.data.code})
   }
 
   renderUsers() {
@@ -121,6 +131,7 @@ export default class RoomLobby extends Component {
   render() {
     return (
       this.state.connected ? (
+        !this.state.gameStarted ?
         <View style={styles.container}>
           <View style={styles.userList}>
             {this.renderUsers()}
@@ -134,11 +145,14 @@ export default class RoomLobby extends Component {
             this.props.room.currentRoom.data.created_by == this.props.user.id ?
               <TouchableOpacity
                 style={styles.startGameButton}
-                onPress={() => this.socket.emit('game_start', `${this.props.user.username} começou a partida`)}>
+                onPress={() => this.startGame()}>
                 <Text style={{ color: '#000', textAlign: 'center' }}>Começar partida</Text>
               </TouchableOpacity> :
               null
           }
+        </View> :
+        <View style={[styles.container, {justifyContent: 'center'}]}>
+          <Text style={{color: '#FFF', fontSize: 24}}>Game has started!</Text>
         </View>
       ) :
         <View style={{ flex: 1, justifyContent: 'center' }}>
