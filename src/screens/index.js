@@ -4,7 +4,7 @@ import Home from './Home.js';
 import JoinRoom from './Room/JoinRoom';
 import CreateRoom from './Room/CreateRoom';
 import SelectCollection from './Room/SelectCollection';
-import RoomLobby from './Room/RoomLobby';
+import Room from './Room/Room';
 
 import Cards from './Cards/Cards';
 import CreateCard from './Cards/CreateCard';
@@ -23,6 +23,6 @@ export {
   ShowCollection,
   JoinRoom,
   CreateRoom,
-  RoomLobby,
+  Room,
   SelectCollection
 };

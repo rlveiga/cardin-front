@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, Login, RoomLobby, ShowCollection, SelectCollection } from './src/screens';
+import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, Login, Room, ShowCollection, SelectCollection } from './src/screens';
 import stores from './src/stores';
 
 
@@ -54,8 +54,8 @@ const HomeNavigator = createStackNavigator({
     }
   },
 
-  RoomLobby: {
-    screen: RoomLobby
+  Room: {
+    screen: Room
   }
 }, {
   initialRouteName: 'Home',

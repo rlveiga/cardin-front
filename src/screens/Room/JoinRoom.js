@@ -18,7 +18,7 @@ export default class JoinRoom extends Component {
 
     if(this.props.room.success) {
       // Go to room lobby
-      this.props.navigation.navigate('RoomLobby', {code: this.props.room.currentRoom.data.code})
+      this.props.navigation.navigate('Room', {code: this.props.room.currentRoom.data.code})
     }
 
     else {

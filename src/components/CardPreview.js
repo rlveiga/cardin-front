@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { widthPercentageToDP } from 'react-native-responsive-screen';
+import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 
 export default class CardPreview extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class CardPreview extends Component {
 }
 
 const styles = StyleSheet.create({
-  cardContainer: (height = 180, width = widthPercentageToDP("30%")) => {
+  cardContainer: (height = heightPercentageToDP(23), width = heightPercentageToDP(15)) => {
     return {
       margin: 6,
       paddingTop: 12,
