@@ -18,7 +18,7 @@ export default class CardPreview extends Component {
     ])
 
     return (
-      <View style={combinedStyles}>
+      <View style={[combinedStyles, { opacity: this.props.disabled ? 0.3 : 1 }]}>
         <Text style={styles.cardText(this.props.fontSize, textColor)}>
           {this.props.card.name}
         </Text>
@@ -28,7 +28,7 @@ export default class CardPreview extends Component {
 }
 
 const styles = StyleSheet.create({
-  cardContainer: (height = heightPercentageToDP(23), width = heightPercentageToDP(15)) => {
+  cardContainer: (height = heightPercentageToDP(20), width = widthPercentageToDP(30)) => {
     return {
       margin: 6,
       paddingTop: 12,

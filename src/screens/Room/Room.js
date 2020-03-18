@@ -91,9 +91,11 @@ export default class Room extends Component {
 
     this.setState({ gameStarted: true })
     this.props.room.gameData = data
+    console.log('A')
     this.props.room.hand = this.props.room.gameData.hands.filter(hand => {
       return hand.user_id == this.props.user.id
     })
+    console.log('B')
   }
 
   _onBack = () => {
@@ -172,9 +174,9 @@ export default class Room extends Component {
           <PlayersList />
 
           {
-            !this.state.gameStarted ?
-              this.renderGameLobby() :
-              <Game />
+            this.state.gameStarted && this.props.room.gameData ?
+              <Game /> :
+              this.renderGameLobby()
           }
         </View>
       ) :

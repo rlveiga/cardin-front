@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import CardPreview from '../../components/CardPreview';
 import { toJS } from 'mobx';
@@ -15,27 +15,28 @@ export default class Game extends Component {
 
     this.state = {
       handLoaded: false,
-      hand: null
+      hand: null,
+      isVoter: (this.props.room.gameData.czar_id == this.props.user.id)
     }
   }
 
-  // async componentDidMount() {
-  //   this.props.hand = await this.props.room.gameData.hands
-  //     .filter((hand) => {
-  //       return hand.user_id == this.props.user.id
-  //     })
-
-  //   this.setState({ handLoaded: true, hand })
-  // }
+  componentDidMount() {
+    console.log(this.props.room.gameData.czar_id)
+    console.log(this.props.user.id)
+  }
 
   renderHandCards() {
     if (this.props.room.hand) {
       return this.props.room.hand[0].cards.map((card, i) => {
         return (
-          <CardPreview
-            style={{ marginBottom: 0 }}
-            key={i}
-            card={card} />
+          <TouchableOpacity
+            disabled={this.state.isVoter}>
+            <CardPreview
+              disabled={this.state.isVoter}
+              style={{ marginBottom: 0 }}
+              key={i}
+              card={card} />
+          </TouchableOpacity>
         )
       })
     }
@@ -44,11 +45,21 @@ export default class Game extends Component {
   }
 
   render() {
-    return this.props.room.gameData ?
+    return (
       <View
         style={styles.container}>
         <View
           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+          {
+            this.state.isVoter ?
+              <Text
+                style={styles.czarInfoText}>
+                Você é o votador!
+                </Text> :
+              null
+          }
+
           <CardPreview
             fontSize={heightPercentageToDP(3)}
             height={heightPercentageToDP(40)}
@@ -64,8 +75,8 @@ export default class Game extends Component {
             {this.renderHandCards()}
           </ScrollView>
         </View>
-      </View> :
-      null
+      </View>
+    )
   }
 }
 
@@ -87,5 +98,10 @@ const styles = StyleSheet.create({
   handContainer: {
     alignItems: 'center',
     flexDirection: 'row'
+  },
+
+  czarInfoText: {
+    textAlign: 'center',
+    color: '#FFF'
   }
 })
