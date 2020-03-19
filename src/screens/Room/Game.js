@@ -5,6 +5,7 @@ import CardPreview from '../../components/CardPreview';
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import PlayersList from '../../components/PlayersList';
+import io from 'socket.io-client/dist/socket.io';
 
 @inject('user')
 @inject('room')
@@ -16,27 +17,38 @@ export default class Game extends Component {
     this.state = {
       handLoaded: false,
       hand: null,
-      isVoter: (this.props.room.gameData.czar_id == this.props.user.id)
+      isVoter: (this.props.room.currentRoom.game.czar_id == this.props.user.id),
+      cardsSelectedCount: 0,
+      cardsSelected: []
     }
   }
 
-  componentDidMount() {
-    console.log(this.props.room.gameData.czar_id)
-    console.log(this.props.user.id)
-  }
-
   renderHandCards() {
-    if (this.props.room.hand) {
-      return this.props.room.hand[0].cards.map((card, i) => {
+    console.log(this.props.room.userData)
+
+    if (this.props.room.userData) {
+      return this.props.room.userData[0].hand.map((card, i) => {
         return (
-          <TouchableOpacity
-            disabled={this.state.isVoter}>
-            <CardPreview
-              disabled={this.state.isVoter}
-              style={{ marginBottom: 0 }}
-              key={i}
-              card={card} />
-          </TouchableOpacity>
+          <View
+            key={i}
+            style={{ alignItems: 'center' }}>
+            {
+              card['selected'] ?
+                <Text style={{ color: '#FFF', position: 'absolute', top: -heightPercentageToDP(2) }}>
+                  {card['selectedIndex']}
+                </Text> :
+                null
+            }
+            <TouchableOpacity
+              onPress={() => this.onCardSelect(card)}
+              disabled={this.state.isVoter}>
+              <CardPreview
+                disabled={this.state.isVoter || card['selected']}
+                style={{ marginBottom: 0 }}
+                key={i}
+                card={card} />
+            </TouchableOpacity>
+          </View>
         )
       })
     }
@@ -44,8 +56,44 @@ export default class Game extends Component {
     else return null
   }
 
+  onCardSelect(card) {
+    card['selected'] = !card['selected']
+
+    let copiedList = this.state.cardsSelected
+
+    if (card['selected']) {
+      const cardCopy = {
+        id: card.id,
+        card_type: card.card_type,
+        name: card.name,
+        created_by: card.created_by
+      }
+
+      copiedList.push(cardCopy)
+      card['selectedIndex'] = copiedList.length
+    }
+
+    else {
+      copiedList = copiedList.filter((elem) => {
+        return elem.id != card.id
+      })
+    }
+
+    this.setState({ cardsSelected: copiedList })
+  }
+
+  confirmCards() {
+    this.props.socket.emit('cards_selected', {
+      room: this.props.room.currentRoom.data.code,
+      user_id: this.props.user.id,
+      cards: this.state.cardsSelected
+    })
+  }
+
   render() {
-    return (
+    console.log(this.props.room.currentRoom.game)
+
+    return this.props.room.currentRoom.game ?
       <View
         style={styles.container}>
         <View
@@ -64,7 +112,16 @@ export default class Game extends Component {
             fontSize={heightPercentageToDP(3)}
             height={heightPercentageToDP(40)}
             width={heightPercentageToDP(25)}
-            card={this.props.room.gameData.table_card} />
+            card={this.props.room.currentRoom.game.table_card} />
+
+          {
+            !this.state.isVoter ?
+              <TouchableOpacity
+                onPress={() => this.confirmCards()}>
+                <Text style={{ color: '#FFF' }}>Jogar</Text>
+              </TouchableOpacity> :
+              null
+          }
 
           <View
             style={{ flex: 1 }} />
@@ -75,8 +132,8 @@ export default class Game extends Component {
             {this.renderHandCards()}
           </ScrollView>
         </View>
-      </View>
-    )
+      </View> :
+      null
   }
 }
 

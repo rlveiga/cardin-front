@@ -42,6 +42,7 @@ export default class Room extends Component {
     this.socket.on('join_response', this._onUserAdded)
     this.socket.on('leave_response', this._onUserRemoved)
     this.socket.on('start_response', this._onGameStarted)
+    this.socket.on('cards_selected_response', this._onCardsSelected)
 
     this._onBack = this._onBack.bind(this)
   }
@@ -65,37 +66,25 @@ export default class Room extends Component {
   }
 
   _onUserAdded = (data) => {
-    console.log(data)
-
-    let new_user = data
-
-    if (new_user.username == this.props.user.username) {
-      return
-    }
-
-    this.props.room.currentRoom.users.push(new_user)
+    this.props.room.currentRoom.game = data
   }
 
   _onUserRemoved = (data) => {
-    console.log(data)
-
-    let removed_user = data
-
-    this.props.room.currentRoom.users = this.props.room.currentRoom.users.filter(user => {
-      return user.username != removed_user.username
-    })
+    this.props.room.currentRoom.game = data
   }
 
   _onGameStarted = (data) => {
-    console.log(data)
+    this.props.room.currentRoom.game = data
+
+    this.props.room.userData = this.props.room.currentRoom.game.players.filter(player => {
+      return player.data.id == this.props.user.id
+    })
 
     this.setState({ gameStarted: true })
-    this.props.room.gameData = data
-    console.log('A')
-    this.props.room.hand = this.props.room.gameData.hands.filter(hand => {
-      return hand.user_id == this.props.user.id
-    })
-    console.log('B')
+  }
+
+  _onCardsSelected = (data) => {
+    this.props.room.currentRoom.game = data
   }
 
   _onBack = () => {
@@ -168,14 +157,15 @@ export default class Room extends Component {
 
   render() {
     return (
-      this.state.connected ? (
+      this.props.room.currentRoom.game ? (
         <View
           style={styles.container}>
           <PlayersList />
 
           {
-            this.state.gameStarted && this.props.room.gameData ?
-              <Game /> :
+            this.state.gameStarted ?
+              <Game 
+              socket={this.socket}/> :
               this.renderGameLobby()
           }
         </View>

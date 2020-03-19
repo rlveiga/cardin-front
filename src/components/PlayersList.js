@@ -7,7 +7,7 @@ import { inject, observer } from 'mobx-react';
 @observer
 export default class PlayersList extends Component {
   renderPlayers() {
-    return this.props.room.currentRoom.users.map((user, i) => {
+    return this.props.room.currentRoom.game.players.map((player, i) => {
       return (
         <View
           key={i}
@@ -17,9 +17,10 @@ export default class PlayersList extends Component {
             width: heightPercentageToDP("8%"),
             borderRadius: heightPercentageToDP("4%"),
             justifyContent: 'center',
-            marginHorizontal: 6
+            marginHorizontal: 6,
+            opacity: player.data.has_played ? 0.3 : 1
           }}>
-          <Text style={{ color: '#000', textAlign: 'center' }}>{user.username}</Text>
+          <Text style={{ color: '#000', textAlign: 'center' }}>{player.data.username}</Text>
         </View>
       )
     })
