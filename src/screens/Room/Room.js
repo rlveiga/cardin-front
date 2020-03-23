@@ -51,10 +51,14 @@ export default class Room extends Component {
     this.props.navigation.setParams({ onBack: this._onBack })
   }
 
-  async componentWillUnmount() {
-    this.socket.disconnect()
-
+  async leaveRoom() {
     await this.props.room.leaveRoom()
+
+    this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: { username: this.props.user.username } })
+    this.socket.disconnect()
+    
+    this.currentRoom = null
+    this.props.navigation.navigate('Home')
   }
 
   _onRoomConnect = () => {
@@ -71,6 +75,7 @@ export default class Room extends Component {
 
   _onUserRemoved = (data) => {
     this.props.room.currentRoom.game = data
+    console.log(this.props.room.currentRoom.game)
   }
 
   _onGameStarted = (data) => {
@@ -86,7 +91,7 @@ export default class Room extends Component {
 
   _onCardsSelected = (data) => {
     console.log(data)
-    
+
     this.props.room.currentRoom.game = data
   }
 
@@ -96,10 +101,7 @@ export default class Room extends Component {
       null,
       [
         {
-          text: 'Sair', style: 'destructive', onPress: () => {
-            this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: { username: this.props.user.username } })
-            this.props.navigation.navigate('Home')
-          }
+          text: 'Sair', style: 'destructive', onPress: () => this.leaveRoom()
         },
         { text: 'Continuar' }
       ]
@@ -158,8 +160,8 @@ export default class Room extends Component {
 
           {
             this.state.gameStarted ?
-              <Game 
-              socket={this.socket}/> :
+              <Game
+                socket={this.socket} /> :
               this.renderGameLobby()
           }
         </View>

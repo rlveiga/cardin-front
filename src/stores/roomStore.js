@@ -61,7 +61,6 @@ export default class RoomStore {
             
             if(res.status == 200) {
               this.success = true
-              this.currentRoom = null
             }
         }, err => {
             console.log(err.response)
