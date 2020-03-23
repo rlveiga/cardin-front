@@ -74,6 +74,7 @@ export default class Room extends Component {
   }
 
   _onGameStarted = (data) => {
+    console.log(data)
     this.props.room.currentRoom.game = data
 
     this.props.room.userData = this.props.room.currentRoom.game.players.filter(player => {
@@ -84,6 +85,8 @@ export default class Room extends Component {
   }
 
   _onCardsSelected = (data) => {
+    console.log(data)
+    
     this.props.room.currentRoom.game = data
   }
 
@@ -144,15 +147,6 @@ export default class Room extends Component {
         }
       </View>
     )
-  }
-
-  renderGame() {
-    return this.props.room.gameData ?
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <CardPreview
-          card={this.props.room.gameData.table_card} />
-      </View> :
-      null
   }
 
   render() {

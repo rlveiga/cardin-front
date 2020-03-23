@@ -18,7 +18,7 @@ export default class PlayersList extends Component {
             borderRadius: heightPercentageToDP("4%"),
             justifyContent: 'center',
             marginHorizontal: 6,
-            opacity: player.data.has_played ? 0.3 : 1
+            opacity: player.data.is_ready ? 0.3 : 1
           }}>
           <Text style={{ color: '#000', textAlign: 'center' }}>{player.data.username}</Text>
         </View>

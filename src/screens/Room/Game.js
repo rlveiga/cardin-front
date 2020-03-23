@@ -6,6 +6,7 @@ import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import PlayersList from '../../components/PlayersList';
 import io from 'socket.io-client/dist/socket.io';
+import Swiper from 'react-native-swiper';
 
 @inject('user')
 @inject('room')
@@ -90,7 +91,7 @@ export default class Game extends Component {
     })
   }
 
-  render() {
+  renderSelecting() {
     console.log(this.props.room.currentRoom.game)
 
     return this.props.room.currentRoom.game ?
@@ -135,6 +136,56 @@ export default class Game extends Component {
       </View> :
       null
   }
+
+  renderVoting() {
+    return this.props.room.currentRoom.game.czar_id == this.props.user.id ?
+      <View
+        style={styles.container}>
+        {/* <CardPreview
+          width={widthPercentageToDP(45)}
+          height={heightPercentageToDP(35)}
+          fontSize={heightPercentageToDP(3)}
+          card={this.props.room.currentRoom.game.table_card} /> */}
+
+        <Swiper
+        loop={false}
+        dotStyle={{borderWidth: 1, borderColor: '#FFF'}}
+        activeDotColor='#FFF'>
+          {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
+            return (
+              <View
+                style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                {e.cards.map((card, i) => {
+                  return (
+                    <CardPreview
+                      fontSize={heightPercentageToDP(4)}
+                      width={widthPercentageToDP(60)}
+                      height={heightPercentageToDP(50)}
+                      card={card} />
+                  )
+                })}
+              </View>
+            )
+          })}
+        </Swiper>
+      </View> :
+      <View
+        style={styles.container}>
+
+      </View>
+  }
+
+  render() {
+    console.log(this.props.room.currentRoom.game)
+
+    switch (this.props.room.currentRoom.game.state) {
+      case 'Selecting':
+        return this.renderSelecting()
+
+      case 'Voting':
+        return this.renderVoting()
+    }
+  }
 }
 
 const styles = StyleSheet.create({
@@ -142,7 +193,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     alignSelf: 'stretch',
-    paddingTop: heightPercentageToDP(2)
+    paddingTop: heightPercentageToDP(2),
+    alignItems: 'center'
   },
 
   userList: {
