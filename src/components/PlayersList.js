@@ -9,18 +9,20 @@ export default class PlayersList extends Component {
   renderPlayers() {
     return this.props.room.currentRoom.game.players.map((player, i) => {
       return (
-        <View
-          key={i}
-          style={{
-            backgroundColor: '#FFF',
-            height: heightPercentageToDP("8%"),
-            width: heightPercentageToDP("8%"),
-            borderRadius: heightPercentageToDP("4%"),
-            justifyContent: 'center',
-            marginHorizontal: 6,
-            opacity: player.data.is_ready ? 0.3 : 1
-          }}>
-          <Text style={{ color: '#000', textAlign: 'center' }}>{player.data.username}</Text>
+        <View>
+          <View
+            key={i}
+            style={{
+              backgroundColor: '#FFF',
+              height: heightPercentageToDP("8%"),
+              width: heightPercentageToDP("8%"),
+              borderRadius: heightPercentageToDP("4%"),
+              justifyContent: 'center',
+              marginHorizontal: 6,
+              opacity: player.is_ready ? 0.3 : 1
+            }}>
+            <Text style={{ color: '#000', textAlign: 'center' }}>{player.data.username}</Text>
+          </View>
         </View>
       )
     })
@@ -29,7 +31,7 @@ export default class PlayersList extends Component {
   render() {
     return (
       <View
-      style={styles.container}>
+        style={styles.container}>
         {this.renderPlayers()}
       </View>
     )

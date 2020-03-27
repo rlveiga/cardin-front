@@ -36,6 +36,8 @@ export default class Room extends Component {
       gameStarted: false
     }
 
+    this.game = null
+
     this.socket = this.socket = io(`http://127.0.0.1:5000`, { transports: ['websocket'] })
 
     this.socket.on('connect', this._onRoomConnect)
@@ -43,6 +45,8 @@ export default class Room extends Component {
     this.socket.on('leave_response', this._onUserRemoved)
     this.socket.on('start_response', this._onGameStarted)
     this.socket.on('cards_selected_response', this._onCardsSelected)
+    this.socket.on('pick_winner_response', this._onWinnerSelected)
+    this.socket.on('new_round_start_response', this._onNewRoundStart)
 
     this._onBack = this._onBack.bind(this)
   }
@@ -56,7 +60,7 @@ export default class Room extends Component {
 
     this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: { username: this.props.user.username } })
     this.socket.disconnect()
-    
+
     this.currentRoom = null
     this.props.navigation.navigate('Home')
   }
@@ -70,17 +74,17 @@ export default class Room extends Component {
   }
 
   _onUserAdded = (data) => {
-    this.props.room.currentRoom.game = data
+    this.updateGame(data)
   }
 
   _onUserRemoved = (data) => {
-    this.props.room.currentRoom.game = data
-    console.log(this.props.room.currentRoom.game)
+    console.log(data)
+    this.updateGame(data)
   }
 
   _onGameStarted = (data) => {
     console.log(data)
-    this.props.room.currentRoom.game = data
+    this.updateGame(data)
 
     this.props.room.userData = this.props.room.currentRoom.game.players.filter(player => {
       return player.data.id == this.props.user.id
@@ -92,6 +96,26 @@ export default class Room extends Component {
   _onCardsSelected = (data) => {
     console.log(data)
 
+    this.updateGame(data)
+  }
+
+  _onWinnerSelected = (data) => {
+    console.log(data)
+
+    this.updateGame(data)
+  }
+
+  _onNewRoundStart = (data) => {
+    console.log(data)
+
+    this.updateGame(data)
+
+    this.props.room.userData = this.props.room.currentRoom.game.players.filter(player => {
+      return player.data.id == this.props.user.id
+    })
+  }
+
+  updateGame(data) {
     this.props.room.currentRoom.game = data
   }
 
@@ -161,6 +185,7 @@ export default class Room extends Component {
           {
             this.state.gameStarted ?
               <Game
+                ref={ref => this.game = ref}
                 socket={this.socket} /> :
               this.renderGameLobby()
           }

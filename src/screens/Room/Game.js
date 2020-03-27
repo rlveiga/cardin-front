@@ -18,7 +18,6 @@ export default class Game extends Component {
     this.state = {
       handLoaded: false,
       hand: null,
-      isVoter: (this.props.room.currentRoom.game.czar_id == this.props.user.id),
       cardsSelectedCount: 0,
       cardsSelected: []
     }
@@ -28,7 +27,9 @@ export default class Game extends Component {
     console.log(this.props.room.userData)
 
     if (this.props.room.userData) {
-      return this.props.room.userData[0].hand.map((card, i) => {
+      return this.props.room.currentRoom.game.players.filter(player => {
+        return player.data.id == this.props.user.id
+      })[0].hand.map((card, i) => {
         return (
           <View
             key={i}
@@ -42,9 +43,9 @@ export default class Game extends Component {
             }
             <TouchableOpacity
               onPress={() => this.onCardSelect(card)}
-              disabled={this.state.isVoter}>
+              disabled={this.isCzar()}>
               <CardPreview
-                disabled={this.state.isVoter || card['selected']}
+                disabled={this.isCzar() || card['selected']}
                 style={{ marginBottom: 0 }}
                 key={i}
                 card={card} />
@@ -83,12 +84,27 @@ export default class Game extends Component {
     this.setState({ cardsSelected: copiedList })
   }
 
-  confirmCards() {
+  confirmSelectedCards() {
     this.props.socket.emit('cards_selected', {
       room: this.props.room.currentRoom.data.code,
       user_id: this.props.user.id,
       cards: this.state.cardsSelected
     })
+
+    this.setState({cardsSelected: [], cardsSelectedCount: 0})
+  }
+
+  confirmWinner(winner_id) {
+    console.log(winner_id)
+
+    this.props.socket.emit('pick_winner', {
+      room: this.props.room.currentRoom.data.code,
+      winner_id: winner_id
+    })
+  }
+
+  isCzar() {
+    return this.props.room.currentRoom.game.czar_id == this.props.user.id
   }
 
   renderSelecting() {
@@ -101,7 +117,7 @@ export default class Game extends Component {
           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
           {
-            this.state.isVoter ?
+            this.isCzar() ?
               <Text
                 style={styles.czarInfoText}>
                 Você é o votador!
@@ -116,9 +132,9 @@ export default class Game extends Component {
             card={this.props.room.currentRoom.game.table_card} />
 
           {
-            !this.state.isVoter ?
+            !this.isCzar() ?
               <TouchableOpacity
-                onPress={() => this.confirmCards()}>
+                onPress={() => this.confirmSelectedCards()}>
                 <Text style={{ color: '#FFF' }}>Jogar</Text>
               </TouchableOpacity> :
               null
@@ -148,12 +164,13 @@ export default class Game extends Component {
           card={this.props.room.currentRoom.game.table_card} /> */}
 
         <Swiper
-        loop={false}
-        dotStyle={{borderWidth: 1, borderColor: '#FFF'}}
-        activeDotColor='#FFF'>
+          loop={false}
+          dotStyle={{ borderWidth: 1, borderColor: '#FFF' }}
+          activeDotColor='#FFF'>
           {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
             return (
-              <View
+              <TouchableOpacity
+                onPress={() => this.confirmWinner(e.user.id)}
                 style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 {e.cards.map((card, i) => {
                   return (
@@ -164,7 +181,7 @@ export default class Game extends Component {
                       card={card} />
                   )
                 })}
-              </View>
+              </TouchableOpacity>
             )
           })}
         </Swiper>
@@ -173,6 +190,46 @@ export default class Game extends Component {
         style={styles.container}>
 
       </View>
+  }
+
+  renderResults() {
+    // Host restarts the round
+    if (this.props.room.currentRoom.data.created_by == this.props.user.id) {
+      setTimeout(() => this.props.socket.emit('new_round_start', {
+        room: this.props.room.currentRoom.data.code
+      }), 5000)
+    }
+
+    return (
+      <View
+        style={styles.container}>
+        <Text
+          style={styles.winnerText}>
+          {`${this.props.room.currentRoom.game.round_winner.username} venceu a rodada!`}
+        </Text>
+
+        <View
+          style={styles.scoreboard}>
+          {
+            this.props.room.currentRoom.game.players
+              .slice()
+              .sort((a, b) => {
+                return b.score - a.score
+              })
+              .map((player, i) => {
+                return (
+                  <View
+                    style={styles.scoreboardItem}>
+                    <Text
+                      style={styles.scoreboardText}>{`${player.data.username} ${player.score}`}
+                    </Text>
+                  </View>
+                )
+              })
+          }
+        </View>
+      </View>
+    )
   }
 
   render() {
@@ -184,6 +241,9 @@ export default class Game extends Component {
 
       case 'Voting':
         return this.renderVoting()
+
+      case 'Results':
+        return this.renderResults()
     }
   }
 }
@@ -193,8 +253,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     alignSelf: 'stretch',
-    paddingTop: heightPercentageToDP(2),
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   userList: {
@@ -212,5 +272,27 @@ const styles = StyleSheet.create({
   czarInfoText: {
     textAlign: 'center',
     color: '#FFF'
+  },
+
+  winnerText: {
+    color: '#FFF',
+    fontSize: widthPercentageToDP(5),
+    marginBottom: heightPercentageToDP(2)
+  },
+
+  scoreboard: {
+    alignSelf: 'stretch',
+    borderRadius: widthPercentageToDP(4),
+    height: heightPercentageToDP(50),
+    marginHorizontal: widthPercentageToDP(15),
+    backgroundColor: '#FFF'
+  },
+
+  scoreboardItem: {
+    paddingVertical: heightPercentageToDP(2),
+    paddingHorizontal: widthPercentageToDP(3),
+    borderBottomWidth: 1,
+    borderColor: '#DFDFDF',
+    flexDirection: 'row'
   }
 })
