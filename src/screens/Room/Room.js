@@ -47,6 +47,7 @@ export default class Room extends Component {
     this.socket.on('cards_selected_response', this._onCardsSelected)
     this.socket.on('pick_winner_response', this._onWinnerSelected)
     this.socket.on('new_round_start_response', this._onNewRoundStart)
+    this.socket.on('card_swipe_response', this._onCardSwiped)
 
     this._onBack = this._onBack.bind(this)
   }
@@ -113,6 +114,22 @@ export default class Room extends Component {
     this.props.room.userData = this.props.room.currentRoom.game.players.filter(player => {
       return player.data.id == this.props.user.id
     })
+  }
+
+  _onVoterSwiped = (index) => {
+    console.log(index)
+
+    this.socket.emit('card_swipe', {room: this.props.room.currentRoom.data.code, index: index})
+  }
+
+  _onCardSwiped = (index) => {
+    console.log(index)
+
+    console.log(this.state.game)
+
+    if(this.game) {
+      this.game._updateSwiperIndex(index)
+    }
   }
 
   updateGame(data) {
@@ -186,7 +203,8 @@ export default class Room extends Component {
             this.state.gameStarted ?
               <Game
                 ref={ref => this.game = ref}
-                socket={this.socket} /> :
+                socket={this.socket} 
+                onVoterSwiped={this._onVoterSwiped}/> :
               this.renderGameLobby()
           }
         </View>

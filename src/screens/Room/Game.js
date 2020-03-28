@@ -19,8 +19,11 @@ export default class Game extends Component {
       handLoaded: false,
       hand: null,
       cardsSelectedCount: 0,
-      cardsSelected: []
+      cardsSelected: [],
+      swiperIndex: 0
     }
+
+    this.voterSwiper = null
   }
 
   renderHandCards() {
@@ -91,7 +94,7 @@ export default class Game extends Component {
       cards: this.state.cardsSelected
     })
 
-    this.setState({cardsSelected: [], cardsSelectedCount: 0})
+    this.setState({ cardsSelected: [], cardsSelectedCount: 0 })
   }
 
   confirmWinner(winner_id) {
@@ -165,6 +168,12 @@ export default class Game extends Component {
 
         <Swiper
           loop={false}
+          index={this.state.swiperIndex}
+          onIndexChanged={(index) => {
+            console.log(this.state.swiperIndex, index)
+
+            this._onVotersSwipe(index)
+          }}
           dotStyle={{ borderWidth: 1, borderColor: '#FFF' }}
           activeDotColor='#FFF'>
           {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
@@ -176,7 +185,7 @@ export default class Game extends Component {
                   return (
                     <CardPreview
                       fontSize={heightPercentageToDP(4)}
-                      width={widthPercentageToDP(60)}
+                      width={widthPercentageToDP(65)}
                       height={heightPercentageToDP(50)}
                       card={card} />
                   )
@@ -188,8 +197,40 @@ export default class Game extends Component {
       </View> :
       <View
         style={styles.container}>
-
+        <Swiper
+          index={this.state.swiperIndex}
+          ref={ref => this.voterSwiper = ref}
+          loop={false}
+          showsPagination={false}
+          scrollEnabled={false}>
+          {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
+            return (
+              <View
+                style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                {e.cards.map((card, i) => {
+                  return (
+                    <CardPreview
+                      fontSize={heightPercentageToDP(4)}
+                      width={widthPercentageToDP(65)}
+                      height={heightPercentageToDP(50)}
+                      card={card} />
+                  )
+                })}
+              </View>
+            )
+          })}
+        </Swiper>
       </View>
+  }
+
+  _onVotersSwipe(index) {
+    this.props.onVoterSwiped(index)
+  }
+
+  _updateSwiperIndex(index) {
+    console.log(index)
+
+    this.setState({ swiperIndex: index })
   }
 
   renderResults() {
@@ -233,18 +274,20 @@ export default class Game extends Component {
   }
 
   render() {
-    console.log(this.props.room.currentRoom.game)
+    if (this.props.room.currentRoom.game) {
+      switch (this.props.room.currentRoom.game.state) {
+        case 'Selecting':
+          return this.renderSelecting()
 
-    switch (this.props.room.currentRoom.game.state) {
-      case 'Selecting':
-        return this.renderSelecting()
+        case 'Voting':
+          return this.renderVoting()
 
-      case 'Voting':
-        return this.renderVoting()
-
-      case 'Results':
-        return this.renderResults()
+        case 'Results':
+          return this.renderResults()
+      }
     }
+
+    else return null;
   }
 }
 

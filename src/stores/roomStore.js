@@ -12,6 +12,8 @@ export default class RoomStore {
     @observable gameData
     @observable hand
 
+    @observable voterSwiperIndex = 0
+
     @action
     async createRoom(code) {
       this.success = false
