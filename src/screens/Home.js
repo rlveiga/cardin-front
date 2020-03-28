@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
   },
 
   cardButtonText: {
-    fontSize: 24,
+    fontSize: heightPercentageToDP(3),
     fontWeight: 'bold'
   },
 
   cardButtonDescription: {
-    fontSize: 14,
+    fontSize: heightPercentageToDP(2),
     marginTop: heightPercentageToDP("2%")
   },
 
