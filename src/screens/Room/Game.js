@@ -160,13 +160,53 @@ export default class Game extends Component {
     return this.props.room.currentRoom.game.czar_id == this.props.user.id ?
       <View
         style={styles.container}>
-        {/* <CardPreview
-          width={widthPercentageToDP(45)}
-          height={heightPercentageToDP(35)}
-          fontSize={heightPercentageToDP(3)}
-          card={this.props.room.currentRoom.game.table_card} /> */}
+        <View
+          style={{
+            flex: 0.25,
+            alignSelf: 'stretch',
+            justifyContent: 'center',
+            paddingHorizontal: 25
+          }}>
+          <Text style={{
+            textAlign: "left",
+            color: '#FFF',
+            fontSize: heightPercentageToDP(4)
+          }}>
+            {this.props.room.currentRoom.game.table_card.name}
+          </Text>
+        </View>
 
-        <Swiper
+        <View
+          style={{ flex: 1, alignSelf: 'stretch' }}>
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            horizontal={true}
+            contentContainerStyle={{ alignSelf: 'stretch' }}>
+            {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
+              return (
+                <View
+                  style={{ flex: 1, width: widthPercentageToDP(100) }}>
+                  <TouchableOpacity
+                    onPress={() => this.confirmWinner(e.user.id)}
+                    style={{ alignSelf: 'center' }}>
+                    {e.cards.map((card, i) => {
+                      return (
+                        <CardPreview
+                          fontSize={heightPercentageToDP(4)}
+                          width={widthPercentageToDP(65)}
+                          height={heightPercentageToDP(50)}
+                          card={card} />
+                      )
+                    })}
+                  </TouchableOpacity>
+                </View>
+              )
+            })}
+          </ScrollView>
+        </View>
+
+        {/* <Swiper
           loop={false}
           index={this.state.swiperIndex}
           onIndexChanged={(index) => {
@@ -178,25 +218,46 @@ export default class Game extends Component {
           activeDotColor='#FFF'>
           {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
             return (
-              <TouchableOpacity
-                onPress={() => this.confirmWinner(e.user.id)}
-                style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {e.cards.map((card, i) => {
-                  return (
-                    <CardPreview
-                      fontSize={heightPercentageToDP(4)}
-                      width={widthPercentageToDP(65)}
-                      height={heightPercentageToDP(50)}
-                      card={card} />
-                  )
-                })}
-              </TouchableOpacity>
+              <View
+                style={{ flex: 1 }}>
+
+                  
+                <TouchableOpacity
+                  onPress={() => this.confirmWinner(e.user.id)}
+                  style={{ alignItems: 'center' }}>
+                  {e.cards.map((card, i) => {
+                    return (
+                      <CardPreview
+                        fontSize={heightPercentageToDP(4)}
+                        width={widthPercentageToDP(65)}
+                        height={heightPercentageToDP(50)}
+                        card={card} />
+                    )
+                  })}
+                </TouchableOpacity>
+              </View>
             )
           })}
-        </Swiper>
+        </Swiper> */}
       </View> :
       <View
         style={styles.container}>
+        <View
+          style={{
+            flex: 0.25,
+            alignSelf: 'stretch',
+            justifyContent: 'center',
+            paddingHorizontal: 25
+          }}>
+          <Text style={{
+            textAlign: "left",
+            color: '#FFF',
+            fontSize: heightPercentageToDP(4)
+          }}>
+            {this.props.room.currentRoom.game.table_card.name}
+          </Text>
+        </View>
+
         <Swiper
           index={this.state.swiperIndex}
           ref={ref => this.voterSwiper = ref}
@@ -206,16 +267,20 @@ export default class Game extends Component {
           {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
             return (
               <View
-                style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                {e.cards.map((card, i) => {
-                  return (
-                    <CardPreview
-                      fontSize={heightPercentageToDP(4)}
-                      width={widthPercentageToDP(65)}
-                      height={heightPercentageToDP(50)}
-                      card={card} />
-                  )
-                })}
+                style={{ flex: 1 }}>
+                <TouchableOpacity
+                  disabled={true}
+                  style={{ alignItems: 'center' }}>
+                  {e.cards.map((card, i) => {
+                    return (
+                      <CardPreview
+                        fontSize={heightPercentageToDP(4)}
+                        width={widthPercentageToDP(65)}
+                        height={heightPercentageToDP(50)}
+                        card={card} />
+                    )
+                  })}
+                </TouchableOpacity>
               </View>
             )
           })}
@@ -297,7 +362,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     alignSelf: 'stretch',
     alignItems: 'center',
-    justifyContent: 'center',
   },
 
   userList: {
