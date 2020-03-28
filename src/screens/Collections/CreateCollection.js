@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import { inject, observer } from 'mobx-react'
+import { widthPercentageToDP } from 'react-native-responsive-screen'
 
 @inject('collection')
 @observer
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     },
 
     textInput: {
-        fontSize: 24,
+        fontSize: widthPercentageToDP(6),
         fontWeight: 'bold',
         borderBottomWidth: 1,
         borderColor: '#A2A2A2',

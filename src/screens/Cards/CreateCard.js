@@ -1,6 +1,7 @@
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
 
 @inject('card')
 @inject('collection')
@@ -33,19 +34,19 @@ export default class CreateCard extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{marginTop: 25, flexDirection: 'row'}}>
+                <View style={{marginTop: heightPercentageToDP(2), flexDirection: 'row'}}>
                     <TouchableOpacity
                     onPress={() => this.setState({cardType: 'black'})}
                     disabled={this.state.cardType == 'black'}
-                    style={[styles.optionButton, {backgroundColor: this.state.cardType == 'black' ? 'grey' : '#FFF' , marginRight: 24}]}>
-                        <Text>Preta</Text>
+                    style={[styles.optionButton, {backgroundColor: this.state.cardType == 'black' ? 'grey' : '#FFF' , marginRight: widthPercentageToDP(5)}]}>
+                        <Text style={styles.optionButtonText}>Preta</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                     onPress={() => this.setState({cardType: 'white'})}
                     disabled={this.state.cardType == 'white'}
                     style={[styles.optionButton, {backgroundColor: this.state.cardType == 'white' ? 'grey' : '#FFF'}]}>
-                        <Text>Branca</Text>
+                        <Text style={styles.optionButtonText}>Branca</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.creatorContainer, {backgroundColor: this.state.cardType == 'black' ? '#000' : '#FFF'}]}>
@@ -87,8 +88,8 @@ const styles = StyleSheet.create({
     },
 
     creatorContainer: {
-        flex: 0.75,
-        marginTop: 32,
+        flex: 0.95,
+        marginTop: heightPercentageToDP(4),
         alignSelf: 'stretch',
         borderWidth: 2,
         borderColor: '#FFF',
@@ -108,10 +109,12 @@ const styles = StyleSheet.create({
     optionButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingLeft: 24,
-        paddingRight: 24,
-        paddingTop: 12,
-        paddingBottom: 12,
+        paddingHorizontal: widthPercentageToDP(4),
+        paddingVertical: widthPercentageToDP(2),
         borderRadius: 4
+    },
+
+    optionButtonText: {
+      fontSize: widthPercentageToDP(4)
     }
 })

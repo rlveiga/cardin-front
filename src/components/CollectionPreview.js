@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     borderRadius: 6,
     width: widthPercentageToDP(35),
-    height: 245
+    height: widthPercentageToDP(65)
   },
 
   bottomCounter: {
