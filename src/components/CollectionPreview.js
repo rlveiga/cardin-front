@@ -10,26 +10,26 @@ export default class CollectionPreview extends Component {
   render() {
 
     return (
-      <View style={[styles.collectionContainer, { opacity: this.props.disabled ? 0.3 : 1 }]}>
-        <Text numberOfLines={2} style={{ fontSize: 28, fontWeight: 'bold', color: '#FFF' }}>
+      <View style={[styles.collectionContainer, { height: this.props.height, width: this.props.width }]}>
+        <Text numberOfLines={2} style={{ fontSize: this.props.fontSize, fontWeight: 'bold', color: '#FFF' }}>
           {this.props.collection.name}
         </Text>
 
         <View style={{ flex: 1 }} />
 
         <View
-        style={styles.bottomCounter}>
-          <Text style={{ marginBottom: 8, color: '#FFF' }}>
+          style={styles.bottomCounter}>
+          <Text style={{ fontSize: this.props.cardCountFontSize, marginBottom: 8, color: '#FFF' }}>
             {`${this.props.collection.white_card_count}`}
           </Text>
 
-          <View style={[styles.tinyCard, {backgroundColor: '#FFF'}]}/>
+          <View style={[styles.tinyCard, { backgroundColor: '#FFF' }]} />
 
-          <Text style={{ marginBottom: 8, color: '#FFF' }}>
+          <Text style={{ fontSize: this.props.cardCountFontSize, marginBottom: 8, color: '#FFF' }}>
             {`${this.props.collection.black_card_count}`}
           </Text>
 
-          <View style={[styles.tinyCard, {backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF'}]}/>
+          <View style={[styles.tinyCard, { backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF' }]} />
         </View>
       </View>
     )
@@ -42,13 +42,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     borderWidth: 2,
     borderColor: '#FFF',
-    opacity: 0.8,
     paddingTop: 12,
     paddingLeft: 8,
     paddingRight: 12,
-    borderRadius: 6,
-    width: widthPercentageToDP(35),
-    height: widthPercentageToDP(65)
+    borderRadius: 6
   },
 
   bottomCounter: {

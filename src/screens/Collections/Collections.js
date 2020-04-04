@@ -42,7 +42,11 @@ export default class Collections extends Component {
               this.props.navigation.navigate('ShowCollection', { collection })
             }}
             style={{ marginTop: 8 }} key={i}>
-            <CollectionPreview collection={collection} />
+            <CollectionPreview 
+            fontSize={heightPercentageToDP(3)}
+            height={widthPercentageToDP(60)}
+            width={widthPercentageToDP(35)}
+            collection={collection} />
           </TouchableOpacity>
         )
       })

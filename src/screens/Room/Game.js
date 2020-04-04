@@ -7,6 +7,7 @@ import { inject, observer } from 'mobx-react';
 import PlayersList from '../../components/PlayersList';
 import io from 'socket.io-client/dist/socket.io';
 import Swiper from 'react-native-swiper';
+import Carousel from 'react-native-snap-carousel';
 
 @inject('user')
 @inject('room')
@@ -24,11 +25,10 @@ export default class Game extends Component {
     }
 
     this.voterSwiper = null
+    this.spectatorSwiper = null
   }
 
   renderHandCards() {
-    console.log(this.props.room.userData)
-
     if (this.props.room.userData) {
       return this.props.room.currentRoom.game.players.filter(player => {
         return player.data.id == this.props.user.id
@@ -111,8 +111,6 @@ export default class Game extends Component {
   }
 
   renderSelecting() {
-    console.log(this.props.room.currentRoom.game)
-
     return this.props.room.currentRoom.game ?
       <View
         style={styles.container}>
@@ -156,13 +154,52 @@ export default class Game extends Component {
       null
   }
 
+  renderCard = ({ item, index }) => {
+    return (
+      <View
+        style={{ flex: 1, justifyContent: 'center' }}>
+        <TouchableOpacity
+          disabled={this.props.room.currentRoom.game.czar_id !== this.props.user.id}
+          onPress={() => this.confirmWinner(item.user.id)}
+          style={{ alignSelf: 'center' }}>
+          {
+            item.cards.length == 1 ?
+              <CardPreview
+                fontSize={heightPercentageToDP(4)}
+                width={widthPercentageToDP(65)}
+                height={heightPercentageToDP(50)}
+                card={item.cards[0]} /> :
+              item.cards.map((card, i) => {
+                return (
+                  <View
+                    style={{ alignItems: 'center' }}>
+                    <CardPreview
+                      style={{
+                        top: i % 2 == 0 ? heightPercentageToDP(25) : 0,
+                        shadowOpacity: 0.8,
+                        elevation: 2,
+                        shadowRadius: heightPercentageToDP(5),
+                        shadowOffset: { width: 0, height: heightPercentageToDP(5) }
+                      }}
+                      fontSize={heightPercentageToDP(4)}
+                      width={i % 2 == 0 ? widthPercentageToDP(60) : widthPercentageToDP(65)}
+                      height={heightPercentageToDP(50)}
+                      card={card} />
+                  </View>
+                )
+              })
+          }
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   renderVoting() {
     return this.props.room.currentRoom.game.czar_id == this.props.user.id ?
       <View
         style={styles.container}>
         <View
           style={{
-            flex: 0.25,
             alignSelf: 'stretch',
             justifyContent: 'center',
             paddingHorizontal: 25
@@ -177,74 +214,21 @@ export default class Game extends Component {
         </View>
 
         <View
-          style={{ flex: 1, alignSelf: 'stretch' }}>
-          <ScrollView
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            horizontal={true}
-            contentContainerStyle={{ alignSelf: 'stretch' }}>
-            {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
-              return (
-                <View
-                  style={{ flex: 1, width: widthPercentageToDP(100) }}>
-                  <TouchableOpacity
-                    onPress={() => this.confirmWinner(e.user.id)}
-                    style={{ alignSelf: 'center' }}>
-                    {e.cards.map((card, i) => {
-                      return (
-                        <CardPreview
-                          fontSize={heightPercentageToDP(4)}
-                          width={widthPercentageToDP(65)}
-                          height={heightPercentageToDP(50)}
-                          card={card} />
-                      )
-                    })}
-                  </TouchableOpacity>
-                </View>
-              )
-            })}
-          </ScrollView>
+          style={{ flex: 1 }}>
+          <Carousel
+            onSnapToItem={this._onVotersSwipe}
+            onScrollAnimationEnd={this._onVotersSwipe}
+            data={this.props.room.currentRoom.game.selected_cards}
+            renderItem={this.renderCard}
+            sliderWidth={widthPercentageToDP(100)}
+            itemWidth={widthPercentageToDP(75)} />
         </View>
 
-        {/* <Swiper
-          loop={false}
-          index={this.state.swiperIndex}
-          onIndexChanged={(index) => {
-            console.log(this.state.swiperIndex, index)
-
-            this._onVotersSwipe(index)
-          }}
-          dotStyle={{ borderWidth: 1, borderColor: '#FFF' }}
-          activeDotColor='#FFF'>
-          {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
-            return (
-              <View
-                style={{ flex: 1 }}>
-
-                  
-                <TouchableOpacity
-                  onPress={() => this.confirmWinner(e.user.id)}
-                  style={{ alignItems: 'center' }}>
-                  {e.cards.map((card, i) => {
-                    return (
-                      <CardPreview
-                        fontSize={heightPercentageToDP(4)}
-                        width={widthPercentageToDP(65)}
-                        height={heightPercentageToDP(50)}
-                        card={card} />
-                    )
-                  })}
-                </TouchableOpacity>
-              </View>
-            )
-          })}
-        </Swiper> */}
       </View> :
       <View
         style={styles.container}>
         <View
           style={{
-            flex: 0.25,
             alignSelf: 'stretch',
             justifyContent: 'center',
             paddingHorizontal: 25
@@ -258,54 +242,30 @@ export default class Game extends Component {
           </Text>
         </View>
 
-        <Swiper
-          index={this.state.swiperIndex}
-          ref={ref => this.voterSwiper = ref}
-          loop={false}
-          showsPagination={false}
-          scrollEnabled={false}>
-          {this.props.room.currentRoom.game.selected_cards.map((e, i) => {
-            return (
-              <View
-                style={{ flex: 1 }}>
-                <TouchableOpacity
-                  disabled={true}
-                  style={{ alignItems: 'center' }}>
-                  {e.cards.map((card, i) => {
-                    return (
-                      <CardPreview
-                        fontSize={heightPercentageToDP(4)}
-                        width={widthPercentageToDP(65)}
-                        height={heightPercentageToDP(50)}
-                        card={card} />
-                    )
-                  })}
-                </TouchableOpacity>
-              </View>
-            )
-          })}
-        </Swiper>
+        <View
+          style={{ flex: 1 }}>
+          <Carousel
+            ref={ref => this.spectatorSwiper = ref}
+            scrollEnabled={false}
+            data={this.props.room.currentRoom.game.selected_cards}
+            renderItem={this.renderCard}
+            sliderWidth={widthPercentageToDP(100)}
+            itemWidth={widthPercentageToDP(75)} />
+        </View>
       </View>
   }
 
-  _onVotersSwipe(index) {
+  _onVotersSwipe = (index) => {
     this.props.onVoterSwiped(index)
   }
 
-  _updateSwiperIndex(index) {
-    console.log(index)
-
-    this.setState({ swiperIndex: index })
+  _updateSwiperIndex = (index) => {
+    if (this.props.room.currentRoom.game.czar_id != this.props.user.id) {
+      this.spectatorSwiper.snapToItem(index)
+    }
   }
 
   renderResults() {
-    // Host restarts the round
-    if (this.props.room.currentRoom.data.created_by == this.props.user.id) {
-      setTimeout(() => this.props.socket.emit('new_round_start', {
-        room: this.props.room.currentRoom.data.code
-      }), 5000)
-    }
-
     return (
       <View
         style={styles.container}>
@@ -338,6 +298,17 @@ export default class Game extends Component {
     )
   }
 
+  startNewRound() {
+    // Host restarts the round
+    if (this.props.room.currentRoom.data.created_by == this.props.user.id) {
+      console.log('Restarting in 5')
+
+      setTimeout(() => this.props.socket.emit('new_round_start', {
+        room: this.props.room.currentRoom.data.code
+      }), 5000)
+    }
+  }
+
   render() {
     if (this.props.room.currentRoom.game) {
       switch (this.props.room.currentRoom.game.state) {
@@ -348,6 +319,7 @@ export default class Game extends Component {
           return this.renderVoting()
 
         case 'Results':
+          this.startNewRound()
           return this.renderResults()
       }
     }

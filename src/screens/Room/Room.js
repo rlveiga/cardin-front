@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { HeaderBackButton } from 'react-navigation-stack';
 import io from 'socket.io-client/dist/socket.io';
 import CollectionPreview from '../../components/CollectionPreview';
@@ -119,7 +119,7 @@ export default class Room extends Component {
   _onVoterSwiped = (index) => {
     console.log(index)
 
-    this.socket.emit('card_swipe', {room: this.props.room.currentRoom.data.code, index: index})
+    this.socket.emit('card_swipe', { room: this.props.room.currentRoom.data.code, index: index })
   }
 
   _onCardSwiped = (index) => {
@@ -127,13 +127,14 @@ export default class Room extends Component {
 
     console.log(this.state.game)
 
-    if(this.game) {
+    if (this.game) {
       this.game._updateSwiperIndex(index)
     }
   }
 
   updateGame(data) {
     this.props.room.currentRoom.game = data
+    console.log('Game updated')
   }
 
   _onBack = () => {
@@ -175,9 +176,16 @@ export default class Room extends Component {
   renderGameLobby() {
     return (
       <View style={styles.container}>
-        <CollectionPreview
-          collection={this.props.room.currentRoom.game.collection}
-        />
+        <View
+        style={{alignItems: "center"}}>
+          <CollectionPreview
+            fontSize={heightPercentageToDP(5)}
+            cardCountFontSize={heightPercentageToDP(3)}
+            height={heightPercentageToDP(55)}
+            width={widthPercentageToDP(75)}
+            collection={this.props.room.currentRoom.game.collection}
+          />
+        </View>
 
         {
           this.props.room.currentRoom.data.created_by == this.props.user.id ?
@@ -203,8 +211,8 @@ export default class Room extends Component {
             this.state.gameStarted ?
               <Game
                 ref={ref => this.game = ref}
-                socket={this.socket} 
-                onVoterSwiped={this._onVoterSwiped}/> :
+                socket={this.socket}
+                onVoterSwiped={this._onVoterSwiped} /> :
               this.renderGameLobby()
           }
         </View>
@@ -219,6 +227,7 @@ export default class Room extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     backgroundColor: '#000'
   },
 
