@@ -115,7 +115,12 @@ export default class Game extends Component {
       <View
         style={styles.container}>
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          style={{
+            paddingVertical: heightPercentageToDP(2),
+            alignSelf: 'stretch',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
 
           {
             this.isCzar() ?
@@ -140,16 +145,13 @@ export default class Game extends Component {
               </TouchableOpacity> :
               null
           }
-
-          <View
-            style={{ flex: 1 }} />
-
-          <ScrollView
-            horizontal={true}
-            contentContainerStyle={styles.handContainer}>
-            {this.renderHandCards()}
-          </ScrollView>
         </View>
+
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={styles.handContainer}>
+          {this.renderHandCards()}
+        </ScrollView>
       </View> :
       null
   }
@@ -165,7 +167,7 @@ export default class Game extends Component {
           {
             item.cards.length == 1 ?
               <CardPreview
-                fontSize={heightPercentageToDP(4)}
+                fontSize={widthPercentageToDP(7)}
                 width={widthPercentageToDP(65)}
                 height={heightPercentageToDP(50)}
                 card={item.cards[0]} /> :
@@ -175,13 +177,13 @@ export default class Game extends Component {
                     style={{ alignItems: 'center' }}>
                     <CardPreview
                       style={{
-                        top: i % 2 == 0 ? heightPercentageToDP(25) : 0,
+                        top: i % 2 == 0 ? heightPercentageToDP(30) : 0,
                         shadowOpacity: 0.8,
                         elevation: 2,
                         shadowRadius: heightPercentageToDP(5),
                         shadowOffset: { width: 0, height: heightPercentageToDP(5) }
                       }}
-                      fontSize={heightPercentageToDP(4)}
+                      fontSize={widthPercentageToDP(7)}
                       width={i % 2 == 0 ? widthPercentageToDP(60) : widthPercentageToDP(65)}
                       height={heightPercentageToDP(50)}
                       card={card} />
