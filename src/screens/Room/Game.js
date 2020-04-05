@@ -8,6 +8,7 @@ import PlayersList from '../../components/PlayersList';
 import io from 'socket.io-client/dist/socket.io';
 import Swiper from 'react-native-swiper';
 import Carousel from 'react-native-snap-carousel';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 @inject('user')
 @inject('room')
@@ -106,6 +107,14 @@ export default class Game extends Component {
     })
   }
 
+  discardOption(user_id) {
+    console.log(user_id)
+    this.props.socket.emit('discard_option', {
+      room: this.props.room.currentRoom.data.code,
+      user_id: user_id
+    })
+  }
+
   isCzar() {
     return this.props.room.currentRoom.game.czar_id == this.props.user.id
   }
@@ -159,17 +168,15 @@ export default class Game extends Component {
   renderCard = ({ item, index }) => {
     return (
       <View
-        style={{ flex: 1, justifyContent: 'center' }}>
-        <TouchableOpacity
-          disabled={this.props.room.currentRoom.game.czar_id !== this.props.user.id}
-          onPress={() => this.confirmWinner(item.user.id)}
-          style={{ alignSelf: 'center' }}>
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{ opacity: item.discarded ? 0.4 : 1, alignSelf: 'center' }}>
           {
             item.cards.length == 1 ?
               <CardPreview
                 fontSize={widthPercentageToDP(7)}
                 width={widthPercentageToDP(65)}
-                height={heightPercentageToDP(50)}
+                height={heightPercentageToDP(45)}
                 card={item.cards[0]} /> :
               item.cards.map((card, i) => {
                 return (
@@ -191,7 +198,28 @@ export default class Game extends Component {
                 )
               })
           }
-        </TouchableOpacity>
+
+          {
+            this.props.room.currentRoom.game.czar_id == this.props.user.id ?
+              <View
+                style={styles.voteButtonsContainer}>
+                <TouchableOpacity
+                  disabled={item.discarded}
+                  onPress={() => this.confirmWinner(item.user.id)}
+                  style={[styles.voteButton, { backgroundColor: 'green' }]}>
+                  <Icon name='check' color='#FFF' size={24} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  disabled={item.discarded}
+                  onPress={() => this.discardOption(item.user.id)}
+                  style={[styles.voteButton, { backgroundColor: 'red' }]}>
+                  <Icon name='trash' color='#FFF' size={24} />
+                </TouchableOpacity>
+              </View> :
+              null
+          }
+        </View>
       </View>
     )
   }
@@ -353,6 +381,19 @@ const styles = StyleSheet.create({
   czarInfoText: {
     textAlign: 'center',
     color: '#FFF'
+  },
+
+  voteButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: heightPercentageToDP(5)
+  },
+
+  voteButton: {
+    padding: heightPercentageToDP(2),
+    borderRadius: heightPercentageToDP(100),
+    marginHorizontal: widthPercentageToDP(10)
   },
 
   winnerText: {

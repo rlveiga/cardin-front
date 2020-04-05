@@ -48,6 +48,7 @@ export default class Room extends Component {
     this.socket.on('pick_winner_response', this._onWinnerSelected)
     this.socket.on('new_round_start_response', this._onNewRoundStart)
     this.socket.on('card_swipe_response', this._onCardSwiped)
+    this.socket.on('discard_option_response', this._onCardDiscarded)
 
     this._onBack = this._onBack.bind(this)
   }
@@ -130,6 +131,12 @@ export default class Room extends Component {
     if (this.game) {
       this.game._updateSwiperIndex(index)
     }
+  }
+  
+  _onCardDiscarded = (data) => {
+    console.log(data)
+
+    this.updateGame(data)
   }
 
   updateGame(data) {
