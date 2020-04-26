@@ -1,18 +1,17 @@
 import api from '../../axios';
 
 class UserService {
-    login(username, password) {
-         return api.post('/auth/login', {
-             username,
-             password
-         })
-         .then(res => {
-             return res;
-         })
-         .catch(err => {
-            throw err;
-         });
-    }
+  login(fb_access_token) {
+    return api.post('/auth/', {
+      fb_access_token
+    })
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err.response;
+      });
+  }
 }
 
 export default new UserService();

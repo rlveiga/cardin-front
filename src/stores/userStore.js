@@ -9,19 +9,18 @@ export default class UserStore {
   @observable success = false;
 
   @action
-  async login(username, password) {
+  async login(fb_access_token) {
     this.success = false;
 
     await UserService.login(
-      username,
-      password
+      fb_access_token
     ).then(response => {
       console.log(response)
 
       if (response.status == 200) {
         this.success = true;
         this.id = response.data.user.id;
-        this.username = response.data.user.username;
+        this.username = response.data.user.name;
 
         this.token = response.data.token;
       }

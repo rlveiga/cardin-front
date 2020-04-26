@@ -3,45 +3,62 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { LoginButton, AccessToken } from 'react-native-fbsdk';
 
 @inject('user')
 @observer
 export default class Login extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            username: '',
-            password: ''
-        }
-
-        this.onButtonPress = this.onButtonPress.bind(this);
+    this.state = {
+      username: '',
+      password: ''
     }
+  }
 
-    async onButtonPress() {
-        await this.props.user.login(
-            this.state.username,
-            this.state.password
-        );
+  async login(token) {
+    await this.props.user.login(
+      token
+    );
 
-        if(this.props.user.success) {
-            this.props.navigation.navigate('Home')
-        }
+    if (this.props.user.success) {
+      this.props.navigation.navigate('Home')
     }
+  }
 
-    render() {
-        return (
-          <KeyboardAwareScrollView
-          keyboardShouldPersistTaps={false}
-          extraScrollHeight={heightPercentageToDP("7%")}
-          bounces={false}
-          contentContainerStyle={styles.container}>
-            <Text
-            style={styles.title}>
-              Cardin
-            </Text>
+  render() {
+    return (
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps={false}
+        extraScrollHeight={heightPercentageToDP("7%")}
+        bounces={false}
+        contentContainerStyle={styles.container}>
+        <Text
+          style={styles.title}>
+          Cardin
+        </Text>
 
-            <TextInput 
+        <LoginButton
+          permissions={['public_profile']}
+          onLoginFinished={
+            (error, result) => {
+              if (error) {
+                console.log("login has error: " + result.error);
+              } else if (result.isCancelled) {
+                console.log("login is cancelled.");
+              } else {
+                AccessToken.getCurrentAccessToken().then(
+                  (data) => {
+                    this.login(data.accessToken.toString())
+                  }
+                )
+              }
+            }
+          }
+          onLogoutFinished={() => console.log("logout.")} />
+
+        {/* <TextInput 
             style={[styles.textInputContainer, {marginBottom: 42}]}
             placeholder='Nome de usuário'
             placeholderTextColor='#A2A2A2'
@@ -63,47 +80,47 @@ export default class Login extends Component {
             onPress={() => this.onButtonPress()}
             style={styles.button}>
                 <Text style={{color: '#000'}}>Entrar</Text>
-            </TouchableOpacity>
-          </KeyboardAwareScrollView>
-        )
-    }
+            </TouchableOpacity> */}
+      </KeyboardAwareScrollView >
+    )
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexGrow: 1,
-        backgroundColor: '#000',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingLeft: 25,
-        paddingRight: 25,
-    },
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 25,
+    paddingRight: 25,
+  },
 
-    title: {
-      fontSize: 48,
-      fontWeight: 'bold',
-      color: '#FFF',
-      marginBottom: heightPercentageToDP("8%")
-    },
+  title: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#FFF',
+    marginBottom: heightPercentageToDP("8%")
+  },
 
-    textInputContainer: {
-        alignSelf: 'stretch',
-        color: '#FFF',
-        borderBottomWidth: 1,
-        borderColor: 'grey',
-        paddingBottom: 12, 
-        paddingTop: 12,
-        paddingLeft: 25,
-        fontSize: 18,
-    },
+  textInputContainer: {
+    alignSelf: 'stretch',
+    color: '#FFF',
+    borderBottomWidth: 1,
+    borderColor: 'grey',
+    paddingBottom: 12,
+    paddingTop: 12,
+    paddingLeft: 25,
+    fontSize: 18,
+  },
 
-    button: {
-        backgroundColor: '#FFF',
-        borderRadius: 6,
-        paddingTop: 15,
-        paddingBottom: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'stretch'
-    }
+  button: {
+    backgroundColor: '#FFF',
+    borderRadius: 6,
+    paddingTop: 15,
+    paddingBottom: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  }
 })
