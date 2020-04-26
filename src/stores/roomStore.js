@@ -8,6 +8,8 @@ export default class RoomStore {
 
     @observable success = false
 
+    @observable selectedCollection
+
     @observable currentRoom
     @observable gameData
     @observable hand
@@ -20,8 +22,7 @@ export default class RoomStore {
 
       await RoomService.createRoom(
         this.root.userStore.token,
-        code,
-        this.root.collectionStore.selectedCollection.id
+        code
       ).then(res => {
         console.log(res)
         if(res.status == 200) {

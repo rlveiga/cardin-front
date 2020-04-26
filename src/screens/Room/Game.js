@@ -72,7 +72,8 @@ export default class Game extends Component {
         id: card.id,
         card_type: card.card_type,
         name: card.name,
-        created_by: card.created_by
+        created_by: card.created_by,
+        slots: card.slots
       }
 
       copiedList.push(cardCopy)
@@ -339,6 +340,38 @@ export default class Game extends Component {
     }
   }
 
+  renderGameEnd() {
+    return (
+      <View
+        style={styles.container}>
+        <Text
+          style={styles.winnerText}>
+          {`${this.props.room.currentRoom.game.game_winner.username} venceu o jogo!`}
+        </Text>
+
+        <View
+          style={styles.scoreboard}>
+          {
+            this.props.room.currentRoom.game.players
+              .slice()
+              .sort((a, b) => {
+                return b.score - a.score
+              })
+              .map((player, i) => {
+                return (
+                  <View
+                    style={styles.scoreboardItem}>
+                    <Text
+                      style={styles.scoreboardText}>{`${player.data.username} ${player.score}`}
+                    </Text>
+                  </View>
+                )
+              })
+          }
+        </View>
+      </View>
+    )
+  }
   render() {
     if (this.props.room.currentRoom.game) {
       switch (this.props.room.currentRoom.game.state) {
@@ -351,6 +384,9 @@ export default class Game extends Component {
         case 'Results':
           this.startNewRound()
           return this.renderResults()
+
+        case 'End':
+          return this.renderGameEnd()
       }
     }
 
@@ -387,7 +423,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',
-    bottom: heightPercentageToDP(5)
+    bottom: heightPercentageToDP(15)
   },
 
   voteButton: {

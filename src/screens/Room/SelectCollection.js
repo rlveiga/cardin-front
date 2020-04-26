@@ -5,6 +5,7 @@ import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsi
 import CollectionPreview from '../../components/CollectionPreview'
 
 @inject('collection')
+@inject('room')
 @observer
 export default class SellectCollections extends Component {
   constructor(props) {
@@ -40,8 +41,11 @@ export default class SellectCollections extends Component {
                 return
               }
 
-              this.props.collection.selectedCollection = collection
-              this.props.navigation.navigate('CreateRoom')
+              this.props.room.selectedCollection = collection
+
+              const from = this.props.navigation.getParam('from')
+
+              this.props.navigation.navigate(from == 'Room' ? 'Room' : 'CreateRoom')
             }}
             style={{ marginTop: 8 }} key={i}>
             <CollectionPreview

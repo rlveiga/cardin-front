@@ -76,12 +76,14 @@ export default class Room extends Component {
   }
 
   _onUserAdded = (data) => {
-    this.updateGame(data)
+    console.log(data)
+    this.props.room.currentRoom.users = data.users
   }
 
   _onUserRemoved = (data) => {
     console.log(data)
-    this.updateGame(data)
+    this.props.room.currentRoom.users = data.users
+    this.props.room.currentRoom.game = data.game
   }
 
   _onGameStarted = (data) => {
@@ -132,7 +134,7 @@ export default class Room extends Component {
       this.game._updateSwiperIndex(index)
     }
   }
-  
+
   _onCardDiscarded = (data) => {
     console.log(data)
 
@@ -158,40 +160,28 @@ export default class Room extends Component {
   }
 
   async startGame() {
-    this.socket.emit('game_start', { room: this.props.room.currentRoom.data.code })
-  }
-
-  renderUsers() {
-    return this.props.room.currentRoom.users.map((user, i) => {
-      return (
-        <View
-          key={i}
-          style={{
-            backgroundColor: '#FFF',
-            height: heightPercentageToDP("8%"),
-            width: heightPercentageToDP("8%"),
-            borderRadius: heightPercentageToDP("4%"),
-            justifyContent: 'center',
-            marginHorizontal: 6
-          }}>
-          <Text style={{ color: '#000', textAlign: 'center' }}>{user.username}</Text>
-        </View>
-      )
-    })
+    this.socket.emit('game_start', { room: this.props.room.currentRoom.data.code, collection: this.props.room.selectedCollection })
   }
 
   renderGameLobby() {
     return (
       <View style={styles.container}>
         <View
-        style={{alignItems: "center"}}>
-          <CollectionPreview
-            fontSize={heightPercentageToDP(5)}
-            cardCountFontSize={heightPercentageToDP(3)}
-            height={heightPercentageToDP(55)}
-            width={widthPercentageToDP(75)}
-            collection={this.props.room.currentRoom.game.collection}
-          />
+          style={{ alignItems: "center" }}>
+          {
+            this.props.room.currentRoom.data.created_by == this.props.user.id ?
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('SelectCollection', { from: 'Room' })}>
+                <CollectionPreview
+                  fontSize={heightPercentageToDP(5)}
+                  cardCountFontSize={heightPercentageToDP(3)}
+                  height={heightPercentageToDP(55)}
+                  width={widthPercentageToDP(75)}
+                  collection={this.props.room.selectedCollection}
+                />
+              </TouchableOpacity> :
+              null
+          }
         </View>
 
         {
@@ -209,24 +199,21 @@ export default class Room extends Component {
 
   render() {
     return (
-      this.props.room.currentRoom.game ? (
-        <View
-          style={styles.container}>
-          <PlayersList />
-
-          {
-            this.state.gameStarted ?
-              <Game
-                ref={ref => this.game = ref}
-                socket={this.socket}
-                onVoterSwiped={this._onVoterSwiped} /> :
-              this.renderGameLobby()
-          }
-        </View>
-      ) :
-        <View style={{ flex: 1, backgroundColor: '#000', justifyContent: 'center' }}>
-          <ActivityIndicator size='large' color='#FFF' />
-        </View>
+      <View
+        style={styles.container}>
+        <PlayersList />
+        {
+          this.props.room.currentRoom.game && this.state.gameStarted ?
+            <Game
+              ref={ref => this.game = ref}
+              socket={this.socket}
+              onVoterSwiped={this._onVoterSwiped} /> :
+            this.renderGameLobby()
+        }
+        {/* // <View style={{ flex: 1, backgroundColor: '#000', justifyContent: 'center' }}>
+      //   <ActivityIndicator size='large' color='#FFF' />
+      // </View> */}
+      </View>
     )
   }
 }
