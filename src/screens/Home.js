@@ -2,17 +2,24 @@ import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import { LoginManager } from 'react-native-fbsdk'
 
 @inject('user')
 @inject('room')
 @inject('collection')
 @observer
 export default class Home extends Component {
+  logout() {
+    LoginManager.logOut()
+
+    this.props.navigation.navigate('Login')
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={styles.greeter}>👋 Olá, {this.props.user.username}</Text>
+          <Text style={styles.greeter}>👋 Olá, {this.props.user.username.split(' ')[0]}</Text>
           <View style={styles.buttonsContainer}>
             <TouchableOpacity
               style={[styles.cardButton, { backgroundColor: '#FFF' }]}
@@ -39,6 +46,15 @@ export default class Home extends Component {
             </TouchableOpacity>
           </View>
         </View>
+
+        <TouchableOpacity
+          onPress={() => this.logout()}
+          style={styles.logoutButton}>
+          <Text
+            style={styles.logoutButtonText}>
+            Sair
+          </Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -67,8 +83,8 @@ const styles = StyleSheet.create({
     height: heightPercentageToDP("22%"),
     marginHorizontal: 12,
     borderRadius: 8,
-    paddingLeft: widthPercentageToDP("3%"),
-    paddingTop: heightPercentageToDP("2%")
+    paddingHorizontal: widthPercentageToDP("2%"),
+    paddingVertical: heightPercentageToDP("1%")
   },
 
   cardButtonText: {
@@ -105,5 +121,17 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     position: 'absolute',
     right: 0
+  },
+
+  logoutButton: {
+    backgroundColor: '#A2A2A2',
+    paddingHorizontal: widthPercentageToDP(3),
+    paddingVertical: heightPercentageToDP(0.5),
+    borderRadius: 10,
+    bottom: heightPercentageToDP(2)
+  },
+
+  logoutButtonText: {
+    color: '#000',
   }
 })
