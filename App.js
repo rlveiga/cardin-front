@@ -5,11 +5,11 @@ import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, Login, Room, ShowCollection, SelectCollection } from './src/screens';
+import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, LaunchScreen, Login, Room, SelectCollection, ShowCollection } from './src/screens';
 import stores from './src/stores';
 
 
- 
+
 
 
 YellowBox.ignoreWarnings(['Remote debugger']);
@@ -123,7 +123,7 @@ const LoggedInTabNavigator = createBottomTabNavigator({
     screen: HomeNavigator,
     navigationOptions: {
       tabBarLabel: 'Home',
-      tabBarIcon: ({tintColor}) => (
+      tabBarIcon: ({ tintColor }) => (
         <Icon name='home' width={23} height={23} color={tintColor} />
       ),
     }
@@ -133,7 +133,7 @@ const LoggedInTabNavigator = createBottomTabNavigator({
     screen: CollectionsNavigator,
     navigationOptions: {
       tabBarLabel: 'Coleções',
-      tabBarIcon: ({tintColor}) => (
+      tabBarIcon: ({ tintColor }) => (
         <Icon name='collections-bookmark' width={23} height={23} color={tintColor} />
       ),
     }
@@ -153,6 +153,10 @@ const LoggedInTabNavigator = createBottomTabNavigator({
 })
 
 const LoginNavigator = createSwitchNavigator({
+  LaunchScreen: {
+    screen: LaunchScreen
+  },
+
   LoggedOutNavigator: {
     screen: LoggedOutNavigator
   },
@@ -161,7 +165,7 @@ const LoginNavigator = createSwitchNavigator({
     screen: LoggedInTabNavigator
   }
 }, {
-  initialRouteName: 'LoggedOutNavigator'
+  initialRouteName: 'LaunchScreen'
 });
 
 const AppContainer = createAppContainer(LoginNavigator);
@@ -170,8 +174,8 @@ export default class App extends Component {
   render() {
     return (
       <Provider {...stores}>
-        <StatusBar barStyle='light-content'/>
-        <AppContainer/>
+        <StatusBar barStyle='light-content' />
+        <AppContainer />
       </Provider>
     );
   }

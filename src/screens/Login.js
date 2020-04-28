@@ -30,7 +30,7 @@ export default class Login extends Component {
   render() {
     return (
       <KeyboardAwareScrollView
-        keyboardShouldPersistTaps={false}
+        keyboardShouldPersistTaps='never'
         extraScrollHeight={heightPercentageToDP("7%")}
         bounces={false}
         contentContainerStyle={styles.container}>

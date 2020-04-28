@@ -1,4 +1,6 @@
 import Login from './Login.js';
+import LaunchScreen from './LaunchScreen.js';
+
 import Home from './Home.js';
 
 import JoinRoom from './Room/JoinRoom';
@@ -14,7 +16,8 @@ import CreateCollection from './Collections/CreateCollection';
 import ShowCollection from './Collections/ShowCollection';
 
 export {
-	Login,
+  Login,
+  LaunchScreen,
 	Home,
 	Cards,
 	CreateCard,
