@@ -1,4 +1,4 @@
-package com.challengeapp;
+package com.cardin;
 
 import android.app.Application;
 import android.content.Context;

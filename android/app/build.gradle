@@ -128,7 +128,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.challengeapp"
+        applicationId "com.cardin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

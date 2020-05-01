@@ -2,7 +2,7 @@ platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'Cardin' do
-  # Pods for ChallengeApp
+  # Pods for Cardin
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -43,7 +43,7 @@ target 'Cardin' do
 end
 
 target 'Cardin-tvOS' do
-  # Pods for ChallengeApp-tvOS
+  # Pods for Cardin-tvOS
 
   target 'Cardin-tvOSTests' do
     inherit! :search_paths
