@@ -19,13 +19,13 @@ export default class CollectionPreview extends Component {
 
         <View
           style={styles.bottomCounter}>
-          <Text style={{ fontSize: this.props.cardCountFontSize, marginBottom: 8, color: '#FFF' }}>
+          <Text style={{ fontSize: this.props.cardCountFontSize, color: '#FFF' }}>
             {`${this.props.collection.white_card_count}`}
           </Text>
 
           <View style={[styles.tinyCard, { backgroundColor: '#FFF' }]} />
 
-          <Text style={{ fontSize: this.props.cardCountFontSize, marginBottom: 8, color: '#FFF' }}>
+          <Text style={{ fontSize: this.props.cardCountFontSize, color: '#FFF' }}>
             {`${this.props.collection.black_card_count}`}
           </Text>
 
@@ -49,7 +49,9 @@ const styles = StyleSheet.create({
   },
 
   bottomCounter: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: heightPercentageToDP(1)
   },
 
   tinyCard: {

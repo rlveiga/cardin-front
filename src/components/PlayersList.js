@@ -20,15 +20,26 @@ export default class PlayersList extends Component {
               opacity: player.is_ready ? 0.3 : 1
             }}
             key={i}>
-            <Image
-              style={{
-                height: heightPercentageToDP(8),
-                width: heightPercentageToDP(8),
-                borderRadius: heightPercentageToDP("4%"),
-              }}
-              source={{
-                uri: player.data.profile_img
-              }} />
+            {
+              player.data.source == 'fb' ?
+                <Image
+                  style={{
+                    height: heightPercentageToDP(8),
+                    width: heightPercentageToDP(8),
+                    borderRadius: heightPercentageToDP("4%"),
+                  }}
+                  source={{
+                    uri: player.data.profile_img
+                  }} /> :
+                <View
+                  style={{
+                    height: heightPercentageToDP(8),
+                    width: heightPercentageToDP(8),
+                    borderRadius: heightPercentageToDP("4%"),
+                  }}>
+                  <Text>{player.data.username[0].toUpperCase()}</Text>
+                </View>
+            }
 
             <View
               style={{
@@ -40,7 +51,13 @@ export default class PlayersList extends Component {
                 marginTop: heightPercentageToDP(1),
                 paddingHorizontal: widthPercentageToDP(1)
               }}>
-              <Text style={{ color: isVoter ? '#FFF' : '#000', textAlign: 'center' }}>{player.data.name.split(' ')[0]}</Text>
+              <Text style={{ color: isVoter ? '#FFF' : '#000', textAlign: 'center' }}>
+                {
+                  player.data.source == 'fb' ?
+                    player.data.name.split(' ')[0] :
+                    player.data.username
+                }
+              </Text>
             </View>
           </View>
         )
@@ -54,15 +71,26 @@ export default class PlayersList extends Component {
               opacity: 1
             }}
             key={i}>
-            <Image
-              style={{
-                height: heightPercentageToDP(8),
-                width: heightPercentageToDP(8),
-                borderRadius: heightPercentageToDP("4%"),
-              }}
-              source={{
-                uri: player.profile_img
-              }} />
+            {
+              player.source == 'fb' ?
+                <Image
+                  style={{
+                    height: heightPercentageToDP(8),
+                    width: heightPercentageToDP(8),
+                    borderRadius: heightPercentageToDP("4%"),
+                  }}
+                  source={{
+                    uri: player.profile_img
+                  }} /> :
+                <View
+                  style={{
+                    height: heightPercentageToDP(8),
+                    width: heightPercentageToDP(8),
+                    borderRadius: heightPercentageToDP("4%"),
+                  }}>
+                  <Text>{player.username[0].toUpperCase()}</Text>
+                </View>
+            }
             <View
               style={{
                 backgroundColor: '#FFF',
@@ -73,7 +101,13 @@ export default class PlayersList extends Component {
                 paddingHorizontal: widthPercentageToDP(1),
                 marginTop: heightPercentageToDP(1)
               }}>
-              <Text style={{ color: '#000', textAlign: 'center' }}>{player.name.split(' ')[0]}</Text>
+              <Text style={{ color: '#000', textAlign: 'center' }}>
+                {
+                  player.data.source == 'fb' ?
+                    player.data.name.split(' ')[0] :
+                    player.data.username
+                }
+              </Text>
             </View>
           </View>
         )

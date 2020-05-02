@@ -1,9 +1,10 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
+import AsyncLoader from '../components/AsyncLoader';
 
 @inject('user')
 @observer
@@ -13,11 +14,39 @@ export default class Login extends Component {
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      loading: false
     }
   }
 
-  async login(token) {
+  async login(username, password) {
+    this.setState({ loading: true })
+
+    await this.props.user.login(
+      username,
+      password
+    )
+
+    if (this.props.user.success) {
+      this.setState({ loading: false })
+
+      this.props.navigation.navigate('Home')
+    }
+
+    else {
+      Alert.alert(
+        this.props.user.errorMsg,
+        null,
+        [
+          { text: 'Ok', onPress: () => this.setState({ loading: false }) }
+        ]
+      )
+    }
+  }
+
+  async fbLogin(token) {
+    this.setState({ loading: true })
+
     await this.props.user.login(
       token
     );
@@ -25,13 +54,14 @@ export default class Login extends Component {
     if (this.props.user.success) {
       this.props.navigation.navigate('Home')
     }
+
+    this.setState({ loading: false })
   }
 
   render() {
     return (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps='never'
-        extraScrollHeight={heightPercentageToDP("7%")}
         bounces={false}
         contentContainerStyle={styles.container}>
         <Text
@@ -39,48 +69,60 @@ export default class Login extends Component {
           Cardin
         </Text>
 
-        <LoginButton
-          permissions={['public_profile']}
-          onLoginFinished={
-            (error, result) => {
-              if (error) {
-                console.log("login has error: " + result.error);
-              } else if (result.isCancelled) {
-                console.log("login is cancelled.");
-              } else {
-                AccessToken.getCurrentAccessToken().then(
-                  (data) => {
-                    this.login(data.accessToken.toString())
-                  }
-                )
+        <TextInput
+          style={[styles.textInputContainer, { marginBottom: 42 }]}
+          placeholder='Nome de usuário'
+          placeholderTextColor='#A2A2A2'
+          autoCapitalize='none'
+          autoCorrect={false}
+          value={this.state.username}
+          onChangeText={(val) => this.setState({ username: val })} />
+        <TextInput
+          secureTextEntry={true}
+          style={[styles.textInputContainer, { marginBottom: 64 }]}
+          placeholder='Senha'
+          placeholderTextColor='#A2A2A2'
+          autoCapitalize='none'
+          autoCorrect={false}
+          value={this.state.password}
+          onChangeText={(val) => this.setState({ password: val })} />
+
+        <TouchableOpacity
+          onPress={() => this.login(this.state.username, this.state.password)}
+          style={styles.button}>
+          <Text style={{ color: '#000' }}>Entrar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('Registration')}
+          style={[styles.button, { backgroundColor: '#000', marginTop: heightPercentageToDP(2) }]}>
+          <Text style={{ color: '#FFF' }}>Criar conta</Text>
+        </TouchableOpacity>
+
+        <View
+          style={{ marginTop: heightPercentageToDP(5) }}>
+          <LoginButton
+            permissions={['public_profile']}
+            onLoginFinished={
+              (error, result) => {
+                if (error) {
+                  console.log("login has error: " + result.error);
+                } else if (result.isCancelled) {
+                  console.log("login is cancelled.");
+                } else {
+                  AccessToken.getCurrentAccessToken().then(
+                    (data) => {
+                      this.fbLogin(data.accessToken.toString())
+                    }
+                  )
+                }
               }
             }
-          }
-          onLogoutFinished={() => console.log("logout.")} />
+            onLogoutFinished={() => console.log("logout.")} />
+        </View>
 
-        {/* <TextInput 
-            style={[styles.textInputContainer, {marginBottom: 42}]}
-            placeholder='Nome de usuário'
-            placeholderTextColor='#A2A2A2'
-            autoCapitalize='none'
-            autoCorrect={false}
-            value={this.state.username}
-            onChangeText={(val) => this.setState({username: val})}/>
-            <TextInput 
-            secureTextEntry={true}
-            style={[styles.textInputContainer, {marginBottom: 64}]}
-            placeholder='Senha'
-            placeholderTextColor='#A2A2A2'
-            autoCapitalize='none'
-            autoCorrect={false}
-            value={this.state.password}
-            onChangeText={(val) => this.setState({password: val})}/>
-
-            <TouchableOpacity
-            onPress={() => this.onButtonPress()}
-            style={styles.button}>
-                <Text style={{color: '#000'}}>Entrar</Text>
-            </TouchableOpacity> */}
+        <AsyncLoader
+          active={this.state.loading} />
       </KeyboardAwareScrollView >
     )
   }

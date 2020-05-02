@@ -19,7 +19,12 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={styles.greeter}>👋 Olá, {this.props.user.username.split(' ')[0]}</Text>
+          <Text style={styles.greeter}>👋 Olá, {
+            this.props.user.source == 'fb' ?
+              this.props.user.name.split(' ')[0] :
+              this.props.user.username
+          }
+          </Text>
           <View style={styles.buttonsContainer}>
             <TouchableOpacity
               style={[styles.cardButton, { backgroundColor: '#FFF' }]}

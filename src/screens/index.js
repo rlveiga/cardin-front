@@ -1,4 +1,5 @@
 import Login from './Login.js';
+import Registration from './Registration.js';
 import LaunchScreen from './LaunchScreen.js';
 
 import Home from './Home.js';
@@ -17,6 +18,7 @@ import ShowCollection from './Collections/ShowCollection';
 
 export {
   Login,
+  Registration,
   LaunchScreen,
 	Home,
 	Cards,

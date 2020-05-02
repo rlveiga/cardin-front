@@ -77,16 +77,24 @@ export default class Room extends Component {
 
   _onUserAdded = (data) => {
     console.log(data)
-    this.props.room.currentRoom.users = data.users
+    this.props.room.currentRoom.data.users = data.users
   }
 
   _onUserRemoved = (data) => {
     console.log(data)
-    this.props.room.currentRoom.users = data.users
+    this.props.room.currentRoom.data.users = data.users
     this.props.room.currentRoom.game = data.game
   }
 
   _onGameStarted = (data) => {
+    if(data['error']) {
+      Alert.alert(
+        data['error']
+      )
+
+      return
+    }
+    
     console.log(data)
     this.updateGame(data)
 
@@ -168,20 +176,13 @@ export default class Room extends Component {
       <View style={styles.container}>
         <View
           style={{ alignItems: "center" }}>
-          {
-            this.props.room.currentRoom.data.created_by == this.props.user.id ?
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('SelectCollection', { from: 'Room' })}>
-                <CollectionPreview
-                  fontSize={heightPercentageToDP(5)}
-                  cardCountFontSize={heightPercentageToDP(3)}
-                  height={heightPercentageToDP(55)}
-                  width={widthPercentageToDP(75)}
-                  collection={this.props.room.selectedCollection}
-                />
-              </TouchableOpacity> :
-              null
-          }
+          <CollectionPreview
+            fontSize={heightPercentageToDP(5)}
+            cardCountFontSize={heightPercentageToDP(3)}
+            height={heightPercentageToDP(55)}
+            width={widthPercentageToDP(75)}
+            collection={this.props.room.currentRoom.data.collection}
+          />
         </View>
 
         {

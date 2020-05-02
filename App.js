@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, LaunchScreen, Login, Room, SelectCollection, ShowCollection } from './src/screens';
+import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, LaunchScreen, Login, Room, SelectCollection, ShowCollection, Registration } from './src/screens';
 import stores from './src/stores';
 
 
@@ -20,9 +20,25 @@ const LoggedOutNavigator = createStackNavigator({
     navigationOptions: {
       header: null
     }
+  },
+
+  Registration: {
+    screen: Registration,
+    navigationOptions: {
+      title: 'Cadastro'
+    }
   }
 }, {
-  initialRouteName: 'Login'
+  initialRouteName: 'Login',
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: '#000',
+      borderBottomWidth: 0,
+      elevation: 0
+    },
+    headerTintColor: '#FFF',
+    headerBackTitle: null
+  }
 });
 
 const HomeNavigator = createStackNavigator({

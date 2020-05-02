@@ -49,11 +49,14 @@ export default class CreateCard extends Component {
                         <Text style={styles.optionButtonText}>Branca</Text>
                     </TouchableOpacity>
                 </View>
+                
                 <View style={[styles.creatorContainer, {backgroundColor: this.state.cardType == 'black' ? '#000' : '#FFF'}]}>
                     <TextInput
+                    blurOnSubmit={true}
+                    returnKeyType='done'
+                    multiline={true}
                     selectionColor={this.state.cardType == 'black' ? '#FFF' : '#000'}
                     autoCorrect={false}
-                    multiline={true}
                     value={this.state.cardName}
                     onChangeText={(val) => this.setState({cardName: val})}
                     style={[styles.textInput, {color: this.state.cardType == 'black' ? '#FFF' : '#000'}]}
