@@ -14,7 +14,7 @@ export default class CreateRoom extends Component {
   }
 
   async onButtonPress() {
-    await this.props.room.createRoom(this.state.roomCode)
+    await this.props.room.createRoom(this.state.roomCode, this.props.room.selectedCollection.id)
 
     if(this.props.room.success) {
       this.props.navigation.navigate('Room')

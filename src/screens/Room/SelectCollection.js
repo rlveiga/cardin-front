@@ -43,9 +43,7 @@ export default class SellectCollections extends Component {
 
               this.props.room.selectedCollection = collection
 
-              const from = this.props.navigation.getParam('from')
-
-              this.props.navigation.navigate(from == 'Room' ? 'Room' : 'CreateRoom')
+              this.props.navigation.navigate('CreateRoom')
             }}
             style={{ marginTop: 8 }} key={i}>
             <CollectionPreview

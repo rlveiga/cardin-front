@@ -38,7 +38,7 @@ export default class Room extends Component {
 
     this.game = null
 
-    this.socket = this.socket = io(`http://127.0.0.1:5000`, { transports: ['websocket'] })
+    this.socket = this.socket = io(`https://cardin-app.herokuapp.com`, { transports: ['websocket'] })
 
     this.socket.on('connect', this._onRoomConnect)
     this.socket.on('join_response', this._onUserAdded)

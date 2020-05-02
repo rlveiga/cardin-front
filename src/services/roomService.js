@@ -1,11 +1,12 @@
 import api from '../../axios';
 
 class RoomService {
-  createRoom(token, code) {
+  createRoom(token, code, collection_id) {
     return api.post(
       '/rooms/',
       {
-        code
+        code,
+        collection_id
       },
       {
       headers: {

@@ -17,12 +17,13 @@ export default class RoomStore {
     @observable voterSwiperIndex = 0
 
     @action
-    async createRoom(code) {
+    async createRoom(code, collection_id) {
       this.success = false
 
       await RoomService.createRoom(
         this.root.userStore.token,
-        code
+        code,
+        collection_id
       ).then(res => {
         console.log(res)
         if(res.status == 200) {

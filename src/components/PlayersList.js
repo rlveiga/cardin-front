@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { inject, observer } from 'mobx-react';
 
@@ -13,42 +13,67 @@ export default class PlayersList extends Component {
         const isVoter = this.props.room.currentRoom.game.czar_id == player.data.id
 
         return (
-          <View>
+          <View
+            style={{
+              alignItems: 'center',
+              marginHorizontal: 6,
+              opacity: player.is_ready ? 0.3 : 1
+            }}
+            key={i}>
+            <Image
+              style={{
+                height: heightPercentageToDP(8),
+                width: heightPercentageToDP(8),
+                borderRadius: heightPercentageToDP("4%"),
+              }}
+              source={{
+                uri: player.data.profile_img
+              }} />
+
             <View
-              key={i}
               style={{
                 backgroundColor: isVoter ? '#000' : '#FFF',
-                borderRadius: heightPercentageToDP("4%"),
+                borderRadius: heightPercentageToDP(4),
                 borderWidth: isVoter ? 2 : 0,
                 borderColor: '#FFF',
                 justifyContent: 'center',
-                marginHorizontal: 6,
-                paddingHorizontal: widthPercentageToDP(3),
-                paddingVertical: heightPercentageToDP(1),
-                opacity: player.is_ready ? 0.3 : 1
+                marginTop: heightPercentageToDP(1),
+                paddingHorizontal: widthPercentageToDP(1)
               }}>
-              <Text style={{ color: isVoter ? '#FFF' : '#000', textAlign: 'center' }}>{player.data.username}</Text>
+              <Text style={{ color: isVoter ? '#FFF' : '#000', textAlign: 'center' }}>{player.data.name.split(' ')[0]}</Text>
             </View>
           </View>
         )
       }) :
-      this.props.room.currentRoom.users.map((player, i) => {
+      this.props.room.currentRoom.data.users.map((player, i) => {
         return (
-          <View>
+          <View
+            style={{
+              alignItems: 'center',
+              marginHorizontal: 6,
+              opacity: 1
+            }}
+            key={i}>
+            <Image
+              style={{
+                height: heightPercentageToDP(8),
+                width: heightPercentageToDP(8),
+                borderRadius: heightPercentageToDP("4%"),
+              }}
+              source={{
+                uri: player.profile_img
+              }} />
             <View
-              key={i}
               style={{
                 backgroundColor: '#FFF',
                 borderRadius: heightPercentageToDP("4%"),
                 borderWidth: 0,
                 borderColor: '#FFF',
                 justifyContent: 'center',
-                marginHorizontal: 6,
-                paddingHorizontal: widthPercentageToDP(3),
-                paddingVertical: heightPercentageToDP(1),
-                opacity: 1
+                paddingHorizontal: widthPercentageToDP(1),
+                marginTop: heightPercentageToDP(1)
               }}>
-              <Text style={{ color: '#000', textAlign: 'center' }}>{player.username}</Text>
+              <Text style={{ color: '#000', textAlign: 'center' }}>{player.name.split(' ')[0]}</Text>
             </View>
           </View>
         )
