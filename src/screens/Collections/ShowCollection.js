@@ -4,7 +4,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View
 import { NavigationEvents } from 'react-navigation'
 import CardPreview from '../../components/CardPreview'
 import CardModal from '../../components/CardModal'
-import { heightPercentageToDP } from 'react-native-responsive-screen'
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
 
 @inject('user')
 @inject('card')
@@ -74,7 +74,7 @@ export default class ShowCollection extends Component {
 
       else {
         return (
-          <ScrollView contentContainerStyle={styles.cardsContaier}>
+          <ScrollView style={{alignSelf: 'center'}} contentContainerStyle={styles.cardsContaier}>
             {
               this.props.collection.selectedCollection.cards.map((card, i) => {
                 return (
@@ -155,7 +155,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
-    paddingBottom: heightPercentageToDP(6)
+    paddingBottom: heightPercentageToDP(6),
+    width: widthPercentageToDP(100),
+    paddingLeft: widthPercentageToDP(2)
   },
 
   createButton: {

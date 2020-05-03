@@ -47,7 +47,7 @@ export default class Login extends Component {
   async fbLogin(token) {
     this.setState({ loading: true })
 
-    await this.props.user.login(
+    await this.props.user.fbLogin(
       token
     );
 

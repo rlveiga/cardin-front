@@ -31,13 +31,18 @@ export default class PlayersList extends Component {
                   source={{
                     uri: player.data.profile_img
                   }} /> :
-                <View
+                  <View
                   style={{
+                    backgroundColor: '#FFF',
+                    justifyContent: 'center',
                     height: heightPercentageToDP(8),
                     width: heightPercentageToDP(8),
                     borderRadius: heightPercentageToDP("4%"),
                   }}>
-                  <Text>{player.data.username[0].toUpperCase()}</Text>
+                  <Text
+                  style={{fontSize: 22, textAlign: 'center'}}>
+                    {player.data.username[0].toUpperCase()}
+                  </Text>
                 </View>
             }
 
@@ -62,7 +67,7 @@ export default class PlayersList extends Component {
           </View>
         )
       }) :
-      this.props.room.currentRoom.data.users.map((player, i) => {
+      this.props.room.currentRoom.users.map((player, i) => {
         return (
           <View
             style={{
@@ -84,11 +89,16 @@ export default class PlayersList extends Component {
                   }} /> :
                 <View
                   style={{
+                    backgroundColor: '#FFF',
+                    justifyContent: 'center',
                     height: heightPercentageToDP(8),
                     width: heightPercentageToDP(8),
                     borderRadius: heightPercentageToDP("4%"),
                   }}>
-                  <Text>{player.username[0].toUpperCase()}</Text>
+                  <Text
+                  style={{fontSize: 22, textAlign: 'center'}}>
+                    {player.username[0].toUpperCase()}
+                  </Text>
                 </View>
             }
             <View
@@ -103,9 +113,9 @@ export default class PlayersList extends Component {
               }}>
               <Text style={{ color: '#000', textAlign: 'center' }}>
                 {
-                  player.data.source == 'fb' ?
-                    player.data.name.split(' ')[0] :
-                    player.data.username
+                  player.source == 'fb' ?
+                    player.name.split(' ')[0] :
+                    player.username
                 }
               </Text>
             </View>

@@ -74,6 +74,7 @@ export default class UserStore {
         this.id = response.data.user.id;
         this.name = response.data.user.name;
         this.username = response.data.user.username;
+        this.source = response.data.user.source;
 
         this.token = response.data.token;
       }

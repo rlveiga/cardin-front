@@ -54,13 +54,13 @@ export default class Room extends Component {
   }
 
   async componentDidMount() {
-    this.props.navigation.setParams({ onBack: this._onBack })
+    this.props.navigation.setParams({ onBack: this._onBack, code: this.props.room.currentRoom.code })
   }
 
   async leaveRoom() {
     await this.props.room.leaveRoom()
 
-    this.socket.emit('leave', { room: this.props.room.currentRoom.data.code, user: { username: this.props.user.username } })
+    this.socket.emit('leave', { room: this.props.room.currentRoom.code, user: { username: this.props.user.username } })
     this.socket.disconnect()
 
     this.currentRoom = null
@@ -72,17 +72,17 @@ export default class Room extends Component {
     this.setState({ connected: true })
 
     // Emit event to other users that may be in the room`
-    this.socket.emit('join', { room: this.props.room.currentRoom.data.code, user: { username: this.props.user.username } })
+    this.socket.emit('join', { room: this.props.room.currentRoom.code, user: { username: this.props.user.username } })
   }
 
   _onUserAdded = (data) => {
     console.log(data)
-    this.props.room.currentRoom.data.users = data.users
+    this.props.room.currentRoom.users = data.users
   }
 
   _onUserRemoved = (data) => {
     console.log(data)
-    this.props.room.currentRoom.data.users = data.users
+    this.props.room.currentRoom.users = data.users
     this.props.room.currentRoom.game = data.game
   }
 
@@ -130,7 +130,7 @@ export default class Room extends Component {
   _onVoterSwiped = (index) => {
     console.log(index)
 
-    this.socket.emit('card_swipe', { room: this.props.room.currentRoom.data.code, index: index })
+    this.socket.emit('card_swipe', { room: this.props.room.currentRoom.code, index: index })
   }
 
   _onCardSwiped = (index) => {
@@ -168,7 +168,7 @@ export default class Room extends Component {
   }
 
   async startGame() {
-    this.socket.emit('game_start', { room: this.props.room.currentRoom.data.code, collection: this.props.room.selectedCollection })
+    this.socket.emit('game_start', { room: this.props.room.currentRoom.code, collection: this.props.room.selectedCollection })
   }
 
   renderGameLobby() {
@@ -177,16 +177,16 @@ export default class Room extends Component {
         <View
           style={{ alignItems: "center" }}>
           <CollectionPreview
-            fontSize={heightPercentageToDP(5)}
+            fontSize={heightPercentageToDP(4)}
             cardCountFontSize={heightPercentageToDP(3)}
-            height={heightPercentageToDP(55)}
-            width={widthPercentageToDP(75)}
-            collection={this.props.room.currentRoom.data.collection}
+            height={widthPercentageToDP(90)}
+            width={widthPercentageToDP(55)}
+            collection={this.props.room.currentRoom.collection}
           />
         </View>
 
         {
-          this.props.room.currentRoom.data.created_by == this.props.user.id ?
+          this.props.room.currentRoom.created_by == this.props.user.id ?
             <TouchableOpacity
               style={styles.startGameButton}
               onPress={() => this.startGame()}>

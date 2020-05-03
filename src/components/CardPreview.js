@@ -28,7 +28,7 @@ export default class CardPreview extends Component {
 }
 
 const styles = StyleSheet.create({
-  cardContainer: (height = heightPercentageToDP(20), width = widthPercentageToDP(30)) => {
+  cardContainer: (height = widthPercentageToDP(45), width = widthPercentageToDP(30)) => {
     return {
       margin: widthPercentageToDP(1),
       paddingTop: 12,

@@ -91,7 +91,7 @@ export default class Game extends Component {
 
   confirmSelectedCards() {
     this.props.socket.emit('cards_selected', {
-      room: this.props.room.currentRoom.data.code,
+      room: this.props.room.currentRoom.code,
       user_id: this.props.user.id,
       cards: this.state.cardsSelected
     })
@@ -103,7 +103,7 @@ export default class Game extends Component {
     console.log(winner_id)
 
     this.props.socket.emit('pick_winner', {
-      room: this.props.room.currentRoom.data.code,
+      room: this.props.room.currentRoom.code,
       winner_id: winner_id
     })
   }
@@ -111,7 +111,7 @@ export default class Game extends Component {
   discardOption(user_id) {
     console.log(user_id)
     this.props.socket.emit('discard_option', {
-      room: this.props.room.currentRoom.data.code,
+      room: this.props.room.currentRoom.code,
       user_id: user_id
     })
   }
@@ -331,11 +331,11 @@ export default class Game extends Component {
 
   startNewRound() {
     // Host restarts the round
-    if (this.props.room.currentRoom.data.created_by == this.props.user.id) {
+    if (this.props.room.currentRoom.created_by == this.props.user.id) {
       console.log('Restarting in 5')
 
       setTimeout(() => this.props.socket.emit('new_round_start', {
-        room: this.props.room.currentRoom.data.code
+        room: this.props.room.currentRoom.code
       }), 5000)
     }
   }

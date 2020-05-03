@@ -17,7 +17,7 @@ export default class LaunchScreen extends Component {
 
     // Has access token, login user
     if (data) {
-      await this.props.user.login(
+      await this.props.user.fbLogin(
         data['accessToken']
       )
 

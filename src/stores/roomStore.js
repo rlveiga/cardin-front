@@ -28,7 +28,7 @@ export default class RoomStore {
         console.log(res)
         if(res.status == 200) {
           this.success = true
-          this.currentRoom = res.data
+          this.currentRoom = res.data.data
         }
       }, err => {
         console.log(err)
@@ -46,7 +46,7 @@ export default class RoomStore {
             console.log(res)
             if(res.status == 200) {
               this.success = true
-              this.currentRoom = res.data
+              this.currentRoom = res.data.data
             }
         }, err => {
             console.log(err.response)
@@ -59,7 +59,7 @@ export default class RoomStore {
 
         await RoomService.leaveRoom(
             this.root.userStore.token,
-            this.currentRoom.data.code
+            this.currentRoom.code
         ).then(res => {
             console.log(res)
             
