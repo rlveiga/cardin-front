@@ -71,7 +71,10 @@ const HomeNavigator = createStackNavigator({
   },
 
   Room: {
-    screen: Room
+    screen: Room,
+    navigationOptions: {
+      gesturesEnabled: false
+    }
   }
 }, {
   initialRouteName: 'Home',

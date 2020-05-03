@@ -8,6 +8,7 @@ import CollectionPreview from '../../components/CollectionPreview';
 import CardPreview from '../../components/CardPreview';
 import Game from './Game';
 import PlayersList from '../../components/PlayersList';
+import Slider from '@react-native-community/slider';
 
 @inject('user')
 @inject('room')
@@ -33,7 +34,8 @@ export default class Room extends Component {
 
     this.state = {
       connected: false,
-      gameStarted: false
+      gameStarted: false,
+      maxPoints: 5
     }
 
     this.game = null
@@ -87,14 +89,14 @@ export default class Room extends Component {
   }
 
   _onGameStarted = (data) => {
-    if(data['error']) {
+    if (data['error']) {
       Alert.alert(
         data['error']
       )
 
       return
     }
-    
+
     console.log(data)
     this.updateGame(data)
 
@@ -168,7 +170,14 @@ export default class Room extends Component {
   }
 
   async startGame() {
-    this.socket.emit('game_start', { room: this.props.room.currentRoom.code, collection: this.props.room.selectedCollection })
+    this.socket.emit(
+      'game_start',
+      {
+        room: this.props.room.currentRoom.code,
+        collection: this.props.room.selectedCollection,
+        max_points: this.state.maxPoints
+      }
+    )
   }
 
   renderGameLobby() {
@@ -187,11 +196,25 @@ export default class Room extends Component {
 
         {
           this.props.room.currentRoom.created_by == this.props.user.id ?
-            <TouchableOpacity
-              style={styles.startGameButton}
-              onPress={() => this.startGame()}>
-              <Text style={{ color: '#000', textAlign: 'center' }}>Começar partida</Text>
-            </TouchableOpacity> :
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ color: '#FFF', fontSize: 18 }}>
+                Melhor de {this.state.maxPoints} pontos
+              </Text>
+
+              <Slider
+                style={{ width: widthPercentageToDP(60) }}
+                value={this.state.maxPoints}
+                onValueChange={val => this.setState({ maxPoints: val })}
+                minimumValue={3}
+                maximumValue={20}
+                step={1} />
+
+              <TouchableOpacity
+                style={styles.startGameButton}
+                onPress={() => this.startGame()}>
+                <Text style={{ color: '#000', textAlign: 'center' }}>Começar partida</Text>
+              </TouchableOpacity>
+            </View> :
             null
         }
       </View>
@@ -227,8 +250,6 @@ const styles = StyleSheet.create({
   },
 
   startGameButton: {
-    position: 'absolute',
-    bottom: heightPercentageToDP(2),
     alignSelf: 'center',
     backgroundColor: '#A2A2A2',
     borderRadius: 6,

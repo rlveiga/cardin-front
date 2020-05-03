@@ -360,12 +360,14 @@ export default class Game extends Component {
   }
 
   renderGameEnd() {
+    const winner = this.props.room.currentRoom.game.game_winner
+
     return (
       <View
         style={styles.container}>
         <Text
           style={styles.winnerText}>
-          {`${this.props.room.currentRoom.game.game_winner.username} venceu o jogo!`}
+          {`${winner.source == 'fb' ? winner.name.split(' ')[0] : winner.username} venceu o jogo!`}
         </Text>
 
         <View
@@ -378,10 +380,24 @@ export default class Game extends Component {
               })
               .map((player, i) => {
                 return (
-                  <View
-                    style={styles.scoreboardItem}>
-                    <Text
-                      style={styles.scoreboardText}>{`${player.data.username} ${player.score}`}
+                  <View style={styles.scoreboardItem}>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <PlayerPreview
+                        fontSize={14}
+                        height={heightPercentageToDP(4)}
+                        width={heightPercentageToDP(4)}
+                        player={player.data} />
+
+                      <View
+                        style={{ marginLeft: widthPercentageToDP(2), backgroundColor: '#FFF', justifyContent: 'center', flex: 1, borderRadius: widthPercentageToDP(5) }}>
+                        <Text style={{ color: '#000', textAlign: 'center' }}>
+                          {player.data.source == 'fb' ? player.data.name.split(' ')[0] : player.data.username}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <Text style={styles.scoreboardText}>
+                      {`${player.score} ${player.score == 1 ? 'ponto' : 'pontos'}`}
                     </Text>
                   </View>
                 )

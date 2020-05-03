@@ -212,6 +212,8 @@ PODS:
     - React
   - react-native-safe-area-context (0.6.4):
     - React
+  - react-native-slider (2.0.9):
+    - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
   - React-RCTAnimation (0.61.5):
@@ -276,6 +278,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -333,6 +336,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fbsdk"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -385,6 +390,7 @@ SPEC CHECKSUMS:
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-fbsdk: c35d42169e64aaf66f01713c1e18d0674f7f6519
   react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
+  react-native-slider: e51492f1264d882a8815b71c5870f8978e52887d
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -401,6 +407,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 6375c00942bf66cabd2405f10ef58d9f75e8b029
+PODFILE CHECKSUM: 3874270b1d041b3d7d8a5e310c902f509334516e
 
 COCOAPODS: 1.8.4
