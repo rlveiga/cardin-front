@@ -9,6 +9,7 @@ import io from 'socket.io-client/dist/socket.io';
 import Swiper from 'react-native-swiper';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import PlayerPreview from '../../components/PlayerPreview';
 
 @inject('user')
 @inject('room')
@@ -143,8 +144,8 @@ export default class Game extends Component {
 
           <CardPreview
             fontSize={heightPercentageToDP(3)}
-            height={heightPercentageToDP(40)}
-            width={heightPercentageToDP(25)}
+            height={widthPercentageToDP(80)}
+            width={widthPercentageToDP(50)}
             card={this.props.room.currentRoom.game.table_card} />
 
           {
@@ -176,8 +177,8 @@ export default class Game extends Component {
             item.cards.length == 1 ?
               <CardPreview
                 fontSize={widthPercentageToDP(7)}
-                width={widthPercentageToDP(65)}
-                height={heightPercentageToDP(45)}
+                width={widthPercentageToDP(60)}
+                height={widthPercentageToDP(85)}
                 card={item.cards[0]} /> :
               item.cards.map((card, i) => {
                 return (
@@ -199,28 +200,28 @@ export default class Game extends Component {
                 )
               })
           }
-
-          {
-            this.props.room.currentRoom.game.czar_id == this.props.user.id ?
-              <View
-                style={styles.voteButtonsContainer}>
-                <TouchableOpacity
-                  disabled={item.discarded}
-                  onPress={() => this.confirmWinner(item.user.id)}
-                  style={[styles.voteButton, { backgroundColor: 'green' }]}>
-                  <Icon name='check' color='#FFF' size={24} />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  disabled={item.discarded}
-                  onPress={() => this.discardOption(item.user.id)}
-                  style={[styles.voteButton, { backgroundColor: 'red' }]}>
-                  <Icon name='trash' color='#FFF' size={24} />
-                </TouchableOpacity>
-              </View> :
-              null
-          }
         </View>
+
+        {
+          this.props.room.currentRoom.game.czar_id == this.props.user.id ?
+            <View
+              style={[styles.voteButtonsContainer, { bottom: item.cards.length == 1 ? heightPercentageToDP(15) : heightPercentageToDP(2) }]}>
+              <TouchableOpacity
+                disabled={item.discarded}
+                onPress={() => this.confirmWinner(item.user.id)}
+                style={[styles.voteButton, { backgroundColor: 'green' }]}>
+                <Icon name='check' color='#FFF' size={24} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                disabled={item.discarded}
+                onPress={() => this.discardOption(item.user.id)}
+                style={[styles.voteButton, { backgroundColor: 'red' }]}>
+                <Icon name='trash' color='#FFF' size={24} />
+              </TouchableOpacity>
+            </View> :
+            null
+        }
       </View>
     )
   }
@@ -297,16 +298,20 @@ export default class Game extends Component {
   }
 
   renderResults() {
+    const winner = this.props.room.currentRoom.game.round_winner
+
     return (
       <View
         style={styles.container}>
+        <PlayerPreview
+          player={winner} />
+
         <Text
           style={styles.winnerText}>
-          {`${this.props.room.currentRoom.game.round_winner.username} venceu a rodada!`}
+          {`${winner.source == 'fb' ? winner.name.split(' ')[0] : winner.username} venceu a rodada!`}
         </Text>
 
-        <View
-          style={styles.scoreboard}>
+        <View style={styles.scoreboard}>
           {
             this.props.room.currentRoom.game.players
               .slice()
@@ -315,10 +320,24 @@ export default class Game extends Component {
               })
               .map((player, i) => {
                 return (
-                  <View
-                    style={styles.scoreboardItem}>
-                    <Text
-                      style={styles.scoreboardText}>{`${player.data.username} ${player.score}`}
+                  <View style={styles.scoreboardItem}>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <PlayerPreview
+                        fontSize={14}
+                        height={heightPercentageToDP(4)}
+                        width={heightPercentageToDP(4)}
+                        player={player.data} />
+
+                      <View
+                        style={{ marginLeft: widthPercentageToDP(2), backgroundColor: '#FFF', justifyContent: 'center', flex: 1, borderRadius: widthPercentageToDP(5) }}>
+                        <Text style={{ color: '#000', textAlign: 'center' }}>
+                          {player.data.source == 'fb' ? player.data.name.split(' ')[0] : player.data.username}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <Text style={styles.scoreboardText}>
+                      {`${player.score} ${player.score == 1 ? 'ponto' : 'pontos'}`}
                     </Text>
                   </View>
                 )
@@ -372,6 +391,7 @@ export default class Game extends Component {
       </View>
     )
   }
+
   render() {
     if (this.props.room.currentRoom.game) {
       switch (this.props.room.currentRoom.game.state) {
@@ -400,6 +420,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     alignSelf: 'stretch',
     alignItems: 'center',
+    paddingTop: heightPercentageToDP(2)
   },
 
   userList: {
@@ -423,7 +444,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',
-    bottom: heightPercentageToDP(15)
   },
 
   voteButton: {
@@ -435,22 +455,29 @@ const styles = StyleSheet.create({
   winnerText: {
     color: '#FFF',
     fontSize: widthPercentageToDP(5),
-    marginBottom: heightPercentageToDP(2)
+    marginVertical: heightPercentageToDP(2)
   },
 
   scoreboard: {
+    flex: 1,
+    marginBottom: heightPercentageToDP(5),
     alignSelf: 'stretch',
     borderRadius: widthPercentageToDP(4),
-    height: heightPercentageToDP(50),
     marginHorizontal: widthPercentageToDP(15),
-    backgroundColor: '#FFF'
+    paddingVertical: heightPercentageToDP(2),
+    paddingHorizontal: widthPercentageToDP(5),
+    backgroundColor: '#0f0f0f'
   },
 
   scoreboardItem: {
-    paddingVertical: heightPercentageToDP(2),
-    paddingHorizontal: widthPercentageToDP(3),
-    borderBottomWidth: 1,
-    borderColor: '#DFDFDF',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: heightPercentageToDP(1)
+  },
+
+  scoreboardText: {
+    color: '#FFF',
+    width: widthPercentageToDP(20),
+    paddingLeft: widthPercentageToDP(2)
   }
 })
