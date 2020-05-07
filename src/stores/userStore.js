@@ -11,14 +11,17 @@ export default class UserStore {
   @observable success = false;
 
   @action
-  async register(username, password) {
+  async register(username, password, profile_color) {
     this.success = false;
     this.errorMsg = ''
 
     await UserService.register(
       username,
-      password
+      password,
+      profile_color
     ).then(response => {
+      console.log(response)
+      
       if(response.status == 201) {
         this.success = true
       }
@@ -48,6 +51,7 @@ export default class UserStore {
         this.name = response.data.user.name;
         this.username = response.data.user.username;
         this.source = response.data.user.source;
+        this.profile_color = response.data.user.profile_color;
 
         this.token = response.data.token;
       }

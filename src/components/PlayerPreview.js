@@ -21,14 +21,16 @@ export default class PlayerPreview extends Component {
               }} /> :
             <View
               style={{
-                backgroundColor: '#FFF',
+                backgroundColor: player.profile_color,
+                borderWidth: 2,
+                borderColor: '#FFF',
                 justifyContent: 'center',
                 height: height || heightPercentageToDP(8),
                 width: width || heightPercentageToDP(8),
                 borderRadius: height / 2 || heightPercentageToDP(4),
               }}>
               <Text
-                style={{ fontSize: fontSize || 22, textAlign: 'center' }}>
+                style={{ color: '#FFF', fontSize: fontSize || 22, textAlign: 'center' }}>
                 {player.username[0].toUpperCase()}
               </Text>
             </View>

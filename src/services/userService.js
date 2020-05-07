@@ -1,10 +1,11 @@
 import api from '../../axios';
 
 class UserService {
-  register(username, password) {
+  register(username, password, profile_color) {
     return api.post('/auth/register', {
       username,
-      password
+      password,
+      profile_color
     })
       .then(res => {
         return res;

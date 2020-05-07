@@ -4,7 +4,9 @@ import { inject, observer } from 'mobx-react'
 import CollectionPreview from '../../components/CollectionPreview'
 import { NavigationEvents } from 'react-navigation'
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
+import PlayerPreview from '../../components/PlayerPreview'
 
+@inject('user')
 @inject('collection')
 @observer
 export default class Collections extends Component {
@@ -42,11 +44,11 @@ export default class Collections extends Component {
               this.props.navigation.navigate('ShowCollection', { collection })
             }}
             style={{ marginTop: 8 }} key={i}>
-            <CollectionPreview 
-            fontSize={heightPercentageToDP(3)}
-            height={widthPercentageToDP(60)}
-            width={widthPercentageToDP(35)}
-            collection={collection} />
+            <CollectionPreview
+              fontSize={heightPercentageToDP(3)}
+              height={widthPercentageToDP(60)}
+              width={widthPercentageToDP(35)}
+              collection={collection} />
           </TouchableOpacity>
         )
       })
@@ -76,6 +78,12 @@ export default class Collections extends Component {
             }
           }} />
 
+        <View
+          style={styles.profileContainer}>
+            <PlayerPreview
+            player={this.props.user}/>
+        </View>
+
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.collectionContaier}>
           {this.renderCollections()}
         </ScrollView>
@@ -96,13 +104,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
 
+  profileContainer: {
+    paddingVertical: heightPercentageToDP(2),
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#0F0F0F',
+  },
+
   collectionContaier: {
     flexGrow: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingTop: heightPercentageToDP(2),
     paddingHorizontal: widthPercentageToDP(10),
     flexWrap: 'wrap',
-    paddingBottom: heightPercentageToDP(6)
+    paddingBottom: heightPercentageToDP(6),
   },
 
   createButton: {

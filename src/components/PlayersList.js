@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { inject, observer } from 'mobx-react';
+import PlayerPreview from './PlayerPreview';
 
 @inject('room')
 @inject('user')
@@ -31,19 +32,8 @@ export default class PlayersList extends Component {
                   source={{
                     uri: player.data.profile_img
                   }} /> :
-                  <View
-                  style={{
-                    backgroundColor: '#FFF',
-                    justifyContent: 'center',
-                    height: heightPercentageToDP(8),
-                    width: heightPercentageToDP(8),
-                    borderRadius: heightPercentageToDP("4%"),
-                  }}>
-                  <Text
-                  style={{fontSize: 22, textAlign: 'center'}}>
-                    {player.data.username[0].toUpperCase()}
-                  </Text>
-                </View>
+                <PlayerPreview
+                  player={player} />
             }
 
             <View
@@ -87,19 +77,8 @@ export default class PlayersList extends Component {
                   source={{
                     uri: player.profile_img
                   }} /> :
-                <View
-                  style={{
-                    backgroundColor: '#FFF',
-                    justifyContent: 'center',
-                    height: heightPercentageToDP(8),
-                    width: heightPercentageToDP(8),
-                    borderRadius: heightPercentageToDP("4%"),
-                  }}>
-                  <Text
-                  style={{fontSize: 22, textAlign: 'center'}}>
-                    {player.username[0].toUpperCase()}
-                  </Text>
-                </View>
+                <PlayerPreview
+                  player={player} />
             }
             <View
               style={{
@@ -108,7 +87,8 @@ export default class PlayersList extends Component {
                 borderWidth: 0,
                 borderColor: '#FFF',
                 justifyContent: 'center',
-                paddingHorizontal: widthPercentageToDP(1),
+                paddingHorizontal: widthPercentageToDP(2),
+                paddingVertical: widthPercentageToDP(1),
                 marginTop: heightPercentageToDP(1)
               }}>
               <Text style={{ color: '#000', textAlign: 'center' }}>
