@@ -30,7 +30,7 @@ export default class PlayerPreview extends Component {
                 borderRadius: height / 2 || heightPercentageToDP(4),
               }}>
               <Text
-                style={{ color: '#FFF', fontSize: fontSize || 22, textAlign: 'center' }}>
+                style={{ color: '#FFF', fontWeight: 'bold', fontSize: fontSize || 22, textAlign: 'center' }}>
                 {player.username[0].toUpperCase()}
               </Text>
             </View>

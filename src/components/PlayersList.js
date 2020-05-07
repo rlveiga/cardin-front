@@ -33,6 +33,7 @@ export default class PlayersList extends Component {
                     uri: player.data.profile_img
                   }} /> :
                 <PlayerPreview
+                fontSize={28}
                   player={player} />
             }
 
@@ -78,6 +79,7 @@ export default class PlayersList extends Component {
                     uri: player.profile_img
                   }} /> :
                 <PlayerPreview
+                  fontSize={28}
                   player={player} />
             }
             <View

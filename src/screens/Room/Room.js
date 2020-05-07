@@ -9,6 +9,7 @@ import CardPreview from '../../components/CardPreview';
 import Game from './Game';
 import PlayersList from '../../components/PlayersList';
 import Slider from '@react-native-community/slider';
+import Toast from 'react-native-easy-toast';
 
 @inject('user')
 @inject('room')
@@ -39,6 +40,7 @@ export default class Room extends Component {
     }
 
     this.game = null
+    this.toast = null
 
     this.socket = this.socket = io(`https://cardin-app.herokuapp.com`, { transports: ['websocket'] })
 
@@ -169,6 +171,20 @@ export default class Room extends Component {
     )
   }
 
+  async acquireCollection() {
+    await this.props.collection.acquireCollection(
+      this.props.room.currentRoom.collection.id
+    )
+
+    if (this.props.collection.success) {
+      this.toast.show('Adicionado às suas coleções!')
+    }
+
+    else {
+      this.toast.show(this.props.collection.errorMsg)
+    }
+  }
+
   async startGame() {
     this.socket.emit(
       'game_start',
@@ -184,7 +200,7 @@ export default class Room extends Component {
     return (
       <View style={styles.container}>
         <View
-          style={{ alignItems: "center" }}>
+          style={{ alignItems: "center", marginBottom: 32 }}>
           <CollectionPreview
             fontSize={heightPercentageToDP(4)}
             cardCountFontSize={heightPercentageToDP(3)}
@@ -215,7 +231,11 @@ export default class Room extends Component {
                 <Text style={{ color: '#000', textAlign: 'center' }}>Começar partida</Text>
               </TouchableOpacity>
             </View> :
-            null
+            <TouchableOpacity
+              onPress={() => this.acquireCollection()}
+              style={styles.startGameButton}>
+              <Text style={{ color: '#000', textAlign: 'center' }}>Adquirir coleção</Text>
+            </TouchableOpacity>
         }
       </View>
     )
@@ -234,9 +254,14 @@ export default class Room extends Component {
               onVoterSwiped={this._onVoterSwiped} /> :
             this.renderGameLobby()
         }
-        {/* // <View style={{ flex: 1, backgroundColor: '#000', justifyContent: 'center' }}>
-      //   <ActivityIndicator size='large' color='#FFF' />
-      // </View> */}
+
+        <Toast
+          position='bottom'
+          positionValue={heightPercentageToDP(25)}
+          fadeInDuration={150}
+          fadeOutDuration={500}
+          style={styles.toast}
+          ref={ref => this.toast = ref} />
       </View>
     )
   }
@@ -257,5 +282,11 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     paddingTop: 4,
     paddingBottom: 4
+  },
+
+  toast: {
+    paddingHorizontal: widthPercentageToDP(3),
+    paddingVertical: widthPercentageToDP(1),
+    backgroundColor: '#010054'
   }
 })
