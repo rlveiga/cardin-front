@@ -78,12 +78,6 @@ export default class Collections extends Component {
             }
           }} />
 
-        <View
-          style={styles.profileContainer}>
-            <PlayerPreview
-            player={this.props.user}/>
-        </View>
-
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.collectionContaier}>
           {this.renderCollections()}
         </ScrollView>
@@ -102,13 +96,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-  },
-
-  profileContainer: {
-    paddingVertical: heightPercentageToDP(2),
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#0F0F0F',
   },
 
   collectionContaier: {

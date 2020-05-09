@@ -1,8 +1,8 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
-import { LoginManager } from 'react-native-fbsdk'
+import PlayerPreview from '../components/PlayerPreview';
 
 @inject('user')
 @inject('room')
@@ -18,39 +18,49 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={styles.greeter}>👋 Olá, {
-            this.props.user.source == 'fb' ?
-              this.props.user.name.split(' ')[0] :
-              this.props.user.username
-          }
-          </Text>
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              style={[styles.cardButton, { backgroundColor: '#FFF' }]}
-              onPress={() => this.props.navigation.navigate('SelectCollection')}>
-              <Text style={[styles.cardButtonText, { color: '#000' }]}>
-                Criar sala
-              </Text>
+        <SafeAreaView style={{ flex: 1, alignSelf: 'stretch', alignItems: 'center' }}>
+          <View
+            style={styles.profileContainer}>
+            <PlayerPreview
+              player={this.props.user} />
 
-              <Text style={[styles.cardButtonDescription, { color: '#000' }]}>
-                Crie uma nova sala e chame seus amigos
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.cardButton, { backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF' }]}
-              onPress={() => this.props.navigation.navigate('JoinRoom')}>
-              <Text style={[styles.cardButtonText, { color: '#FFF' }]}>
-                Buscar sala
-              </Text>
-
-              <Text style={[styles.cardButtonDescription, { color: '#FFF' }]}>
-                Encontre amigos ou jogue online com desconhecidos
-              </Text>
-            </TouchableOpacity>
+            <Text style={styles.greeter}>
+              👋 Olá, {
+                this.props.user.source == 'fb' ?
+                  this.props.user.name.split(' ')[0] :
+                  this.props.user.username
+              }
+            </Text>
           </View>
-        </View>
+
+          <View style={{ flex: 1, alignItems: 'center', paddingTop: heightPercentageToDP(15) }}>
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={[styles.cardButton, { backgroundColor: '#FFF' }]}
+                onPress={() => this.props.navigation.navigate('SelectCollection')}>
+                <Text style={[styles.cardButtonText, { color: '#000' }]}>
+                  Criar sala
+              </Text>
+
+                <Text style={[styles.cardButtonDescription, { color: '#000' }]}>
+                  Crie uma nova sala e chame seus amigos
+              </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.cardButton, { backgroundColor: '#000', borderWidth: 1, borderColor: '#FFF' }]}
+                onPress={() => this.props.navigation.navigate('JoinRoom')}>
+                <Text style={[styles.cardButtonText, { color: '#FFF' }]}>
+                  Buscar sala
+              </Text>
+
+                <Text style={[styles.cardButtonDescription, { color: '#FFF' }]}>
+                  Encontre amigos ou jogue online com desconhecidos
+              </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </SafeAreaView>
 
         <TouchableOpacity
           onPress={() => this.logout()}
@@ -73,10 +83,18 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
+  profileContainer: {
+    paddingVertical: heightPercentageToDP(2),
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#1F1F1F',
+    alignSelf: 'stretch'
+  },
+
   greeter: {
     color: '#FFF',
     fontSize: 26,
-    marginBottom: heightPercentageToDP("3%")
+    marginTop: heightPercentageToDP(1)
   },
 
   buttonsContainer: {

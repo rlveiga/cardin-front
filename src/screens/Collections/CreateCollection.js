@@ -18,7 +18,8 @@ export default class CreateCollection extends Component {
       cardCreators: [
         {
           switch: true,
-          text: ''
+          text: '',
+          slots: 0
         }
       ],
       loading: false
@@ -30,11 +31,11 @@ export default class CreateCollection extends Component {
   }
 
   createCollection = async () => {
-    if(this.state.collectionName == '') {
+    if (this.state.collectionName == '') {
       Alert.alert(
         'Insira um nome para a coleção'
       )
-      
+
       return
     }
     this.setState({ loading: true })
@@ -118,7 +119,29 @@ export default class CreateCollection extends Component {
   updateCardCreatorText(val, i) {
     let cardCreators = this.state.cardCreators
 
-    cardCreators[i].text = val
+    // Add new slot, check for length to allow backspace
+    if (val[val.length - 1] == '_' && val.length > cardCreators[i].text.length) {
+      if (cardCreators[i].switch)
+        return
+
+      if (cardCreators[i].slots == 2) {
+        Alert.alert('Máximo de 2 espaços em branco por carta preta')
+        return
+      }
+
+      val = `${val}___ `
+      cardCreators[i].slots++
+    }
+
+    // Remove slot
+    if (cardCreators[i].text[cardCreators[i].text.length - 1] == '_' && val.length < cardCreators[i].text.length) {
+      cardCreators[i].text = cardCreators[i].text.substring(0, cardCreators[i].text.length - 4)
+      cardCreators[i].slots--
+    }
+
+    else {
+      cardCreators[i].text = val
+    }
 
     this.setState({ cardCreators })
   }

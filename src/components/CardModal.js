@@ -155,7 +155,7 @@ export default class CardModal extends Component {
                 onPress={() => this.props.onDelete(card.id)}
                 style={styles.deleteButton}>
                 <Text style={{ color: '#FFF' }}>
-                  Delete card
+                  Deletar carta
                 </Text>
               </TouchableOpacity> :
               null
