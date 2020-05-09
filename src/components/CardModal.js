@@ -60,12 +60,12 @@ export default class CardModal extends Component {
   async onCollectionPress(collection, inCollection) {
     // Remove element from editedList
     if (inCollection) {
-      await this.props.card.removeFromCollection(
+      await this.props.collection.removeCard(
+        collection.id,
         this.props.card.selectedCard.id,
-        collection.id
       )
 
-      if (this.props.card.success) {
+      if (this.props.collection.success) {
         const newList = this.state.editedList.filter((e) => {
           return e.id != collection.id
         })
@@ -80,12 +80,12 @@ export default class CardModal extends Component {
 
     // Add element to editedList
     else {
-      await this.props.card.addToCollection(
-        this.props.card.selectedCard.id,
-        collection.id
+      await this.props.collection.addCard(
+        collection.id,
+        this.props.card.selectedCard.id
       )
 
-      if (this.props.card.success) {
+      if (this.props.collection.success) {
         const newList = this.state.editedList.concat([collection])
 
         this.setState({ editedList: newList })

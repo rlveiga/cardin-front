@@ -92,4 +92,38 @@ export default class CollectionStore {
       this.errorMsg = error.response.data.message
     })
   }
+
+  @action
+  async addCard(collection_id, card_id) {
+    await CollectionService.addCard(
+      this.root.userStore.token,
+      collection_id,
+      card_id
+    ).then(response => {
+      console.log(response)
+
+      if (response.status == 200) {
+        this.success = true
+      }
+    }, error => {
+      console.log(error)
+    })
+  }
+
+  @action
+  async removeCard(collection_id, card_id) {
+    await CollectionService.removeCard(
+      this.root.userStore.token,
+      collection_id,
+      card_id
+    ).then(response => {
+      console.log(response)
+
+      if (response.status == 200) {
+        this.success = true
+      }
+    }, error => {
+      console.log(error)
+    })
+  }
 }

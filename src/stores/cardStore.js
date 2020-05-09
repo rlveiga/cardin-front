@@ -75,40 +75,6 @@ export default class CardStore {
         })
     }
 
-    @action
-    async addToCollection(card_id, collection_id) {
-        await CardService.addToCollection(
-            this.root.userStore.token,
-            card_id,
-            collection_id
-        ).then(response => {
-          console.log(response)
-
-          if(response.status == 200) {
-              this.success = true
-          }
-        }, error => {
-            console.log(error)
-        })
-    }
-
-    @action
-    async removeFromCollection(card_id, collection_id) {
-        await CardService.removeFromCollection(
-            this.root.userStore.token,
-            card_id,
-            collection_id
-        ).then(response => {
-          console.log(response)
-
-          if(response.status == 200) {
-              this.success = true
-          }
-        }, error => {
-            console.log(error)
-        })
-    }
-
     // @action
     // async updateCollections(card_id, alterations) {
     //   console.log(alterations)
