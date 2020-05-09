@@ -10,7 +10,7 @@ import { LoginManager } from 'react-native-fbsdk'
 @observer
 export default class Home extends Component {
   logout() {
-    LoginManager.logOut()
+    // LoginManager.logOut()
 
     this.props.navigation.navigate('Login')
   }

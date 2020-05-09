@@ -12,6 +12,7 @@ export default class CollectionStore {
   @observable success
   @observable collectionList
   @observable selectedCollection
+  @observable createdCollection
 
   @observable errorMsg
 
@@ -63,6 +64,7 @@ export default class CollectionStore {
       console.log(response)
       if (response.status == 201) {
         this.success = true
+        this.createdCollection = response.data.collection
       }
     }, error => {
       console.log(error.response)

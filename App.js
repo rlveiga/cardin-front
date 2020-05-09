@@ -1,16 +1,12 @@
 import { Provider } from 'mobx-react';
 import React, { Component } from 'react';
-import { StatusBar, YellowBox } from 'react-native';
+import { StatusBar, YellowBox, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, LaunchScreen, Login, Room, SelectCollection, ShowCollection, Registration } from './src/screens';
 import stores from './src/stores';
-
-
-
-
 
 YellowBox.ignoreWarnings(['Remote debugger']);
 
@@ -111,9 +107,19 @@ const CollectionsNavigator = createStackNavigator({
 
   CreateCollection: {
     screen: CreateCollection,
-    navigationOptions: {
-      title: 'Nova coleção'
-    }
+    navigationOptions: ({ navigation }) => ({
+      title: 'Nova coleção',
+      headerRight: () => {
+        console.log(navigation)
+        return (
+          <TouchableOpacity
+            style={{ marginRight: 32 }}
+            onPress={navigation.getParam('createCollection')}>
+            <Text style={{ color: '#FFF', fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Criar</Text>
+          </TouchableOpacity>
+        )
+      }
+    })
   },
 
   ShowCollection: {
