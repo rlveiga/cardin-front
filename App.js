@@ -90,6 +90,18 @@ const HomeNavigator = createStackNavigator({
   }
 });
 
+HomeNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true
+
+  if (navigation.state.index > 0) {
+    tabBarVisible = false
+  }
+
+  return {
+    tabBarVisible,
+  }
+}
+
 const CollectionsNavigator = createStackNavigator({
   Collections: {
     screen: Collections,
@@ -142,6 +154,19 @@ const CollectionsNavigator = createStackNavigator({
     headerBackTitle: null
   }
 })
+
+CollectionsNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true
+
+  if (navigation.state.index > 0) {
+    tabBarVisible = false
+  }
+
+  return {
+    tabBarVisible,
+  }
+}
+
 
 const LoggedInTabNavigator = createBottomTabNavigator({
   Home: {
