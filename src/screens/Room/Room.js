@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { HeaderBackButton } from 'react-navigation-stack';
 import io from 'socket.io-client/dist/socket.io';
@@ -10,6 +10,8 @@ import Game from './Game';
 import PlayersList from '../../components/PlayersList';
 import Slider from '@react-native-community/slider';
 import Toast from 'react-native-easy-toast';
+import RNPickerSelect from 'react-native-picker-select';
+import { Icon } from 'react-native-elements';
 
 @inject('user')
 @inject('room')
@@ -36,7 +38,32 @@ export default class Room extends Component {
     this.state = {
       connected: false,
       gameStarted: false,
-      maxPoints: 5
+      maxPoints: 5,
+      maxPointsList: [
+        {
+          label: '3',
+          value: 3
+        },
+        {
+          label: '5',
+          value: 5
+        },
+
+        {
+          label: '7',
+          value: 7
+        },
+
+        {
+          label: '10',
+          value: 10
+        },
+
+        {
+          label: '15',
+          value: 15
+        }
+      ]
     }
 
     this.game = null
@@ -101,10 +128,7 @@ export default class Room extends Component {
 
     console.log(data)
     this.updateGame(data)
-
-    this.props.room.userData = this.props.room.currentRoom.game.players.filter(player => {
-      return player.data.id == this.props.user.id
-    })
+    this.updatePlayers(data.players)
 
     this.setState({ gameStarted: true })
   }
@@ -112,7 +136,11 @@ export default class Room extends Component {
   _onCardsSelected = (data) => {
     console.log(data)
 
-    this.updateGame(data)
+    this.updatePlayers(data.players)
+
+    if (data.state == 'Voting') {
+      this.updateGame(data)
+    }
   }
 
   _onWinnerSelected = (data) => {
@@ -122,13 +150,11 @@ export default class Room extends Component {
   }
 
   _onNewRoundStart = (data) => {
+    this.props.room.lockHand = false
     console.log(data)
 
     this.updateGame(data)
-
-    this.props.room.userData = this.props.room.currentRoom.game.players.filter(player => {
-      return player.data.id == this.props.user.id
-    })
+    this.updatePlayers(data.players)
   }
 
   _onVoterSwiped = (index) => {
@@ -156,6 +182,14 @@ export default class Room extends Component {
   updateGame(data) {
     this.props.room.currentRoom.game = data
     console.log('Game updated')
+  }
+
+  updatePlayers(data) {
+    this.props.room.playersList = data
+
+    this.props.room.userData = data.filter(player => {
+      return player.data.id == this.props.user.id
+    })[0]
   }
 
   _onBack = () => {
@@ -214,16 +248,43 @@ export default class Room extends Component {
           this.props.room.currentRoom.created_by == this.props.user.id ?
             <View style={{ alignItems: 'center' }}>
               <Text style={{ color: '#FFF', fontSize: 18 }}>
-                Melhor de {this.state.maxPoints} pontos
+                Pontuação máxima:
               </Text>
 
-              <Slider
-                style={{ width: widthPercentageToDP(60) }}
-                value={this.state.maxPoints}
-                onValueChange={val => this.setState({ maxPoints: val })}
-                minimumValue={3}
-                maximumValue={20}
-                step={1} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  marginVertical: 15,
+                  paddingVertical: 5,
+                  backgroundColor: '#FFF',
+                  borderRadius: 12,
+                  width: widthPercentageToDP(30)
+                }}>
+                <View style={{ flex: 1 }}>
+                  <RNPickerSelect
+                    ref='picker'
+                    placeholder={{}}
+                    value={this.state.maxPoints}
+                    items={this.state.maxPointsList}
+                    onValueChange={val => this.setState({ maxPoints: val })}
+                    textInputProps={{ style: { color: '#000', textAlign: 'center' } }} />
+                </View>
+
+                {
+                  Platform.os == 'ios' ?
+                    <TouchableOpacity
+                      onPress={() => this.refs['picker'].togglePicker()}
+                      style={{
+                        opacity: 0.75,
+                        position: 'absolute',
+                        right: widthPercentageToDP(2)
+                      }}>
+                      <Icon size={28} name='arrow-drop-down' />
+                    </TouchableOpacity> :
+                    null
+                }
+              </View>
 
               <TouchableOpacity
                 style={styles.startGameButton}
