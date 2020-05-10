@@ -1,14 +1,10 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
-import CardPreview from '../../components/CardPreview';
-import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import PlayersList from '../../components/PlayersList';
-import io from 'socket.io-client/dist/socket.io';
-import Swiper from 'react-native-swiper';
+import React, { Component } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CardPreview from '../../components/CardPreview';
 import PlayerPreview from '../../components/PlayerPreview';
 
 @inject('user')
@@ -21,9 +17,8 @@ export default class Game extends Component {
     this.state = {
       handLoaded: false,
       hand: null,
-      cardsSelectedCount: 0,
       cardsSelected: [],
-      swiperIndex: 0
+      swiperIndex: 0,
     }
 
     this.voterSwiper = null
@@ -39,21 +34,23 @@ export default class Game extends Component {
           <View
             key={i}
             style={{ alignItems: 'center' }}>
-            {
-              card['selected'] ?
-                <Text style={{ color: '#FFF', position: 'absolute', top: -heightPercentageToDP(2) }}>
-                  {card['selectedIndex']}
-                </Text> :
-                null
-            }
             <TouchableOpacity
+              style={{ alignItems: 'center' }}
               onPress={() => this.onCardSelect(card)}
-              disabled={this.isCzar()}>
+              disabled={this.isCzar() || this.props.room.lockHand}>
               <CardPreview
-                disabled={this.isCzar() || card['selected']}
+                fontSize={widthPercentageToDP(4)}
+                disabled={this.isCzar() || card['selected'] || this.props.room.lockHand}
                 style={{ marginBottom: 0 }}
                 key={i}
                 card={card} />
+              {
+                card['selected'] ?
+                  <Text style={{ color: '#FFF', position: 'absolute', bottom: heightPercentageToDP(3) }}>
+                    {card['selectedIndex']}
+                  </Text> :
+                  null
+              }
             </TouchableOpacity>
           </View>
         )
@@ -64,6 +61,13 @@ export default class Game extends Component {
   }
 
   onCardSelect(card) {
+    const slots = this.props.room.currentRoom.game.table_card.slots
+
+    if(this.state.cardsSelected.length == slots && !card['selected']) {
+      Alert.alert(`Máximo de ${slots} ${slots == 1 ? 'carta' : 'cartas'} para esta rodada`)
+      return
+    }
+
     card['selected'] = !card['selected']
 
     let copiedList = this.state.cardsSelected
@@ -91,13 +95,21 @@ export default class Game extends Component {
   }
 
   confirmSelectedCards() {
+    const slots = this.props.room.currentRoom.game.table_card.slots
+    
+    if(this.state.cardsSelected.length !== slots) {
+      Alert.alert(`Você deve jogar ${slots} ${slots == 1 ? 'carta' : 'cartas'}`)
+      return
+    }
+
     this.props.socket.emit('cards_selected', {
       room: this.props.room.currentRoom.code,
       user_id: this.props.user.id,
       cards: this.state.cardsSelected
     })
 
-    this.setState({ cardsSelected: [], cardsSelectedCount: 0 })
+    this.setState({ cardsSelected: [] })
+    this.props.room.lockHand = true
   }
 
   confirmWinner(winner_id) {
@@ -119,6 +131,12 @@ export default class Game extends Component {
 
   isCzar() {
     return this.props.room.currentRoom.game.czar_id == this.props.user.id
+  }
+
+  isReady() {
+    console.log(this.props.room.userData.is_ready)
+
+    return this.props.room.userData.is_ready
   }
 
   renderSelecting() {
@@ -143,14 +161,15 @@ export default class Game extends Component {
           }
 
           <CardPreview
-            fontSize={heightPercentageToDP(3)}
-            height={widthPercentageToDP(80)}
+            fontSize={widthPercentageToDP(6)}
+            height={widthPercentageToDP(75)}
             width={widthPercentageToDP(50)}
             card={this.props.room.currentRoom.game.table_card} />
 
           {
             !this.isCzar() ?
               <TouchableOpacity
+                disabled={this.props.room.lockHand}
                 onPress={() => this.confirmSelectedCards()}>
                 <Text style={{ color: '#FFF' }}>Jogar</Text>
               </TouchableOpacity> :
@@ -369,6 +388,28 @@ export default class Game extends Component {
           style={styles.winnerText}>
           {`${winner.source == 'fb' ? winner.name.split(' ')[0] : winner.username} venceu o jogo!`}
         </Text>
+
+        {
+          this.props.room.currentRoom.created_by == this.props.user.id ?
+            <TouchableOpacity
+              onPress={() => {
+                this.props.socket.emit(
+                  'game_start',
+                  {
+                    room: this.props.room.currentRoom.code,
+                    collection: this.props.room.collection,
+                    max_points: 5
+                  }
+                )
+              }}
+              style={{ backgroundColor: '#FFF', padding: 5, borderRadius: 12, opacity: 0.7, marginBottom: heightPercentageToDP(2) }}>
+              <Text
+                style={{ color: '#000' }}>
+                Começar nova partida
+              </Text>
+            </TouchableOpacity> :
+            null
+        }
 
         <View
           style={styles.scoreboard}>

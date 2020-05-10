@@ -13,6 +13,8 @@ export default class RoomStore {
     @observable currentRoom
     @observable gameData
     @observable hand
+    @observable playersList
+    @observable lockHand = false
 
     @observable voterSwiperIndex = 0
 

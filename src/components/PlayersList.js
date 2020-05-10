@@ -9,8 +9,8 @@ import PlayerPreview from './PlayerPreview';
 @observer
 export default class PlayersList extends Component {
   renderPlayers() {
-    return this.props.room.currentRoom.game ?
-      this.props.room.currentRoom.game.players.map((player, i) => {
+    return this.props.room.currentRoom.game && this.props.room.playersList ?
+      this.props.room.playersList.map((player, i) => {
         const isVoter = this.props.room.currentRoom.game.czar_id == player.data.id
 
         return (
@@ -33,8 +33,8 @@ export default class PlayersList extends Component {
                     uri: player.data.profile_img
                   }} /> :
                 <PlayerPreview
-                fontSize={28}
-                  player={player} />
+                  fontSize={28}
+                  player={player.data} />
             }
 
             <View
