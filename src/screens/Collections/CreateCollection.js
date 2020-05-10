@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, Switch, Alert, ScrollView } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import { inject, observer } from 'mobx-react'
-import { widthPercentageToDP } from 'react-native-responsive-screen'
+import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen'
 import AsyncLoader from '../../components/AsyncLoader';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 @inject('collection')
 @inject('card')
@@ -90,8 +91,16 @@ export default class CreateCollection extends Component {
     return this.state.cardCreators.map((creator, i) => {
       return (
         <View
+          key={i}
           style={styles.cardCreator}>
           <TextInput
+            ref={`card_input_${i}`}
+            returnKeyType='next'
+            onSubmitEditing={() => {
+              if (this.refs[`card_input_${i + 1}`])
+                this.refs[`card_input_${i + 1}`].focus()
+            }}
+            autoCorrect={false}
             value={creator.text}
             onChangeText={val => this.updateCardCreatorText(val, i)}
             placeholderTextColor='#A2A2A2'
@@ -158,6 +167,8 @@ export default class CreateCollection extends Component {
     return (
       <View style={styles.container}>
         <TextInput
+          returnKeyType='done'
+          autoCorrect={false}
           value={this.state.collectionName}
           onChangeText={val => this.setState({ collectionName: val })}
           placeholderTextColor='#A2A2A2'
@@ -165,14 +176,17 @@ export default class CreateCollection extends Component {
           style={styles.textInput} />
 
         <View style={{ flex: 1, marginTop: 25 }}>
-          <ScrollView>
+          <KeyboardAwareScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps='always'
+            extraScrollHeight={heightPercentageToDP(5)}>
             {this.renderCardCreators()}
             <TouchableOpacity
               onPress={() => this.addCardCreator()}
               style={styles.addCardButton}>
               <Text style={{ fontSize: 24 }}>+</Text>
             </TouchableOpacity>
-          </ScrollView>
+          </KeyboardAwareScrollView>
         </View>
 
         <AsyncLoader
@@ -217,6 +231,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     padding: 12,
     marginRight: 25,
+    fontSize: 16
   },
 
   addCardButton: {
