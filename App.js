@@ -1,6 +1,6 @@
 import { Provider } from 'mobx-react';
 import React, { Component } from 'react';
-import { StatusBar, YellowBox, TouchableOpacity, Text } from 'react-native';
+import { StatusBar, YellowBox, TouchableOpacity, Text, Platform } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -84,7 +84,7 @@ const HomeNavigator = createStackNavigator({
       backgroundColor: '#000',
       elevation: 0,
       borderBottomWidth: 0,
-      paddingBottom: 12,
+      paddingTop: Platform.OS === 'ios' ? 20 : StatusBar.currentHeight,
     },
     headerBackTitle: null
   }
@@ -149,7 +149,7 @@ const CollectionsNavigator = createStackNavigator({
       backgroundColor: '#000',
       elevation: 0,
       borderBottomWidth: 0,
-      paddingBottom: 12,
+      paddingTop: Platform.OS === 'ios' ? 20 : StatusBar.currentHeight,
     },
     headerBackTitle: null
   }
