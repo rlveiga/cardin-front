@@ -1,8 +1,8 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import AsyncLoader from '../components/AsyncLoader';
 
@@ -64,10 +64,18 @@ export default class Login extends Component {
         keyboardShouldPersistTaps='never'
         bounces={false}
         contentContainerStyle={styles.container}>
-        <Text
-          style={styles.title}>
-          Cardin
-        </Text>
+        <View
+        style={{flexDirection: 'row', alignItems: 'center', marginBottom: heightPercentageToDP("8%")}}>
+          <Text
+            style={styles.title}>
+            Cardin
+          </Text>
+
+          <Image
+          resizeMode='contain'
+          style={{width: widthPercentageToDP(15), height: widthPercentageToDP(15)}}
+          source={require('../../assets/images/logo.png')}/>
+        </View>
 
         <TextInput
           style={[styles.textInputContainer, { marginBottom: 42 }]}
@@ -99,7 +107,7 @@ export default class Login extends Component {
           <Text style={{ color: '#FFF' }}>Criar conta</Text>
         </TouchableOpacity>
 
-        <View
+        {/* <View
           style={{ marginTop: heightPercentageToDP(5) }}>
           <LoginButton
             permissions={['public_profile']}
@@ -119,7 +127,7 @@ export default class Login extends Component {
               }
             }
             onLogoutFinished={() => console.log("logout.")} />
-        </View>
+        </View> */}
 
         <AsyncLoader
           active={this.state.loading} />
@@ -142,7 +150,6 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: 'bold',
     color: '#FFF',
-    marginBottom: heightPercentageToDP("8%")
   },
 
   textInputContainer: {
