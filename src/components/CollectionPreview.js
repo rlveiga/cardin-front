@@ -10,7 +10,7 @@ export default class CollectionPreview extends Component {
   render() {
 
     return (
-      <View style={[styles.collectionContainer, { height: this.props.height, width: this.props.width }]}>
+      <View style={[styles.collectionContainer, { opacity: this.props.disabled ? 0.3 : 1, height: this.props.height, width: this.props.width }]}>
         <Text numberOfLines={2} style={{ fontSize: this.props.fontSize, fontWeight: 'bold', color: '#FFF' }}>
           {this.props.collection.name}
         </Text>

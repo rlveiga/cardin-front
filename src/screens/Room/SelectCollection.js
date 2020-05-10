@@ -47,6 +47,9 @@ export default class SellectCollections extends Component {
             }}
             style={{ marginTop: 8 }} key={i}>
             <CollectionPreview
+            fontSize={heightPercentageToDP(3)}
+            height={widthPercentageToDP(60)}
+            width={widthPercentageToDP(35)}
             disabled={collection.white_card_count <= 30 && collection.black_card_count <= 10}
             collection={collection} />
           </TouchableOpacity>
