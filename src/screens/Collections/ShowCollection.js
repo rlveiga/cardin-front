@@ -74,7 +74,10 @@ export default class ShowCollection extends Component {
 
       else {
         return (
-          <ScrollView style={{alignSelf: 'center'}} contentContainerStyle={styles.cardsContaier}>
+          <ScrollView 
+          showsVerticalScrollIndicator={false}
+          style={{alignSelf: 'center'}} 
+          contentContainerStyle={styles.cardsContaier}>
             {
               this.props.collection.selectedCollection.cards.map((card, i) => {
                 return (
