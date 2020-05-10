@@ -55,82 +55,114 @@ export default class Registration extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#000'}}>
-      <KeyboardAwareScrollView
-        keyboardShouldPersistTaps='never'
-        extraScrollHeight={heightPercentageToDP("7%")}
-        bounces={false}
-        contentContainerStyle={styles.container}>
-        <View style={{ flex: 1, alignSelf: 'stretch', alignItems: 'center', paddingTop: 25 }}>
-          <View
-            style={styles.profilePreviewContainer}>
+      <View style={{ flex: 1, backgroundColor: '#000' }}>
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps='never'
+          extraScrollHeight={heightPercentageToDP("7%")}
+          bounces={false}
+          contentContainerStyle={styles.container}>
+          <View style={{ flex: 1, alignSelf: 'stretch', alignItems: 'center', paddingTop: 25 }}>
             <View
-              style={[styles.profilePreview, { backgroundColor: this.state.selectedColor }]}>
+              style={styles.profilePreviewContainer}>
+              <View
+                style={[styles.profilePreview, { backgroundColor: this.state.selectedColor }]}>
+                <Text
+                  style={styles.profilePreviewText}>
+                  {this.state.username ? this.state.username[0].toUpperCase() : null}
+                </Text>
+              </View>
+
+              <View
+                style={styles.colorsContainer}>
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#348082' })}
+                  style={[styles.colorPreview, { backgroundColor: '#348082' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#174041' })}
+                  style={[styles.colorPreview, { backgroundColor: '#174041' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#000000' })}
+                  style={[styles.colorPreview, { backgroundColor: '#000000' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#400807' })}
+                  style={[styles.colorPreview, { backgroundColor: '#400807' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#801A17' })}
+                  style={[styles.colorPreview, { backgroundColor: '#801A17' }]} />
+              </View>
+
+              <View
+                style={styles.colorsContainer}>
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#932191' })}
+                  style={[styles.colorPreview, { backgroundColor: '#932191' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#AD3D6F' })}
+                  style={[styles.colorPreview, { backgroundColor: '#AD3D6F' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#C7594B' })}
+                  style={[styles.colorPreview, { backgroundColor: '#C7594B' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#E17327' })}
+                  style={[styles.colorPreview, { backgroundColor: ' #E17327' }]} />
+
+                <TouchableOpacity
+                  onPress={() => this.setState({ selectedColor: '#FF9300' })}
+                  style={[styles.colorPreview, { backgroundColor: '#FF9300' }]} />
+              </View>
+            </View>
+
+            <View
+              style={{ flex: 1, alignSelf: 'stretch', justifyContent: 'center', marginVertical: heightPercentageToDP(5) }}>
+              <TextInput
+                style={[styles.textInputContainer, { marginBottom: 42 }]}
+                placeholder='Nome de usuário'
+                placeholderTextColor='#A2A2A2'
+                autoCapitalize='none'
+                autoCorrect={false}
+                value={this.state.username}
+                onChangeText={(val) => this.setState({ username: val })} />
+
+              <TextInput
+                secureTextEntry={true}
+                style={[styles.textInputContainer, { marginBottom: 42 }]}
+                placeholder='Senha'
+                placeholderTextColor='#A2A2A2'
+                autoCapitalize='none'
+                autoCorrect={false}
+                value={this.state.password}
+                onChangeText={(val) => this.setState({ password: val })} />
+
+              <TextInput
+                secureTextEntry={true}
+                style={[styles.textInputContainer, { marginBottom: 24 }]}
+                placeholder='Confirmar senha'
+                placeholderTextColor='#A2A2A2'
+                autoCapitalize='none'
+                autoCorrect={false}
+                value={this.state.passwordConfirm}
+                onChangeText={(val) => this.setState({ passwordConfirm: val })} />
+
               <Text
-                style={styles.profilePreviewText}>
-                {this.state.username ? this.state.username[0].toUpperCase() : null}
+                style={styles.bottomInfoText}>
+                As cartas e coleções que você criar ficarão associadas a este usuário.
               </Text>
             </View>
-
-            <View
-              style={styles.colorsContainer}>
-              <TouchableOpacity
-                onPress={() => this.setState({ selectedColor: '#000000' })}
-                style={[styles.colorPreview, { backgroundColor: '#000000' }]} />
-
-              <TouchableOpacity
-                onPress={() => this.setState({ selectedColor: '#b04632' })}
-                style={[styles.colorPreview, { backgroundColor: '#b04632' }]} />
-
-              <TouchableOpacity
-                onPress={() => this.setState({ selectedColor: '#2156cf' })}
-                style={[styles.colorPreview, { backgroundColor: '#2156cf' }]} />
-
-              <TouchableOpacity
-                onPress={() => this.setState({ selectedColor: '#ff1ea5' })}
-                style={[styles.colorPreview, { backgroundColor: '#ff1ea5' }]} />
-            </View>
           </View>
 
-          <View
-          style={{flex: 1, alignSelf: 'stretch', justifyContent: 'center'}}>
-            <TextInput
-              style={[styles.textInputContainer, { marginBottom: 42 }]}
-              placeholder='Nome de usuário'
-              placeholderTextColor='#A2A2A2'
-              autoCapitalize='none'
-              autoCorrect={false}
-              value={this.state.username}
-              onChangeText={(val) => this.setState({ username: val })} />
-
-            <TextInput
-              secureTextEntry={true}
-              style={[styles.textInputContainer, { marginBottom: 42 }]}
-              placeholder='Senha'
-              placeholderTextColor='#A2A2A2'
-              autoCapitalize='none'
-              autoCorrect={false}
-              value={this.state.password}
-              onChangeText={(val) => this.setState({ password: val })} />
-
-            <TextInput
-              secureTextEntry={true}
-              style={[styles.textInputContainer, { marginBottom: 64 }]}
-              placeholder='Confirmar senha'
-              placeholderTextColor='#A2A2A2'
-              autoCapitalize='none'
-              autoCorrect={false}
-              value={this.state.passwordConfirm}
-              onChangeText={(val) => this.setState({ passwordConfirm: val })} />
-          </View>
-        </View>
-
-        <TouchableOpacity
-          onPress={() => this.register()}
-          style={styles.button}>
-          <Text style={{ color: '#000' }}>Confirmar</Text>
-        </TouchableOpacity>
-      </KeyboardAwareScrollView>
+          <TouchableOpacity
+            onPress={() => this.register()}
+            style={styles.button}>
+            <Text style={{ color: '#000' }}>Confirmar</Text>
+          </TouchableOpacity>
+        </KeyboardAwareScrollView>
       </View>
     )
   }
@@ -156,7 +188,8 @@ const styles = StyleSheet.create({
     borderRadius: heightPercentageToDP(7.5),
     borderColor: '#FFF',
     borderWidth: 4,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBottom: heightPercentageToDP(2)
   },
 
   profilePreviewText: {
@@ -166,8 +199,10 @@ const styles = StyleSheet.create({
   },
 
   colorsContainer: {
-    marginVertical: heightPercentageToDP(3),
+    marginVertical: heightPercentageToDP(1),
     flexDirection: 'row',
+    alignSelf: 'stretch',
+    justifyContent: 'space-between'
   },
 
   colorPreview: {
@@ -176,7 +211,6 @@ const styles = StyleSheet.create({
     borderRadius: heightPercentageToDP(2.5),
     borderColor: '#FFF',
     borderWidth: 2,
-    marginHorizontal: widthPercentageToDP(5)
   },
 
   textInputContainer: {
@@ -188,6 +222,11 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingLeft: 25,
     fontSize: 18,
+  },
+
+  bottomInfoText: {
+    color: '#E4E4E4',
+    textAlign: 'left'
   },
 
   button: {
