@@ -67,6 +67,25 @@ class CollectionService {
       });
   }
 
+  disownCollection(token, collection_id) {
+    return api
+      .delete(
+        `/owned_collections/${collection_id}`,
+        null,
+        {
+          headers: {
+            'access-token': token
+          }
+        }
+      )
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err.response;
+      });
+  }
+
   addCard(token, collection_id, card_id) {
     return api.post(`/collections/${collection_id}/add_card/${card_id}`,
       null,
@@ -86,6 +105,22 @@ class CollectionService {
 
   removeCard(token, collection_id, card_id) {
     return api.delete(`/collections/${collection_id}/remove_card/${card_id}`,
+      {
+        headers: {
+          'access-token': token
+        }
+      }
+    )
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err.response;
+      });
+  }
+
+  deleteCollection(token, collection_id) {
+    return api.delete(`/collections/${collection_id}`,
       {
         headers: {
           'access-token': token

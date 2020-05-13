@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native'
 import { inject, observer } from 'mobx-react'
 import CollectionPreview from '../../components/CollectionPreview'
 import { NavigationEvents } from 'react-navigation'
@@ -14,11 +14,14 @@ export default class Collections extends Component {
     super(props)
 
     this.state = {
-      loaded: false
+      loaded: false,
+      editModeOn: false
     }
   }
 
   componentDidMount() {
+    this.props.navigation.setParams({ toggleEditCollections: this.toggleEditCollections, editModeOn: false })
+
     this.loadCollections()
   }
 
@@ -30,6 +33,52 @@ export default class Collections extends Component {
     if (this.props.collection.success) {
       this.setState({ loaded: true })
     }
+  }
+
+  async deleteCollection(collection_id) {
+    await this.props.collection.deleteCollection(collection_id)
+
+    if (this.props.collection.success) {
+      this.loadCollections()
+    }
+  }
+
+  async disownCollection(collection_id) {
+    await this.props.collection.disownCollection(collection_id)
+
+    if (this.props.collection.success) {
+      this.loadCollections()
+    }
+  }
+
+  removeCollection = async (collection) => {
+    if (collection.created_by == this.props.user.id) {
+      Alert.alert(
+        `Tem certeza que deseja remover a coleção ${collection.name}?`,
+        'Todos os usuários que possuirem esta coleção também irão perde-la',
+        [
+          { text: 'Remover', style: 'destructive', onPress: () => this.deleteCollection(collection.id) },
+          { text: 'Cancelar', style: 'cancel' }
+        ]
+      )
+    }
+
+    else {
+      Alert.alert(
+        `Tem certeza que deseja remover a coleção ${collection.name}?`,
+        null,
+        [
+          { text: 'Remover', type: 'destructive', onPress: () => this.disownCollection(collection.id) },
+          { text: 'Cancelar', type: 'cancel' }
+        ]
+      )
+    }
+  }
+
+  toggleEditCollections = () => {
+    const editModeOn = this.props.navigation.getParam('editModeOn')
+
+    this.props.navigation.setParams({ editModeOn: !editModeOn })
   }
 
   renderCollections() {
@@ -45,6 +94,8 @@ export default class Collections extends Component {
             }}
             style={{ marginTop: 8 }} key={i}>
             <CollectionPreview
+              removeCollection={this.removeCollection}
+              editModeOn={this.props.navigation.getParam('editModeOn')}
               fontSize={heightPercentageToDP(3)}
               height={widthPercentageToDP(60)}
               width={widthPercentageToDP(35)}

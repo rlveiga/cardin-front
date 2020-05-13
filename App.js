@@ -105,9 +105,24 @@ HomeNavigator.navigationOptions = ({ navigation }) => {
 const CollectionsNavigator = createStackNavigator({
   Collections: {
     screen: Collections,
-    navigationOptions: {
-      title: 'Coleções'
-    }
+    navigationOptions: ({ navigation }) => ({
+      title: 'Coleções',
+      headerRight: () => {
+        return (
+          <TouchableOpacity
+            style={{ marginRight: 32 }}
+            onPress={navigation.getParam('toggleEditCollections')}>
+            <Text style={{ color: '#FFF', fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
+              {
+                navigation.getParam('editModeOn') ?
+                  'Concluir' :
+                  'Editar'
+              }
+            </Text>
+          </TouchableOpacity>
+        )
+      }
+    })
   },
 
   CreateCard: {

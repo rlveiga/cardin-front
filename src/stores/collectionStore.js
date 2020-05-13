@@ -94,7 +94,27 @@ export default class CollectionStore {
   }
 
   @action
+  async disownCollection(collection_id) {
+    this.success = false
+
+    await CollectionService.disownCollection(
+      this.root.userStore.token,
+      collection_id
+    ).then(response => {
+      console.log(response)
+
+      if (response.status == 200) {
+        this.success = true
+      }
+    }, error => {
+      console.log(error)
+    })
+  }
+
+  @action
   async addCard(collection_id, card_id) {
+    this.success = false
+    
     await CollectionService.addCard(
       this.root.userStore.token,
       collection_id,
@@ -112,6 +132,8 @@ export default class CollectionStore {
 
   @action
   async removeCard(collection_id, card_id) {
+    this.success = false
+
     await CollectionService.removeCard(
       this.root.userStore.token,
       collection_id,
@@ -121,6 +143,28 @@ export default class CollectionStore {
 
       if (response.status == 200) {
         this.success = true
+      }
+    }, error => {
+      console.log(error)
+    })
+  }
+
+  @action
+  async deleteCollection(collection_id) {
+    this.success = false
+    
+    await CollectionService.deleteCollection(
+      this.root.userStore.token,
+      collection_id
+    ).then(response => {
+      console.log(response)
+
+      if(response.status == 200) {
+        this.success = true
+      }
+
+      else {
+        this.errorMsg = response.data.message
       }
     }, error => {
       console.log(error)
