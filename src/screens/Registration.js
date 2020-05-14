@@ -79,10 +79,6 @@ export default class Registration extends Component {
                   style={[styles.colorPreview, { backgroundColor: '#348082' }]} />
 
                 <TouchableOpacity
-                  onPress={() => this.setState({ selectedColor: '#174041' })}
-                  style={[styles.colorPreview, { backgroundColor: '#174041' }]} />
-
-                <TouchableOpacity
                   onPress={() => this.setState({ selectedColor: '#000000' })}
                   style={[styles.colorPreview, { backgroundColor: '#000000' }]} />
 
@@ -108,10 +104,6 @@ export default class Registration extends Component {
                 <TouchableOpacity
                   onPress={() => this.setState({ selectedColor: '#C7594B' })}
                   style={[styles.colorPreview, { backgroundColor: '#C7594B' }]} />
-
-                <TouchableOpacity
-                  onPress={() => this.setState({ selectedColor: '#E17327' })}
-                  style={[styles.colorPreview, { backgroundColor: ' #E17327' }]} />
 
                 <TouchableOpacity
                   onPress={() => this.setState({ selectedColor: '#FF9300' })}

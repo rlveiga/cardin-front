@@ -18,7 +18,6 @@ export default class PlayersList extends Component {
             style={{
               alignItems: 'center',
               marginHorizontal: 6,
-              opacity: player.is_ready ? 0.3 : 1
             }}
             key={i}>
             {

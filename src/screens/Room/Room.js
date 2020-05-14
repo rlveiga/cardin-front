@@ -94,11 +94,9 @@ export default class Room extends Component {
     this.socket.emit('leave', { room: this.props.room.currentRoom.code, user: { username: this.props.user.username } })
     this.socket.disconnect()
 
-    this.props.room.currentRoom = null
-    this.props.room.playersList = null
     this.props.room.lockHand = false
     if(this.props.room.selectingTimeout) {
-      clearTimeout(selectingTimeout)
+      clearTimeout(this.props.room.selectingTimeout.selectingTimeout)
     }
 
     this.props.navigation.navigate('Home')
