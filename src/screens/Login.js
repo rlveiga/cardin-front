@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import AsyncLoader from '../components/AsyncLoader';
+import DefaultButton from '../components/DefaultButton';
 
 @inject('user')
 @observer
@@ -65,16 +66,16 @@ export default class Login extends Component {
         bounces={false}
         contentContainerStyle={styles.container}>
         <View
-        style={{flexDirection: 'row', alignItems: 'center', marginBottom: heightPercentageToDP("8%")}}>
+          style={{ flexDirection: 'row', alignItems: 'center', marginBottom: heightPercentageToDP("8%") }}>
           <Text
             style={styles.title}>
             Cardin
           </Text>
 
           <Image
-          resizeMode='contain'
-          style={{width: widthPercentageToDP(15), height: widthPercentageToDP(15)}}
-          source={require('../../assets/images/logo.png')}/>
+            resizeMode='contain'
+            style={{ width: widthPercentageToDP(15), height: widthPercentageToDP(15) }}
+            source={require('../../assets/images/logo.png')} />
         </View>
 
         <TextInput
@@ -95,17 +96,16 @@ export default class Login extends Component {
           value={this.state.password}
           onChangeText={(val) => this.setState({ password: val })} />
 
-        <TouchableOpacity
+        <DefaultButton
+          style={{marginBottom: 32}}
           onPress={() => this.login(this.state.username, this.state.password)}
-          style={styles.button}>
-          <Text style={{ color: '#000' }}>Entrar</Text>
-        </TouchableOpacity>
+          label='Entrar' />
 
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('Registration')}
-          style={[styles.button, { backgroundColor: '#000', marginTop: heightPercentageToDP(2) }]}>
-          <Text style={{ color: '#FFF' }}>Criar conta</Text>
-        </TouchableOpacity>
+        <DefaultButton
+          label='Criar conta'
+          style={{ backgroundColor: '#000' }}
+          textColor='#FFF'
+          onPress={() => this.props.navigation.navigate('Registration')} />
 
         {/* <View
           style={{ marginTop: heightPercentageToDP(5) }}>

@@ -3,6 +3,8 @@ import { View, TextInput, StyleSheet, TouchableOpacity, Text, Alert } from 'reac
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
 import { inject, observer } from 'mobx-react'
+import DefaultButton from '../components/DefaultButton'
+import ErrorText from '../components/ErrorText'
 
 @inject('user')
 @observer
@@ -13,8 +15,23 @@ export default class Registration extends Component {
       username: '',
       password: '',
       passwordConfirm: '',
-      selectedColor: '#000000'
+      selectedColor: '#000000',
+      hasErrorPassword: false,
+      errorMsgPassword: ''
     }
+  }
+
+  isButtonDisabled() {
+    if (
+      this.state.username == '' ||
+      this.state.password.length == 0 ||
+      this.state.passwordConfirm.length == 0 ||
+      this.state.hasErrorPassword
+    ) {
+      return true
+    }
+
+    return false
   }
 
   async register() {
@@ -114,7 +131,7 @@ export default class Registration extends Component {
             <View
               style={{ flex: 1, alignSelf: 'stretch', justifyContent: 'center', marginVertical: heightPercentageToDP(5) }}>
               <TextInput
-                style={[styles.textInputContainer, { marginBottom: 42 }]}
+                style={styles.textInputContainer}
                 placeholder='Nome de usuário'
                 placeholderTextColor='#A2A2A2'
                 autoCapitalize='none'
@@ -124,36 +141,53 @@ export default class Registration extends Component {
 
               <TextInput
                 secureTextEntry={true}
-                style={[styles.textInputContainer, { marginBottom: 42 }]}
+                style={[styles.textInputContainer, { marginTop: 32 }]}
                 placeholder='Senha'
                 placeholderTextColor='#A2A2A2'
                 autoCapitalize='none'
                 autoCorrect={false}
                 value={this.state.password}
-                onChangeText={(val) => this.setState({ password: val })} />
+                onChangeText={(val) => {
+                  this.setState({ password: val })
+                }} />
 
               <TextInput
                 secureTextEntry={true}
-                style={[styles.textInputContainer, { marginBottom: 24 }]}
+                style={[styles.textInputContainer, { marginTop: 32, borderColor: this.state.hasErrorPassword ? 'red' : 'grey', }]}
                 placeholder='Confirmar senha'
                 placeholderTextColor='#A2A2A2'
                 autoCapitalize='none'
                 autoCorrect={false}
                 value={this.state.passwordConfirm}
-                onChangeText={(val) => this.setState({ passwordConfirm: val })} />
+                onChangeText={(val) => {
+                  if (val != this.state.password) {
+                    this.setState({ hasErrorPassword: true, errorMsgPassword: 'Senhas não conferem' })
+                  }
+
+                  else {
+                    this.setState({ hasErrorPassword: false })
+                  }
+
+                  this.setState({ passwordConfirm: val })
+                }} />
+
+              <ErrorText
+                textAlign='left'
+                show={this.state.hasErrorPassword}
+                text={this.state.errorMsgPassword} />
 
               <Text
-                style={styles.bottomInfoText}>
+                style={[styles.bottomInfoText, {marginTop: this.state.hasErrorPassword ? 32 - heightPercentageToDP(2) : 32}]}>
                 As cartas e coleções que você criar ficarão associadas a este usuário.
               </Text>
             </View>
           </View>
 
-          <TouchableOpacity
+          <DefaultButton
+            disabled={this.isButtonDisabled()}
+            style={{ marginBottom: 32 }}
             onPress={() => this.register()}
-            style={styles.button}>
-            <Text style={{ color: '#000' }}>Confirmar</Text>
-          </TouchableOpacity>
+            label='Confirmar' />
         </KeyboardAwareScrollView>
       </View>
     )
