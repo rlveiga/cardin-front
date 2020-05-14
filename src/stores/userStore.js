@@ -1,5 +1,6 @@
 import { observable, action } from 'mobx';
 import UserService from '../services/userService';
+import { AsyncStorage } from 'react-native';
 
 export default class UserStore {
   @observable id
@@ -9,6 +10,10 @@ export default class UserStore {
 
   @observable errorMsg
   @observable success = false;
+
+  async updateLoginInfo(username, password) {
+    await AsyncStorage.setItem('credentials', JSON.stringify({username, password}));
+  }
 
   @action
   async register(username, password, profile_color) {
@@ -54,6 +59,8 @@ export default class UserStore {
         this.profile_color = response.data.user.profile_color;
 
         this.token = response.data.token;
+
+        this.updateLoginInfo(username, password)
       }
 
       else {

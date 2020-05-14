@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, ActivityIndicator, AsyncStorage } from 'react-native'
 import { AccessToken } from 'react-native-fbsdk';
 import { inject, observer } from 'mobx-react';
 
@@ -7,18 +7,21 @@ import { inject, observer } from 'mobx-react';
 @observer
 export default class LaunchScreen extends Component {
   componentDidMount() {
-    this.getAccessToken()
+    this.getLoginInfo()
   }
 
-  async getAccessToken() {
-    const data = await AccessToken.getCurrentAccessToken()
+  async getLoginInfo() {
+    let userSession = await AsyncStorage.getItem('credentials')
+    
+    console.log(userSession)
 
-    console.log(data)
+    // Has credentials, login user
+    if (userSession) {
+      userSession = JSON.parse(userSession)
 
-    // Has access token, login user
-    if (data) {
-      await this.props.user.fbLogin(
-        data['accessToken']
+      await this.props.user.login(
+        userSession.username,
+        userSession.password
       )
 
       if (this.props.user.success) {
