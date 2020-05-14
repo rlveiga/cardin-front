@@ -15,6 +15,7 @@ export default class RoomStore {
     @observable hand
     @observable playersList
     @observable lockHand = false
+    @observable selectingTimeout
 
     @observable voterSwiperIndex = 0
 

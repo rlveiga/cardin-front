@@ -95,6 +95,8 @@ export default class Game extends Component {
   }
 
   confirmSelectedCards() {
+    clearTimeout(this.props.room.selectingTimeout)
+    
     const slots = this.props.room.currentRoom.game.table_card.slots
     
     if(this.state.cardsSelected.length !== slots) {

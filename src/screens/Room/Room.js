@@ -94,7 +94,13 @@ export default class Room extends Component {
     this.socket.emit('leave', { room: this.props.room.currentRoom.code, user: { username: this.props.user.username } })
     this.socket.disconnect()
 
-    this.currentRoom = null
+    this.props.room.currentRoom = null
+    this.props.room.playersList = null
+    this.props.room.lockHand = false
+    if(this.props.room.selectingTimeout) {
+      clearTimeout(selectingTimeout)
+    }
+
     this.props.navigation.navigate('Home')
   }
 
@@ -131,6 +137,15 @@ export default class Room extends Component {
     this.updatePlayers(data.players)
 
     this.setState({ gameStarted: true })
+
+    this.props.room.selectingTimeout = setTimeout(() => {
+      console.log('Player timed out')
+      this.socket.emit('cards_selected', {
+        room: this.props.room.currentRoom.code,
+        user_id: this.props.user.id,
+        cards: []
+      })
+    }, 60000)
   }
 
   _onCardsSelected = (data) => {
@@ -155,6 +170,14 @@ export default class Room extends Component {
 
     this.updateGame(data)
     this.updatePlayers(data.players)
+
+    this.props.room.selectingTimeout = setTimeout(() => {
+      this.socket.emit('cards_selected', {
+        room: this.props.room.currentRoom.code,
+        user_id: this.props.user.id,
+        cards: []
+      })
+    }, 60000)
   }
 
   _onVoterSwiped = (index) => {
@@ -272,7 +295,7 @@ export default class Room extends Component {
                 </View>
 
                 {
-                  Platform.os == 'ios' ?
+                  Platform.OS == 'ios' ?
                     <TouchableOpacity
                       onPress={() => this.refs['picker'].togglePicker()}
                       style={{
