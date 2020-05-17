@@ -2,12 +2,26 @@ import React, { Component } from 'react'
 import { View, StyleSheet, ActivityIndicator, AsyncStorage } from 'react-native'
 import { AccessToken } from 'react-native-fbsdk';
 import { inject, observer } from 'mobx-react';
+import codePush from 'react-native-code-push';
 
 @inject('user')
 @observer
 export default class LaunchScreen extends Component {
   componentDidMount() {
+    this.checkForUpdates()
     this.getLoginInfo()
+  }
+
+  async checkForUpdates() {
+    const hasUpdate = await codePush.checkForUpdate();
+
+    console.log('Has CodePush update? ', hasUpdate)
+
+    if(hasUpdate) {
+      codePush.sync({
+        installMode: codePush.InstallMode.IMMEDIATE
+      })
+    }
   }
 
   async getLoginInfo() {

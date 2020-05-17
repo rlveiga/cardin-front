@@ -1,5 +1,6 @@
 import { Provider } from 'mobx-react';
 import React, { Component } from 'react';
+import codePush from "react-native-code-push";
 import { StatusBar, YellowBox, TouchableOpacity, Text, Platform } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
@@ -235,7 +236,7 @@ const LoginNavigator = createSwitchNavigator({
 
 const AppContainer = createAppContainer(LoginNavigator);
 
-export default class App extends Component {
+class App extends Component {
   render() {
     return (
       <Provider {...stores}>
@@ -245,3 +246,5 @@ export default class App extends Component {
     );
   }
 };
+
+export default codePush(App);
