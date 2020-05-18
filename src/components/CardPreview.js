@@ -1,10 +1,25 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class CardPreview extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      selectedForEdit: false
+    }
+  }
+
+  toggleEdit = () => {
+    if(!this.state.selectedForEdit)
+      this.props.addCardToSelectedList()
+
+    else
+      this.props.removeCardFromSelectedList()
+
+    this.setState({ selectedForEdit: !this.state.selectedForEdit })
   }
 
   render() {
@@ -18,11 +33,26 @@ export default class CardPreview extends Component {
     ])
 
     return (
-      <View style={[combinedStyles, { opacity: this.props.disabled ? 0.3 : 1 }]}>
+      <TouchableOpacity
+        onPress={!this.props.editModeOn ? this.props.onPress : this.toggleEdit}
+        style={[combinedStyles, {
+          opacity: this.props.disabled ? 0.3 : 1
+        }]}>
         <Text style={styles.cardText(this.props.fontSize, textColor)}>
           {this.props.card.name}
         </Text>
-      </View>
+
+        {
+          this.props.editModeOn ?
+            this.state.selectedForEdit ?
+              <View
+                style={styles.editCheck}>
+                <Icon name='check' color='#FFF' size={widthPercentageToDP(3)} />
+              </View> :
+              null :
+            null
+        }
+      </TouchableOpacity>
     )
   }
 }
@@ -45,5 +75,17 @@ const styles = StyleSheet.create({
       fontSize: fontSize,
       color: textColor
     }
+  },
+
+  editCheck: {
+    position: 'absolute',
+    right: widthPercentageToDP(4),
+    top: widthPercentageToDP(4),
+    width: widthPercentageToDP(6),
+    height: widthPercentageToDP(6),
+    borderRadius: widthPercentageToDP(3),
+    backgroundColor: '#1C7FF5',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })

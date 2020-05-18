@@ -151,7 +151,25 @@ const CollectionsNavigator = createStackNavigator({
   },
 
   ShowCollection: {
-    screen: ShowCollection
+    screen: ShowCollection,
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.getParam('collection').name,
+      headerRight: () => {
+        return (
+          <TouchableOpacity
+            style={{ marginRight: 32 }}
+            onPress={navigation.getParam('toggleEdit')}>
+            <Text style={{ color: '#FFF', fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
+              {
+                navigation.getParam('editModeOn') ?
+                  'Concluir' :
+                  'Editar'
+              }
+            </Text>
+          </TouchableOpacity>
+        )
+      }
+    })
   }
 }, {
   initialRouteName: 'Collections',

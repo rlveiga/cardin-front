@@ -161,7 +161,7 @@ export default class CardModal extends Component {
               null
           }
 
-          <View style={{ position: 'absolute', top: 100 }}>
+          {/* <View style={{ position: 'absolute', top: 100 }}>
             <View style={{ alignItems: 'center', width: widthPercentageToDP("100%") }}>
               <View style={styles.collectionMenu}>
                 {
@@ -183,7 +183,7 @@ export default class CardModal extends Component {
                 }
               </View>
             </View>
-          </View>
+          </View> */}
         </Modal>
       )
     }
