@@ -41,6 +41,10 @@ export default class LaunchScreen extends Component {
       if (this.props.user.success) {
         this.props.navigation.navigate('Home')
       }
+
+      else {
+        this.props.navigation.navigate('Login')
+      }
     }
 
     else {
