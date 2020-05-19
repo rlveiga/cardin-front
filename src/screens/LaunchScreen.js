@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ActivityIndicator, AsyncStorage } from 'react-native'
+import { View, StyleSheet, ActivityIndicator, AsyncStorage, Platform } from 'react-native'
 import { AccessToken } from 'react-native-fbsdk';
 import { inject, observer } from 'mobx-react';
 import codePush from 'react-native-code-push';
-
+import { ENV } from 'react-native-dotenv';
 @inject('user')
 @observer
 export default class LaunchScreen extends Component {
@@ -13,14 +13,38 @@ export default class LaunchScreen extends Component {
   }
 
   async checkForUpdates() {
-    const hasUpdate = await codePush.checkForUpdate();
+    let codePushOptions = {
+      installMode: codePush.InstallMode.ON_NEXT_RESUME
+    }
+
+    if(ENV == 'prod') {
+      if(Platform.OS == 'ios') {
+        codePushOptions.deploymentKey = 'NtJ1WgW_Hq640kb6SkXzwmsGW3oQ0ah_MFGfj'
+      }
+
+      else {
+        codePushOptions.deploymentKey = '0kYS2fjliUno8AV3M4f9qDx8LzZTRfDnrtKVI'
+      }
+    }
+
+    else {
+      if(Platform.OS == 'ios') {
+        codePushOptions.deploymentKey = 'KzGjiyv9cvIp-iNthVNnrvl1pFD1i_zPabSi4'
+      }
+
+      else {
+        codePushOptions.deploymentKey = '4B1dFM4MTpP9vJE2mbe03kk_A3PfEKW28lssC'
+      }
+    }
+
+    const hasUpdate = await codePush.checkForUpdate(codePushOptions.deploymentKey);
 
     console.log('Has CodePush update? ', hasUpdate)
 
     if(hasUpdate) {
-      codePush.sync({
-        installMode: codePush.InstallMode.IMMEDIATE
-      })
+      codePush.sync(
+        codePushOptions
+      )
     }
   }
 
