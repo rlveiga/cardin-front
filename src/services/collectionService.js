@@ -31,7 +31,7 @@ class CollectionService {
 
   createCollection(token, name) {
     return api.post(
-      `/collections`,
+      `/collections/`,
       {
         name
       },

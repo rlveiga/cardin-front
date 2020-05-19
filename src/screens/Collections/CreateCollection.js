@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, Switch, Alert, ScrollView } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity, Switch, Alert, ScrollView, Platform } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import { inject, observer } from 'mobx-react'
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen'
@@ -71,7 +71,11 @@ export default class CreateCollection extends Component {
 
     else {
       Alert.alert(
-        'Erro ao criar a coleção'
+        'Erro ao criar a coleção',
+        null,
+        [
+          { text: 'Ok', onPress: () => this.setState({ loading: false }) }
+        ]
       )
     }
   }
@@ -81,7 +85,8 @@ export default class CreateCollection extends Component {
 
     cardCreators.push({
       switch: true,
-      text: ''
+      text: '',
+      slots: 0
     })
 
     this.setState({ cardCreators })
@@ -94,6 +99,7 @@ export default class CreateCollection extends Component {
           key={i}
           style={styles.cardCreator}>
           <TextInput
+            maxLength={256}
             ref={`card_input_${i}`}
             returnKeyType='next'
             onSubmitEditing={() => {
@@ -112,10 +118,17 @@ export default class CreateCollection extends Component {
               borderWidth: 2
             }]} />
 
+
           <Switch
             value={creator.switch}
             onValueChange={() => this.updateCardCreatorSwitch(i)}
-            thumbColor={creator.switch ? "#000" : "#FFF"}
+            thumbColor={
+              creator.switch ?
+                Platform.OS == 'ios' ?
+                  "#000" :
+                  '#E4E4E4' :
+                "#FFF"
+            }
             trackColor={{
               false: '#000',
               true: '#FFF',
@@ -130,6 +143,8 @@ export default class CreateCollection extends Component {
 
     // Add new slot, check for length to allow backspace
     if (val[val.length - 1] == '_' && val.length > cardCreators[i].text.length) {
+      console.log(cardCreators[i])
+
       if (cardCreators[i].switch)
         return
 

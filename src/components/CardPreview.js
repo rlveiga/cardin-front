@@ -13,7 +13,7 @@ export default class CardPreview extends Component {
   }
 
   toggleEdit = () => {
-    if(!this.state.selectedForEdit)
+    if (!this.state.selectedForEdit)
       this.props.addCardToSelectedList()
 
     else
@@ -22,25 +22,14 @@ export default class CardPreview extends Component {
     this.setState({ selectedForEdit: !this.state.selectedForEdit })
   }
 
-  render() {
+  renderCardInfo() {
     const textColor = (this.props.card.card_type == 'black' ? 'white' : 'black')
-    const borderColor = (this.props.card.card_type == 'black' ? 'white' : null)
-    const backgroundColor = this.props.card.card_type
-
-    const combinedStyles = StyleSheet.flatten([
-      styles.cardContainer(this.props.height, this.props.width), { borderColor: borderColor, borderWidth: this.props.card.card_type == 'black' ? 2 : null, backgroundColor: backgroundColor },
-      this.props.style
-    ])
-
+    
     return (
-      <TouchableOpacity
-        onPress={!this.props.editModeOn ? this.props.onPress : this.toggleEdit}
-        style={[combinedStyles, {
-          opacity: this.props.disabled ? 0.3 : 1
-        }]}>
-        <Text style={styles.cardText(this.props.fontSize, textColor)}>
+      <View>
+        <Text style={styles.cardText(this.props.fontSize, textColor)} >
           {this.props.card.name}
-        </Text>
+        </Text >
 
         {
           this.props.editModeOn ?
@@ -52,7 +41,32 @@ export default class CardPreview extends Component {
               null :
             null
         }
-      </TouchableOpacity>
+      </View>
+    )
+  }
+
+  render() {
+    const borderColor = (this.props.card.card_type == 'black' ? 'white' : null)
+    const backgroundColor = this.props.card.card_type
+
+    const combinedStyles = StyleSheet.flatten([
+      styles.cardContainer(this.props.height, this.props.width), { borderColor: borderColor, borderWidth: this.props.card.card_type == 'black' ? 2 : null, backgroundColor: backgroundColor },
+      this.props.style
+    ])
+
+    return (
+      this.props.onPress ?
+        <TouchableOpacity
+          disable={this.props.disabled}
+          onPress={!this.props.editModeOn ? this.props.onPress : this.toggleEdit}
+          style={[combinedStyles, {
+            opacity: this.props.disabled ? 0.3 : 1
+          }]}>
+          {this.renderCardInfo()}
+        </TouchableOpacity> :
+        <View style={[combinedStyles, { opacity: this.props.disabled ? 0.3 : 1 }]}>
+          {this.renderCardInfo()}
+        </View>
     )
   }
 }

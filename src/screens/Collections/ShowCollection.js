@@ -100,7 +100,7 @@ export default class ShowCollection extends Component {
   removeCardsFromCollection() {
     Alert.alert(
       'Tem certeza que deseja remover as cartas selecionadas da coleção?',
-      'Elas continuarão disponíveis em "Minhas cartas"',
+      'Se você for o criador da carta removida, ela continuará disponível em "Minhas cartas"',
       [
         { text: 'Remover', style: 'destructive', onPress: () => this.removeCardsFromCollectionConfirm() },
         { text: 'Cancelar', style: 'cancel' }
@@ -140,7 +140,7 @@ export default class ShowCollection extends Component {
         return (
           <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 25, paddingRight: 25 }}>
             <Text style={{ textAlign: 'center', color: '#FFF' }}>
-              Não existem cartas nesta coleção.{`\n`}Que tal criar uma agora mesmo?
+              Não existem cartas nesta coleção.
               </Text>
             <TouchableOpacity
               style={styles.createButton}
@@ -208,7 +208,7 @@ export default class ShowCollection extends Component {
     })
 
     if (collectionList.length == 0) {
-      return <Text>Criar coleção</Text>
+      return <Text style={{textAlign: 'center'}}>Não há coleções disponíveis</Text>
     }
 
     else {
@@ -276,9 +276,12 @@ export default class ShowCollection extends Component {
               }
 
               {
-                this.props.collection.selectedCollection.created_by == this.props.user.id ?
+                (
+                  (this.props.collection.selectedCollection.created_by == this.props.user.id) &&
+                  this.props.collection.selectedCollection.editable == false
+                ) ?
                   <TouchableOpacity
-                  onPress={() => this.deleteCards()}
+                    onPress={() => this.deleteCards()}
                     style={[styles.editOptionsButton, { backgroundColor: 'red' }]}>
                     <Text style={{ color: '#FFF' }}>Deletar</Text>
                   </TouchableOpacity> :

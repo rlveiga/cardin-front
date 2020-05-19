@@ -63,7 +63,7 @@ export default class Game extends Component {
   onCardSelect(card) {
     const slots = this.props.room.currentRoom.game.table_card.slots
 
-    if(this.state.cardsSelected.length == slots && !card['selected']) {
+    if (this.state.cardsSelected.length == slots && !card['selected']) {
       Alert.alert(`Máximo de ${slots} ${slots == 1 ? 'carta' : 'cartas'} para esta rodada`)
       return
     }
@@ -96,10 +96,10 @@ export default class Game extends Component {
 
   confirmSelectedCards() {
     clearTimeout(this.props.room.selectingTimeout)
-    
+
     const slots = this.props.room.currentRoom.game.table_card.slots
-    
-    if(this.state.cardsSelected.length !== slots) {
+
+    if (this.state.cardsSelected.length !== slots) {
       Alert.alert(`Você deve jogar ${slots} ${slots == 1 ? 'carta' : 'cartas'}`)
       return
     }
