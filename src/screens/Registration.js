@@ -5,6 +5,7 @@ import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsi
 import { inject, observer } from 'mobx-react'
 import DefaultButton from '../components/DefaultButton'
 import ErrorText from '../components/ErrorText'
+import AsyncLoader from '../components/AsyncLoader';
 
 @inject('user')
 @observer
@@ -17,7 +18,8 @@ export default class Registration extends Component {
       passwordConfirm: '',
       selectedColor: '#000000',
       hasErrorPassword: false,
-      errorMsgPassword: ''
+      errorMsgPassword: '',
+      loading: false
     }
   }
 
@@ -35,6 +37,8 @@ export default class Registration extends Component {
   }
 
   async register() {
+    this.setState({ loading: true })
+
     await this.props.user.register(
       this.state.username,
       this.state.password,
@@ -48,6 +52,7 @@ export default class Registration extends Component {
       )
 
       if (this.props.user.success) {
+        this.setState({ loading: false })
         this.props.navigation.navigate('Home')
       }
 
@@ -56,7 +61,12 @@ export default class Registration extends Component {
           'Houve um erro no login',
           'Por favor, tente logar novamente',
           [
-            { text: 'Ok', onPress: () => this.props.navigation.navigate('Login') }
+            {
+              text: 'Ok', onPress: () => {
+                this.setState({loading: false})
+                this.props.navigation.navigate('Login')
+              }
+            }
           ]
         )
       }
@@ -65,7 +75,12 @@ export default class Registration extends Component {
     else {
       Alert.alert(
         this.props.user.errorMsg,
-        'Por favor, tente novamente'
+        'Por favor, tente novamente',
+        [
+          {
+            text: 'Ok', onPress: () => this.setState({ loading: false })
+          }
+        ]
       )
     }
   }
@@ -177,7 +192,7 @@ export default class Registration extends Component {
                 text={this.state.errorMsgPassword} />
 
               <Text
-                style={[styles.bottomInfoText, {marginTop: this.state.hasErrorPassword ? 32 - heightPercentageToDP(2) : 32}]}>
+                style={[styles.bottomInfoText, { marginTop: this.state.hasErrorPassword ? 32 - heightPercentageToDP(2) : 32 }]}>
                 As cartas e coleções que você criar ficarão associadas a este usuário.
               </Text>
             </View>
@@ -189,6 +204,9 @@ export default class Registration extends Component {
             onPress={() => this.register()}
             label='Confirmar' />
         </KeyboardAwareScrollView>
+
+        <AsyncLoader
+        active={this.state.loading}/>
       </View>
     )
   }

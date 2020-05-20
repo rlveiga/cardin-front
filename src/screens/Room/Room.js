@@ -12,6 +12,7 @@ import Slider from '@react-native-community/slider';
 import Toast from 'react-native-easy-toast';
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon } from 'react-native-elements';
+import { API_ENDPOINT } from 'react-native-dotenv';
 
 @inject('user')
 @inject('room')
@@ -69,7 +70,7 @@ export default class Room extends Component {
     this.game = null
     this.toast = null
 
-    this.socket = this.socket = io(`https://cardin-app.herokuapp.com`, { transports: ['websocket'] })
+    this.socket = this.socket = io(API_ENDPOINT, { transports: ['websocket'] })
 
     this.socket.on('connect', this._onRoomConnect)
     this.socket.on('join_response', this._onUserAdded)

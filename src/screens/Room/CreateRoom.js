@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert } from 'react-native'
 import { inject, observer } from 'mobx-react'
+import AsyncLoader from '../../components/AsyncLoader'
 
 @inject('room')
 @observer
@@ -9,14 +10,18 @@ export default class CreateRoom extends Component {
     super(props)
 
     this.state = {
-      roomCode: ''
+      roomCode: '',
+      loading: false
     }
   }
 
   async onButtonPress() {
+    this.setState({ loading: true })
+
     await this.props.room.createRoom(this.state.roomCode, this.props.room.selectedCollection.id)
 
-    if(this.props.room.success) {
+    if (this.props.room.success) {
+      this.setState({ loading: false })
       this.props.navigation.navigate('Room')
     }
 
@@ -24,28 +29,31 @@ export default class CreateRoom extends Component {
       Alert.alert(
         'Erro ao criar sala',
         'Tente novamente mais tarde!',
-        [{text: 'Entendi'}]
+        [{ text: 'Entendi', onPress: () => this.setState({ loading: false }) }]
       )
     }
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
         <TextInput
-          onChangeText={roomCode => this.setState({roomCode})}
+          onChangeText={roomCode => this.setState({ roomCode })}
           autoCapitalize='characters'
           autoCorrect={false}
           maxLength={5}
           style={styles.roomInput}
           placeholder='digite o nome da sala'
-          placeholderTextColor='#A2A2A2'/>
+          placeholderTextColor='#A2A2A2' />
 
         <TouchableOpacity
-          style={{marginTop: 32}}
+          style={{ marginTop: 32 }}
           onPress={() => this.onButtonPress()}>
-          <Text style={{color: '#FFF', textAlign: 'center'}}>Criar</Text>
+          <Text style={{ color: '#FFF', textAlign: 'center' }}>Criar</Text>
         </TouchableOpacity>
+
+        <AsyncLoader
+          active={this.state.loading} />
       </View>
     )
   }
@@ -58,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 25
   },
-  
+
   roomInput: {
     height: 50,
     borderBottomWidth: 1,

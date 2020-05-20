@@ -740,7 +740,7 @@
 			baseConfigurationReference = B65C4D0BA2AF2E732CEA065C /* Pods-Cardin.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = NO;
@@ -755,7 +755,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Cardin;
 				PRODUCT_NAME = Cardin;
-				PROVISIONING_PROFILE_SPECIFIER = "com.Cardin AppStore";
+				PROVISIONING_PROFILE_SPECIFIER = "com.Cardin Development";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -765,7 +765,7 @@
 			baseConfigurationReference = 2F4E50BFD9878D0E691F5416 /* Pods-Cardin.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 4JAYY9PPU9;
@@ -779,7 +779,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Cardin;
 				PRODUCT_NAME = Cardin;
-				PROVISIONING_PROFILE_SPECIFIER = "com.Cardin AppStore";
+				PROVISIONING_PROFILE_SPECIFIER = "com.Cardin Development";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

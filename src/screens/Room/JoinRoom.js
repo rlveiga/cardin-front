@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Alert, View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 import { inject, observer } from 'mobx-react'
+import AsyncLoader from '../../components/AsyncLoader'
 
 @inject('room')
 @observer
@@ -9,15 +10,17 @@ export default class JoinRoom extends Component {
     super(props)
 
     this.state = {
-      roomCode: ''
+      roomCode: '',
+      loading: false
     }
   }
 
   async onButtonPress() {
     await this.props.room.joinRoom(this.state.roomCode)
 
-    if(this.props.room.success) {
-      // Go to room lobby
+    if (this.props.room.success) {
+      this.setState({ loading: false })
+
       this.props.navigation.navigate('Room')
     }
 
@@ -25,7 +28,7 @@ export default class JoinRoom extends Component {
       Alert.alert(
         'Erro ao entrar na sala',
         'Tente novamente mais tarde!',
-        [{text: 'Entendi'}]
+        [{ text: 'Entendi', onPress: () => this.setState({ loading: false }) }]
       )
     }
   }
@@ -35,19 +38,22 @@ export default class JoinRoom extends Component {
       <View
         style={styles.container}>
         <TextInput
-          onChangeText={roomCode => this.setState({roomCode})}
+          onChangeText={roomCode => this.setState({ roomCode })}
           autoCapitalize='characters'
           autoCorrect={false}
           maxLength={5}
           style={styles.roomInput}
           placeholder='digite o nome da sala'
-          placeholderTextColor='#A2A2A2'/>
+          placeholderTextColor='#A2A2A2' />
 
         <TouchableOpacity
-          style={{marginTop: 32}}
+          style={{ marginTop: 32 }}
           onPress={() => this.onButtonPress()}>
-          <Text style={{color: '#FFF', textAlign: 'center'}}>Entrar</Text>
+          <Text style={{ color: '#FFF', textAlign: 'center' }}>Entrar</Text>
         </TouchableOpacity>
+
+        <AsyncLoader
+          active={this.state.loading} />
       </View>
     )
   }
@@ -60,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 25
   },
-  
+
   roomInput: {
     height: 50,
     borderBottomWidth: 1,

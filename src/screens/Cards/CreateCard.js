@@ -1,7 +1,8 @@
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native'
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
+import AsyncLoader from '../../components/AsyncLoader'
 
 @inject('card')
 @inject('collection')
@@ -13,11 +14,13 @@ export default class CreateCard extends Component {
       this.state = {
         cardName: '',
         cardType: 'black',
-        loaded: false
+        loading: false
       }
     }
 
     async createCard() {
+      this.setState({loading: true})
+
       await this.props.card.createCard(
         this.state.cardName,
         this.state.cardType,
@@ -25,9 +28,21 @@ export default class CreateCard extends Component {
       )
 
       if(this.props.card.success) {
+        this.setState({loading: false})
+        
         this.props.collection.shouldReloadCollection = true
         this.props.collection.shouldReloadCollections = true
         this.props.navigation.goBack()
+      }
+
+      else {
+        Alert.alert(
+          'Houve um erro ao criar a carta',
+          null,
+          [
+            {text: 'Ok', onPress: () => this.setState({loading: false})}
+          ]
+        )
       }
     }
 
