@@ -26,6 +26,11 @@ fastlane ios refresh_profiles
 fastlane ios beta
 ```
 
+### ios apple
+```
+fastlane ios apple
+```
+Push a new beta build to TestFlight
 
 ----
 

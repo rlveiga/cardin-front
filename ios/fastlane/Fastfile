@@ -42,4 +42,16 @@ platform :ios do
       message: "Build #{lane_context[SharedValues::BUILD_NUMBER]}"
     )
   end
+
+  desc "Push a new beta build to TestFlight"
+  lane :apple do
+    build_app(scheme: "Cardin",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: { 
+          "com.Cardin" => "com.Cardin AppStore"
+        }
+    })
+    # upload_to_testflight
+  end
 end
