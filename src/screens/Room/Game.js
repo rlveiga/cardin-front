@@ -6,6 +6,7 @@ import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CardPreview from '../../components/CardPreview';
 import PlayerPreview from '../../components/PlayerPreview';
+import CountDown from 'react-native-countdown-component';
 
 @inject('user')
 @inject('room')
@@ -39,7 +40,9 @@ export default class Game extends Component {
               onPress={() => this.onCardSelect(card)}
               disabled={this.isCzar() || this.props.room.lockHand}>
               <CardPreview
-                fontSize={widthPercentageToDP(4)}
+                height={heightPercentageToDP(25)}
+                width={heightPercentageToDP(18)}
+                fontSize={heightPercentageToDP(2)}
                 disabled={this.isCzar() || card['selected'] || this.props.room.lockHand}
                 style={{ marginBottom: 0 }}
                 key={i}
@@ -147,12 +150,12 @@ export default class Game extends Component {
         style={styles.container}>
         <View
           style={{
+            height: heightPercentageToDP(45),
             paddingVertical: heightPercentageToDP(2),
             alignSelf: 'stretch',
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-
           {
             this.isCzar() ?
               <Text
@@ -163,20 +166,29 @@ export default class Game extends Component {
           }
 
           <CardPreview
-            fontSize={widthPercentageToDP(6)}
-            height={widthPercentageToDP(75)}
-            width={widthPercentageToDP(50)}
+            fontSize={heightPercentageToDP(3)}
+            height={heightPercentageToDP(40)}
+            width={heightPercentageToDP(28)}
             card={this.props.room.currentRoom.game.table_card} />
 
           {
             !this.isCzar() ?
               <TouchableOpacity
+                style={{ marginTop: heightPercentageToDP(2), backgroundColor: '#FFF', paddingHorizontal: widthPercentageToDP(2), paddingVertical: widthPercentageToDP(1), borderRadius: 8 }}
                 disabled={this.props.room.lockHand}
                 onPress={() => this.confirmSelectedCards()}>
-                <Text style={{ color: '#FFF' }}>Jogar</Text>
+                <Text style={{ color: '#000' }}>Confirmar</Text>
               </TouchableOpacity> :
               null
           }
+
+          <View
+            style={{ position: 'absolute', top: 0, left: widthPercentageToDP(5), height: 50, width: 50 }}>
+            <CountDown
+              until={60}
+              timeToShow={['S']}
+            />
+          </View>
         </View>
 
         <ScrollView
@@ -193,7 +205,7 @@ export default class Game extends Component {
       <View
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View
-          style={{ opacity: item.discarded ? 0.4 : 1, alignSelf: 'center' }}>
+          style={{ zIndex: 0, opacity: item.discarded ? 0.4 : 1, alignSelf: 'center' }}>
           {
             item.cards.length == 1 ?
               <CardPreview
@@ -226,7 +238,7 @@ export default class Game extends Component {
         {
           this.props.room.currentRoom.game.czar_id == this.props.user.id ?
             <View
-              style={[styles.voteButtonsContainer, { bottom: item.cards.length == 1 ? heightPercentageToDP(15) : heightPercentageToDP(2) }]}>
+              style={[styles.voteButtonsContainer, { bottom: item.cards.length == 1 ? heightPercentageToDP(15) : heightPercentageToDP(5) }]}>
               <TouchableOpacity
                 disabled={item.discarded}
                 onPress={() => this.confirmWinner(item.user.id)}
@@ -369,17 +381,6 @@ export default class Game extends Component {
     )
   }
 
-  startNewRound() {
-    // Host restarts the round
-    if (this.props.room.currentRoom.created_by == this.props.user.id) {
-      console.log('Restarting in 5')
-
-      setTimeout(() => this.props.socket.emit('new_round_start', {
-        room: this.props.room.currentRoom.code
-      }), 5000)
-    }
-  }
-
   renderGameEnd() {
     const winner = this.props.room.currentRoom.game.game_winner
 
@@ -461,7 +462,7 @@ export default class Game extends Component {
           return this.renderVoting()
 
         case 'Results':
-          this.startNewRound()
+          // this.startNewRound()
           return this.renderResults()
 
         case 'End':
@@ -476,10 +477,8 @@ export default class Game extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     alignSelf: 'stretch',
-    alignItems: 'center',
-    paddingTop: heightPercentageToDP(2)
+    alignItems: 'center'
   },
 
   userList: {
@@ -490,6 +489,7 @@ const styles = StyleSheet.create({
   },
 
   handContainer: {
+    height: heightPercentageToDP(30),
     alignItems: 'center',
     flexDirection: 'row'
   },
@@ -503,6 +503,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',
+    zIndex: 999
   },
 
   voteButton: {

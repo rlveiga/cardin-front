@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { View, Image, Text } from 'react-native'
+import { View, Image, Text, StyleSheet } from 'react-native'
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
 
 export default class PlayerPreview extends Component {
   render() {
     const { player, height, width, fontSize } = this.props
-    
+
     return (
       <View>
         {
@@ -33,9 +33,30 @@ export default class PlayerPreview extends Component {
                 style={{ color: '#FFF', fontWeight: 'bold', fontSize: fontSize || 22, textAlign: 'center' }}>
                 {player.username[0].toUpperCase()}
               </Text>
+              {
+                this.props.score >= 0 ?
+                  <View style={styles.scoreContainer}>
+                    <Text style={{ textAlign: 'center', color: '#000' }}>
+                      {this.props.score}
+                    </Text>
+                  </View> :
+                  null
+              }
             </View>
         }
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  scoreContainer: {
+    position: 'absolute',
+    top: -5,
+    width: widthPercentageToDP(6),
+    height: widthPercentageToDP(6),
+    borderRadius: widthPercentageToDP(3),
+    justifyContent: 'center',
+    backgroundColor: '#ead538'
+  }
+})

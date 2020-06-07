@@ -10,7 +10,12 @@ import PlayerPreview from './PlayerPreview';
 export default class PlayersList extends Component {
   renderPlayers() {
     return this.props.room.currentRoom.game && this.props.room.playersList ?
-      this.props.room.playersList.map((player, i) => {
+      this.props.room.playersList
+      .slice()
+      .sort((a, b) => {
+        return b.score - a.score
+      })
+      .map((player, i) => {
         const isVoter = this.props.room.currentRoom.game.czar_id == player.data.id
 
         return (
@@ -33,7 +38,8 @@ export default class PlayersList extends Component {
                   }} /> :
                 <PlayerPreview
                   fontSize={28}
-                  player={player.data} />
+                  player={player.data}
+                  score={player.score} />
             }
 
             <View
@@ -119,6 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
+    height: heightPercentageToDP(15)
   }
 })

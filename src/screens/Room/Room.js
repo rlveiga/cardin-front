@@ -1,18 +1,16 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
+import { Alert, AppState, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { API_ENDPOINT } from 'react-native-dotenv';
+import Toast from 'react-native-easy-toast';
+import { Icon } from 'react-native-elements';
+import RNPickerSelect from 'react-native-picker-select';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { HeaderBackButton } from 'react-navigation-stack';
 import io from 'socket.io-client/dist/socket.io';
 import CollectionPreview from '../../components/CollectionPreview';
-import CardPreview from '../../components/CardPreview';
-import Game from './Game';
 import PlayersList from '../../components/PlayersList';
-import Slider from '@react-native-community/slider';
-import Toast from 'react-native-easy-toast';
-import RNPickerSelect from 'react-native-picker-select';
-import { Icon } from 'react-native-elements';
-import { API_ENDPOINT } from 'react-native-dotenv';
+import Game from './Game';
 
 @inject('user')
 @inject('room')
@@ -83,10 +81,35 @@ export default class Room extends Component {
     this.socket.on('discard_option_response', this._onCardDiscarded)
 
     this._onBack = this._onBack.bind(this)
+
+    // AppState.addEventListener('change', this.onAppStateChange)
   }
+
+  // onAppStateChange = (state) => {
+  //   console.log(state)
+
+  //   // App enters background mode and is possibly closed,
+  //   // remove user from room if inactive for 2 minutes
+  //   if (state == 'background') {
+  //     this.socket.emit('user_in_background', { room: this.props.room.currentRoom.code, user: { username: this.props.user.username } })
+  //   }
+  // }
 
   async componentDidMount() {
     this.props.navigation.setParams({ onBack: this._onBack, code: this.props.room.currentRoom.code })
+
+    AppState.addEventListener('change',
+      this.handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
+  handleAppStateChange = (nextAppState) => {
+    if (nextAppState === 'inactive') {
+      console.log('the app is closed');
+    }
   }
 
   async leaveRoom() {
@@ -96,11 +119,16 @@ export default class Room extends Component {
     this.socket.disconnect()
 
     this.props.room.lockHand = false
+
     if(this.props.room.selectingTimeout) {
       clearTimeout(this.props.room.selectingTimeout.selectingTimeout)
     }
 
     this.props.navigation.navigate('Home')
+  }
+
+  _onRoomDisconnect = () => {
+    console.log('disconnected')
   }
 
   _onRoomConnect = () => {
