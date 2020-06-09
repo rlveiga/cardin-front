@@ -98,7 +98,7 @@ export default class Game extends Component {
   }
 
   confirmSelectedCards() {
-    clearTimeout(this.props.room.selectingTimeout)
+    // clearTimeout(this.props.room.selectingTimeout)
 
     const slots = this.props.room.currentRoom.game.table_card.slots
 
@@ -182,13 +182,13 @@ export default class Game extends Component {
               null
           }
 
-          <View
+          {/* <View
             style={{ position: 'absolute', top: 0, left: widthPercentageToDP(5), height: 50, width: 50 }}>
             <CountDown
               until={60}
               timeToShow={['S']}
             />
-          </View>
+          </View> */}
         </View>
 
         <ScrollView
@@ -259,65 +259,70 @@ export default class Game extends Component {
     )
   }
 
-  renderVoting() {
-    return this.props.room.currentRoom.game.czar_id == this.props.user.id ?
+  renderVoting() {    
+    return this.props.room.currentRoom.game.selected_cards.length == 0 ?
       <View
-        style={styles.container}>
-        <View
-          style={{
-            alignSelf: 'stretch',
-            justifyContent: 'center',
-            paddingHorizontal: 25
-          }}>
-          <Text style={{
-            textAlign: "left",
-            color: '#FFF',
-            fontSize: heightPercentageToDP(4)
-          }}>
-            {this.props.room.currentRoom.game.table_card.name}
-          </Text>
-        </View>
-
-        <View
-          style={{ flex: 1 }}>
-          <Carousel
-            onSnapToItem={this._onVotersSwipe}
-            onScrollAnimationEnd={this._onVotersSwipe}
-            data={this.props.room.currentRoom.game.selected_cards}
-            renderItem={this.renderCard}
-            sliderWidth={widthPercentageToDP(100)}
-            itemWidth={widthPercentageToDP(75)} />
-        </View>
-
+        style={[styles.container, {justifyContent: 'center'}]}>
+        <Text style={{color: '#FFF', fontSize: widthPercentageToDP(5)}}>Ninguém jogou nesta rodada</Text>
       </View> :
-      <View
-        style={styles.container}>
+      this.props.room.currentRoom.game.czar_id == this.props.user.id ?
         <View
-          style={{
-            alignSelf: 'stretch',
-            justifyContent: 'center',
-            paddingHorizontal: 25
-          }}>
-          <Text style={{
-            textAlign: "left",
-            color: '#FFF',
-            fontSize: heightPercentageToDP(4)
-          }}>
-            {this.props.room.currentRoom.game.table_card.name}
-          </Text>
-        </View>
+          style={styles.container}>
+          <View
+            style={{
+              alignSelf: 'stretch',
+              justifyContent: 'center',
+              paddingHorizontal: 25
+            }}>
+            <Text style={{
+              textAlign: "left",
+              color: '#FFF',
+              fontSize: heightPercentageToDP(4)
+            }}>
+              {this.props.room.currentRoom.game.table_card.name}
+            </Text>
+          </View>
 
+          <View
+            style={{ flex: 1 }}>
+            <Carousel
+              onSnapToItem={this._onVotersSwipe}
+              onScrollAnimationEnd={this._onVotersSwipe}
+              data={this.props.room.currentRoom.game.selected_cards}
+              renderItem={this.renderCard}
+              sliderWidth={widthPercentageToDP(100)}
+              itemWidth={widthPercentageToDP(75)} />
+          </View>
+
+        </View> :
         <View
-          style={{ flex: 1 }}>
-          <Carousel
-            ref={ref => this.spectatorSwiper = ref}
-            scrollEnabled={false}
-            data={this.props.room.currentRoom.game.selected_cards}
-            renderItem={this.renderCard}
-            sliderWidth={widthPercentageToDP(100)}
-            itemWidth={widthPercentageToDP(75)} />
+          style={styles.container}>
+          <View
+            style={{
+              alignSelf: 'stretch',
+              justifyContent: 'center',
+              paddingHorizontal: 25
+            }}>
+            <Text style={{
+              textAlign: "left",
+              color: '#FFF',
+              fontSize: heightPercentageToDP(4)
+            }}>
+              {this.props.room.currentRoom.game.table_card.name}
+            </Text>
+          </View>
+
+          <View
+            style={{ flex: 1 }}>
+            <Carousel
+              ref={ref => this.spectatorSwiper = ref}
+              scrollEnabled={false}
+              data={this.props.room.currentRoom.game.selected_cards}
+              renderItem={this.renderCard}
+              sliderWidth={widthPercentageToDP(100)}
+              itemWidth={widthPercentageToDP(75)} />
+          </View>
         </View>
-      </View>
   }
 
   _onVotersSwipe = (index) => {

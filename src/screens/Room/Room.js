@@ -120,9 +120,9 @@ export default class Room extends Component {
 
     this.props.room.lockHand = false
 
-    if(this.props.room.selectingTimeout) {
-      clearTimeout(this.props.room.selectingTimeout.selectingTimeout)
-    }
+    // if(this.props.room.selectingTimeout) {
+    //   clearTimeout(this.props.room.selectingTimeout.selectingTimeout)
+    // }
 
     this.props.navigation.navigate('Home')
   }
@@ -165,14 +165,14 @@ export default class Room extends Component {
 
     this.setState({ gameStarted: true })
 
-    this.props.room.selectingTimeout = setTimeout(() => {
-      console.log('Player timed out')
-      this.socket.emit('cards_selected', {
-        room: this.props.room.currentRoom.code,
-        user_id: this.props.user.id,
-        cards: []
-      })
-    }, 60000)
+    // this.props.room.selectingTimeout = setTimeout(() => {
+    //   console.log('Player timed out')
+    //   this.socket.emit('cards_selected', {
+    //     room: this.props.room.currentRoom.code,
+    //     user_id: this.props.user.id,
+    //     cards: []
+    //   })
+    // }, 60000)
   }
 
   _onCardsSelected = (data) => {
@@ -198,13 +198,13 @@ export default class Room extends Component {
     this.updateGame(data)
     this.updatePlayers(data.players)
 
-    this.props.room.selectingTimeout = setTimeout(() => {
-      this.socket.emit('cards_selected', {
-        room: this.props.room.currentRoom.code,
-        user_id: this.props.user.id,
-        cards: []
-      })
-    }, 60000)
+    // this.props.room.selectingTimeout = setTimeout(() => {
+    //   this.socket.emit('cards_selected', {
+    //     room: this.props.room.currentRoom.code,
+    //     user_id: this.props.user.id,
+    //     cards: []
+    //   })
+    // }, 60000)
   }
 
   _onVoterSwiped = (index) => {
