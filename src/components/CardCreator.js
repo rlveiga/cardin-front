@@ -3,14 +3,10 @@ import { View, StyleSheet, Text, TouchableOpacity, Switch, Alert, ScrollView, Pl
 import { TextInput } from 'react-native-gesture-handler'
 import { inject, observer } from 'mobx-react'
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen'
-import AsyncLoader from '../../components/AsyncLoader';
+import AsyncLoader from './AsyncLoader';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import CardCreator from '../../components/CardCreator'
 
-@inject('collection')
-@inject('card')
-@observer
-export default class CreateCollection extends Component {
+export default class CardCreator extends Component {
   constructor(props) {
     super(props)
 
@@ -26,74 +22,10 @@ export default class CreateCollection extends Component {
       ],
       loading: false
     }
-
-    this.cardCreator = null
   }
 
-  componentDidMount() {
-    this.props.navigation.setParams({ createCollection: this.createCollection })
-  }
-
-  createCollection = async () => {
-    if (this.state.collectionName == '') {
-      Alert.alert(
-        'Insira um nome para a coleção'
-      )
-
-      return
-    }
-
-    this.setState({ loading: true })
-
-    await this.props.collection.createCollection(
-      this.state.collectionName
-    )
-
-    if (this.props.collection.success) {
-      for (const card of this.cardCreator.getCardCreators()) {
-        if (card.text != '') {
-          await this.props.card.createCard(
-            card.text,
-            card.switch ? 'white' : 'black',
-            this.props.collection.createdCollection.data.id
-          )
-
-          if (!this.props.card.success) {
-            Alert.alert(
-              'Erro ao criar uma ou mais cartas',
-            )
-            break
-          }
-        }
-      }
-
-      this.setState({ loading: false })
-
-      this.props.collection.shouldReloadCollections = true
-      this.props.navigation.navigate('Collections')
-    }
-
-    else {
-      Alert.alert(
-        'Erro ao criar a coleção',
-        null,
-        [
-          { text: 'Ok', onPress: () => this.setState({ loading: false }) }
-        ]
-      )
-    }
-  }
-
-  addCardCreator() {
-    let cardCreators = this.state.cardCreators
-
-    cardCreators.push({
-      switch: true,
-      text: '',
-      slots: 0
-    })
-
-    this.setState({ cardCreators })
+  getCardCreators() {
+    return this.state.cardCreators
   }
 
   renderCardCreators() {
@@ -182,23 +114,33 @@ export default class CreateCollection extends Component {
     this.setState({ cardCreators })
   }
 
+  addCardCreator() {
+    let cardCreators = this.state.cardCreators
+
+    cardCreators.push({
+      switch: true,
+      text: '',
+      slots: 0
+    })
+
+    this.setState({ cardCreators })
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <TextInput
-          returnKeyType='done'
-          autoCorrect={false}
-          value={this.state.collectionName}
-          onChangeText={val => this.setState({ collectionName: val })}
-          placeholderTextColor='#A2A2A2'
-          placeholder='nome da coleção'
-          style={styles.textInput} />
+      <View style={{ flex: 1, marginTop: 25 }}>
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps='always'
+          extraScrollHeight={heightPercentageToDP(5)}>
+          {this.renderCardCreators()}
 
-        <CardCreator
-          ref={ref => this.cardCreator = ref} />
-
-        <AsyncLoader
-          active={this.state.loading} />
+          <TouchableOpacity
+            onPress={() => this.addCardCreator()}
+            style={styles.addCardButton}>
+            <Text style={{ fontSize: 24 }}>+</Text>
+          </TouchableOpacity>
+        </KeyboardAwareScrollView>
       </View>
     )
   }
