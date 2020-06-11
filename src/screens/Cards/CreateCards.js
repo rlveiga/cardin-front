@@ -1,10 +1,8 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, Switch, Alert, ScrollView, Platform } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler'
 import { inject, observer } from 'mobx-react'
-import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen'
-import AsyncLoader from '../../components/AsyncLoader';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import React, { Component } from 'react'
+import { Alert, StyleSheet, View } from 'react-native'
+import { widthPercentageToDP } from 'react-native-responsive-screen'
+import AsyncLoader from '../../components/AsyncLoader'
 import CardCreator from '../../components/CardCreator'
 
 @inject('collection')
@@ -91,35 +89,4 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 4
   },
-
-  cardCreatorContainer: {
-    flexGrow: 1
-  },
-
-  cardCreator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 12
-  },
-
-  cardCreatorInput: {
-    flex: 1,
-    borderRadius: 15,
-    backgroundColor: 'red',
-    padding: 12,
-    marginRight: 25,
-    fontSize: 16
-  },
-
-  addCardButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    opacity: 0.9,
-    alignSelf: 'center',
-    marginBottom: 25
-  }
 })

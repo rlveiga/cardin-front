@@ -11,7 +11,6 @@ export default class CardCreator extends Component {
     super(props)
 
     this.state = {
-      collectionName: '',
       cardCreatorCount: 1,
       cardCreators: [
         {
@@ -19,8 +18,7 @@ export default class CardCreator extends Component {
           text: '',
           slots: 0
         }
-      ],
-      loading: false
+      ]
     }
   }
 
@@ -147,28 +145,6 @@ export default class CardCreator extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-    paddingHorizontal: 25,
-    paddingTop: 25
-  },
-
-  textInput: {
-    fontSize: widthPercentageToDP(6),
-    fontWeight: 'bold',
-    borderBottomWidth: 1,
-    borderColor: '#A2A2A2',
-    color: '#FFF',
-    paddingBottom: 8,
-    paddingLeft: 8,
-    paddingRight: 4
-  },
-
-  cardCreatorContainer: {
-    flexGrow: 1
-  },
-
   cardCreator: {
     flexDirection: 'row',
     alignItems: 'center',
