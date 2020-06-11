@@ -63,7 +63,7 @@ export default class Registration extends Component {
           [
             {
               text: 'Ok', onPress: () => {
-                this.setState({loading: false})
+                this.setState({ loading: false })
                 this.props.navigation.navigate('Login')
               }
             }
@@ -83,6 +83,20 @@ export default class Registration extends Component {
         ]
       )
     }
+  }
+
+  updateUsername(username) {
+    if (this.isUsernameValid(username) || username.length == 0) {
+      this.setState({ username })
+    }
+  }
+
+  isUsernameValid(username) {
+    var re = /^\w+$/;
+    if (!re.test(username)) {
+      return false;
+    }
+    return true;
   }
 
   render() {
@@ -152,7 +166,7 @@ export default class Registration extends Component {
                 autoCapitalize='none'
                 autoCorrect={false}
                 value={this.state.username}
-                onChangeText={(val) => this.setState({ username: val })} />
+                onChangeText={(val) => this.updateUsername(val)} />
 
               <TextInput
                 secureTextEntry={true}
@@ -206,7 +220,7 @@ export default class Registration extends Component {
         </KeyboardAwareScrollView>
 
         <AsyncLoader
-        active={this.state.loading}/>
+          active={this.state.loading} />
       </View>
     )
   }
