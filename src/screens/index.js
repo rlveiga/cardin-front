@@ -11,6 +11,7 @@ import Room from './Room/Room';
 
 import Cards from './Cards/Cards';
 import CreateCard from './Cards/CreateCard';
+import CreateCards from './Cards/CreateCards';
 
 import Collections from './Collections/Collections';
 import CreateCollection from './Collections/CreateCollection';
@@ -22,7 +23,8 @@ export {
   LaunchScreen,
 	Home,
 	Cards,
-	CreateCard,
+  CreateCard,
+  CreateCards,
 	Collections,
 	CreateCollection,
   ShowCollection,

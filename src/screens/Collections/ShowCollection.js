@@ -7,6 +7,7 @@ import CardModal from '../../components/CardModal'
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
 import Modal from 'react-native-modal';
 import AsyncLoader from '../../components/AsyncLoader'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 @inject('user')
 @inject('card')
@@ -144,8 +145,8 @@ export default class ShowCollection extends Component {
               </Text>
             <TouchableOpacity
               style={styles.createButton}
-              onPress={() => this.props.navigation.navigate('CreateCard')}>
-              <Text style={{ color: '#000', textAlign: 'center' }}>+ Criar nova carta</Text>
+              onPress={() => this.props.navigation.navigate('CreateCards')}>
+              <Text style={{ color: '#FFF', textAlign: 'center' }}>+ Criar novas cartas</Text>
             </TouchableOpacity>
           </View>
         )
@@ -208,7 +209,7 @@ export default class ShowCollection extends Component {
     })
 
     if (collectionList.length == 0) {
-      return <Text style={{textAlign: 'center'}}>Não há coleções disponíveis</Text>
+      return <Text style={{ textAlign: 'center' }}>Não há coleções disponíveis</Text>
     }
 
     else {
@@ -245,11 +246,11 @@ export default class ShowCollection extends Component {
         {this.renderCards()}
 
         {
-          this.props.collection.selectedCollection.created_by == this.props.user.id ?
+          this.props.collection.selectedCollection.created_by == this.props.user.id && this.state.loaded ?
             <TouchableOpacity
               style={styles.createButton}
-              onPress={() => this.props.navigation.navigate('CreateCard')}>
-              <Text style={{ color: '#000', textAlign: 'center' }}>+ Criar nova carta</Text>
+              onPress={() => this.props.navigation.navigate('CreateCards')}>
+              <Icon name='plus' color='#FFF' size={24} />
             </TouchableOpacity> :
             null
         }
@@ -352,14 +353,18 @@ const styles = StyleSheet.create({
 
   createButton: {
     position: 'absolute',
-    bottom: heightPercentageToDP(2),
+    bottom: widthPercentageToDP(7),
+    right: widthPercentageToDP(7),
     alignSelf: 'center',
-    backgroundColor: '#A2A2A2',
-    borderRadius: 6,
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 4,
-    paddingBottom: 4
+    backgroundColor: '#000',
+    opacity: 0.85,
+    width: widthPercentageToDP(15),
+    height: widthPercentageToDP(15),
+    borderRadius: widthPercentageToDP(7.5),
+    borderWidth: 5,
+    borderColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   editOptions: {

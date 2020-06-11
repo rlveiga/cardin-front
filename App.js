@@ -6,7 +6,7 @@ import { Icon } from 'react-native-elements';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { Collections, CreateCard, CreateCollection, CreateRoom, Home, JoinRoom, LaunchScreen, Login, Room, SelectCollection, ShowCollection, Registration } from './src/screens';
+import { Collections, CreateCard, CreateCards, CreateCollection, CreateRoom, Home, JoinRoom, LaunchScreen, Login, Room, SelectCollection, ShowCollection, Registration } from './src/screens';
 import stores from './src/stores';
 
 YellowBox.ignoreWarnings(['Remote debugger']);
@@ -131,6 +131,22 @@ const CollectionsNavigator = createStackNavigator({
     navigationOptions: {
       title: 'Nova carta'
     }
+  },
+
+  CreateCards: {
+    screen: CreateCards,
+    navigationOptions: ({ navigation }) => ({
+      title: 'Criar cartas',
+      headerRight: () => {
+        return (
+          <TouchableOpacity
+            style={{ marginRight: 32 }}
+            onPress={navigation.getParam('createCards')}>
+            <Text style={{ color: '#FFF', fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Criar</Text>
+          </TouchableOpacity>
+        )
+      }
+    })
   },
 
   CreateCollection: {
