@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 @inject('user')
 @inject('card')
@@ -144,6 +145,15 @@ export default class CardModal extends Component {
             paddingLeft: 25,
             paddingRight: 25,
           }}>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <TouchableOpacity
+              onPress={() => this.hideModal()}
+              style={styles.closeButton}>
+              <Icon name='times' color='#000' size={24} />
+            </TouchableOpacity>
+          </View>
+
           <View style={[styles.container, { backgroundColor }]}>
             <Text
               style={[styles.cardText, { color: textColor }]}>{card.name}</Text>
@@ -207,6 +217,17 @@ const styles = StyleSheet.create({
   dropdown: {
     width: widthPercentageToDP("45%"),
     alignItems: 'center'
+  },
+
+  closeButton: {
+    bottom: 15,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: widthPercentageToDP(10),
+    height: widthPercentageToDP(10),
+    borderRadius: widthPercentageToDP(5),
+    backgroundColor: '#FFF'
   },
 
   container: {

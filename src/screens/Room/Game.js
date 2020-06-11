@@ -6,7 +6,6 @@ import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CardPreview from '../../components/CardPreview';
 import PlayerPreview from '../../components/PlayerPreview';
-import CountDown from 'react-native-countdown-component';
 
 @inject('user')
 @inject('room')
@@ -181,14 +180,6 @@ export default class Game extends Component {
               </TouchableOpacity> :
               null
           }
-
-          {/* <View
-            style={{ position: 'absolute', top: 0, left: widthPercentageToDP(5), height: 50, width: 50 }}>
-            <CountDown
-              until={60}
-              timeToShow={['S']}
-            />
-          </View> */}
         </View>
 
         <ScrollView

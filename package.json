@@ -11,7 +11,7 @@
     "code-push:ios": "appcenter codepush release-react -a cardin/Cardin"
   },
   "dependencies": {
-    "@react-native-community/slider": "^2.0.9",
+    "@react-native-community/slider": "^3.0.0",
     "appcenter": "^3.0.2",
     "appcenter-analytics": "^3.0.2",
     "appcenter-crashes": "^3.0.2",
