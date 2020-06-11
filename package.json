@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "code-push:ios": "appcenter codepush release-react -a cardin/Cardin"
+    "code-push:ios": "appcenter codepush release-react -a cardin/Cardin",
+    "code-push:android": "appcenter codepush release-react -a cardin/Cardin-Android"
   },
   "dependencies": {
     "@react-native-community/slider": "^3.0.0",
