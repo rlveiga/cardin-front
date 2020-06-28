@@ -12,6 +12,7 @@
     "code-push:android": "appcenter codepush release-react -a cardin/Cardin-Android"
   },
   "dependencies": {
+    "@react-native-community/netinfo": "^5.9.3",
     "@react-native-community/slider": "^3.0.0",
     "appcenter": "^3.0.2",
     "appcenter-analytics": "^3.0.2",

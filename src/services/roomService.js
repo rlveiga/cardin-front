@@ -1,6 +1,20 @@
 import api from '../../axios';
 
 class RoomService {
+  getGameData(token, code) {
+    return api.get(`/rooms/${code}/game`, {
+      headers: {
+          'access-token': token
+      }
+    })
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      throw err;
+    });
+  }
+
   createRoom(token, code, collection_id) {
     return api.post(
       '/rooms/',
